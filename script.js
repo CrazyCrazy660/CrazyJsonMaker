@@ -20,6 +20,7 @@ const builder = document.getElementById("builder");
 const output = document.getElementById("output");
 let selectedBlock = null;
 let autoRandomize = false;
+let isAdmin = false;
 
 const toggleRandomBtn = document.createElement("button");
 toggleRandomBtn.textContent = "🎲 Auto Random: OFF";
@@ -57,9 +58,9 @@ function makeSlider(label, min, max, defaultVal) {
   valueSpan.textContent = input.value;
   labelElem.appendChild(valueSpan);
 
-  const btn = document.createElement("button");
-  btn.textContent = "🎲";
-  btn.onclick = () => {
+  const toggleBtn = document.createElement("button");
+  toggleBtn.textContent = "🎲";
+  toggleBtn.onclick = () => {
     const val = (label === "Scale")
       ? Math.floor(Math.random() * 256) - 128
       : (label === "Saturation")
@@ -74,7 +75,7 @@ function makeSlider(label, min, max, defaultVal) {
     updateOutputJSON();
   };
 
-  wrapper.append(labelElem, input, btn);
+  wrapper.append(labelElem, input, toggleBtn);
   return { input, wrapper };
 }
 
@@ -86,7 +87,7 @@ function applyRandomization(inputs) {
   inputs.forEach(i => i.dispatchEvent(new Event("input")));
 }
 
-function createItemBlock() {
+function originalCreateItemBlock() {
   const wrapper = document.createElement("div");
   wrapper.className = "item-block";
 
@@ -145,11 +146,16 @@ function createItemBlock() {
     wrapper.style.outline = "2px solid red";
   };
 
-  if (autoRandomize) {
-    applyRandomization([hue.input, sat.input, scale.input]);
-  }
-
   return wrapper;
+}
+
+function createItemBlock() {
+  const block = originalCreateItemBlock();
+  if (autoRandomize) {
+    const sliders = block.querySelectorAll("input[type=range]");
+    applyRandomization(sliders);
+  }
+  return block;
 }
 
 function createSlot(slot) {
@@ -165,43 +171,26 @@ function createSlot(slot) {
   builder.appendChild(container);
 }
 
-function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  return crypto.subtle.digest("SHA-256", data).then(buf => {
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-  });
-}
-
-// INITIAL SETUP
 bodyParts.forEach(createSlot);
 updateOutputJSON();
 
-// Load release notes popup once
-if (!localStorage.getItem("releaseNotesSeen")) {
-  document.getElementById("releaseNotesPopup").style.display = "block";
-  localStorage.setItem("releaseNotesSeen", "true");
-}
-
-// Dropdown Presets
-document.getElementById("presetDropdown").onchange = e => {
-  if (e.target.value === "galaxy") {
-    if (!selectedBlock) return alert("Select an item block first.");
-    const inputs = selectedBlock.querySelectorAll("input[type=range]");
-    inputs[0].value = 180;
-    inputs[1].value = 117;
-    inputs.forEach(i => i.dispatchEvent(new Event("input")));
-  } else if (e.target.value === "clear") {
-    if (!confirm("Clear everything?")) return;
-    builder.innerHTML = "";
-    bodyParts.forEach(createSlot);
-    output.textContent = "";
-    selectedBlock = null;
-  }
-  e.target.value = ""; // reset dropdown
+// Button Handlers
+document.getElementById("presetGalaxyBtn").onclick = () => {
+  if (!selectedBlock) return alert("Select an item block first.");
+  const inputs = selectedBlock.querySelectorAll("input[type=range]");
+  inputs[0].value = 180;
+  inputs[1].value = 117;
+  inputs.forEach(i => i.dispatchEvent(new Event("input")));
 };
 
-// Download
+document.getElementById("clearBtn").onclick = () => {
+  if (!confirm("Clear everything?")) return;
+  builder.innerHTML = "";
+  bodyParts.forEach(createSlot);
+  output.textContent = "";
+  selectedBlock = null;
+};
+
 document.getElementById("downloadBtn").onclick = () => {
   const json = output.textContent;
   const filename = (document.getElementById("filenameInput").value || "CrazyJsons") + ".json";
@@ -212,30 +201,25 @@ document.getElementById("downloadBtn").onclick = () => {
   a.click();
 };
 
-// Release Notes button
-document.getElementById("releaseNotesBtn").onclick = () => {
-  document.getElementById("releaseNotesPopup").style.display = "block";
-};
+// SHA-256 Hash Helper
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
 
-// Admin Button
 document.getElementById("adminBtn").onclick = async () => {
   const input = prompt("Enter admin password:");
   const hashedInput = await hashPassword(input);
-  const correctHash = "54c4ab41d869f1b5a493364c13f22d9cd5b3a5e464a735ce634d5c56695f648e"; // hash for ACJsonPassword
+  const correctHash = "a1f69735851206ef4990f44707db07c0a89d8e85a9c2f1cc2b46fe2efc2d1d46"; // Hash for "CrazyJson"
   if (hashedInput === correctHash) {
+    isAdmin = true;
     document.getElementById("adminPanel").style.display = "block";
     alert("Admin access granted!");
   } else {
     alert("Incorrect password.");
   }
-};
-
-// Add Item (admin)
-document.getElementById("addItemBtn").onclick = () => {
-  const name = prompt("Enter item name:");
-  const id = prompt("Enter item ID:");
-  if (!name || !id) return alert("Name and ID are required.");
-  items.push({ name, id });
-  items.sort((a, b) => a.name.localeCompare(b.name));
-  alert(`Added item "${name}" with ID "${id}"`);
 };
