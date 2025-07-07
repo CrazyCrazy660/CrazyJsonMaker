@@ -1,4 +1,4 @@
-const items = [
+const items = JSON.parse(localStorage.getItem("customItems")) || [
   { name: "Apple", id: "item_apple" },
   { name: "Backpack", id: "item_backpack" },
   { name: "CEO Plaque", id: "item_ceo_plaque" },
@@ -15,44 +15,30 @@ const items = [
   { name: "Teleport Gun", id: "item_teleport_gun" }
 ].sort((a, b) => a.name.localeCompare(b.name));
 
+const SHA256_HASH = "c1f0cf8a4cfca0c3f7fda7cc2b02e1f06be39b18f52b3424fd4cfc2c15576a69"; // "ACJsonPassword"
+
 const bodyParts = ["leftHand", "rightHand", "leftHip", "rightHip", "back"];
 const builder = document.getElementById("builder");
 const output = document.getElementById("output");
 let selectedBlock = null;
 
-let autoRandomHue = false;
-let autoRandomSat = false;
-let autoRandomScale = false;
-
-function createToggle(label, stateVar, toggleFn) {
-  const btn = document.createElement("button");
-  btn.textContent = `${label}: OFF`;
-  btn.onclick = () => {
-    window[stateVar] = !window[stateVar];
-    btn.textContent = `${label}: ${window[stateVar] ? "ON" : "OFF"}`;
-  };
-  return btn;
-}
-
-document.body.insertBefore(createToggle("Auto Hue", "autoRandomHue"), builder);
-document.body.insertBefore(createToggle("Auto Sat", "autoRandomSat"), builder);
-document.body.insertBefore(createToggle("Auto Scale", "autoRandomScale"), builder);
-
 function updateOutputJSON() {
   const result = { version: 1 };
   document.querySelectorAll("[data-slot]").forEach(section => {
     const block = section.querySelector(".item-block");
-    if (block) {
-      result[section.dataset.slot] = block.toJSON() || {};
-    }
+    if (block) result[section.dataset.slot] = block.toJSON() || {};
   });
   output.textContent = JSON.stringify(result, null, 2);
   localStorage.setItem("animalCompanyJson", output.textContent);
 }
 
-function makeSlider(label, min, max, defaultVal, randomizerFlag) {
+function makeSlider(label, min, max, defaultVal) {
   const wrapper = document.createElement("div");
   wrapper.className = "input-column";
+
+  const toggle = document.createElement("input");
+  toggle.type = "checkbox";
+  toggle.title = `Auto-randomize ${label}`;
 
   const input = document.createElement("input");
   input.type = "range";
@@ -71,17 +57,23 @@ function makeSlider(label, min, max, defaultVal, randomizerFlag) {
     updateOutputJSON();
   };
 
-  if (window[randomizerFlag]) {
-    input.value = (label === "Scale")
-      ? Math.floor(Math.random() * 256) - 128
-      : (label === "Saturation")
-        ? Math.floor(Math.random() * 321) - 120
-        : Math.floor(Math.random() * 241);
-    input.dispatchEvent(new Event("input"));
-  }
+  wrapper.append(labelElem, input, toggle);
+  return { input, toggle, wrapper };
+}
 
-  wrapper.append(labelElem, input);
-  return { input, wrapper };
+function applyAutoRandom(sliders) {
+  if (!sliders) return;
+  sliders.forEach(s => {
+    if (s.toggle.checked) {
+      const label = s.wrapper.querySelector("label").textContent;
+      let val = 0;
+      if (label.includes("Hue")) val = Math.floor(Math.random() * 241);
+      if (label.includes("Saturation")) val = Math.floor(Math.random() * 321) - 120;
+      if (label.includes("Scale")) val = Math.floor(Math.random() * 256) - 128;
+      s.input.value = val;
+      s.input.dispatchEvent(new Event("input"));
+    }
+  });
 }
 
 function createItemBlock() {
@@ -89,10 +81,10 @@ function createItemBlock() {
   wrapper.className = "item-block";
 
   const select = document.createElement("select");
-  const empty = document.createElement("option");
-  empty.value = "";
-  empty.textContent = "-- None --";
-  select.appendChild(empty);
+  const none = document.createElement("option");
+  none.textContent = "-- None --";
+  none.value = "";
+  select.appendChild(none);
   items.forEach(({ name, id }) => {
     const opt = document.createElement("option");
     opt.value = id;
@@ -103,37 +95,38 @@ function createItemBlock() {
   const row = document.createElement("div");
   row.className = "input-row";
 
-  const hue = makeSlider("Hue", 0, 240, 0, "autoRandomHue");
-  const sat = makeSlider("Saturation", -120, 200, 0, "autoRandomSat");
-  const scale = makeSlider("Scale", -128, 127, 0, "autoRandomScale");
+  const hue = makeSlider("Hue", 0, 240, 0);
+  const sat = makeSlider("Saturation", -120, 200, 0);
+  const scale = makeSlider("Scale", -128, 127, 0);
+  const sliders = [hue, sat, scale];
   row.append(hue.wrapper, sat.wrapper, scale.wrapper);
 
   const children = document.createElement("div");
   children.className = "children";
 
   const addChildBtn = document.createElement("button");
-  addChildBtn.textContent = "Add Child";
+  addChildBtn.textContent = "➕ Add Child";
   addChildBtn.onclick = () => {
     const child = createItemBlock();
     children.appendChild(child);
     updateOutputJSON();
   };
 
+  applyAutoRandom(sliders);
+
   wrapper.append(select, row, addChildBtn, children);
 
   wrapper.toJSON = () => {
     if (!select.value) return null;
-    const json = {
+    const obj = {
       itemID: select.value,
       colorHue: +hue.input.value,
       colorSaturation: +sat.input.value,
       scale: +scale.input.value
     };
-    const kids = Array.from(children.children)
-      .map(c => c.toJSON())
-      .filter(Boolean);
-    if (kids.length) json.children = kids;
-    return json;
+    const kids = [...children.children].map(c => c.toJSON()).filter(Boolean);
+    if (kids.length) obj.children = kids;
+    return obj;
   };
 
   wrapper.onclick = e => {
@@ -147,23 +140,23 @@ function createItemBlock() {
 }
 
 function createSlot(slot) {
-  const container = document.createElement("div");
-  container.dataset.slot = slot;
+  const div = document.createElement("div");
+  div.dataset.slot = slot;
 
   const title = document.createElement("h2");
   title.textContent = slot;
-  container.appendChild(title);
+  div.appendChild(title);
 
   const block = createItemBlock();
-  container.appendChild(block);
-  builder.appendChild(container);
+  div.appendChild(block);
+  builder.appendChild(div);
 }
 
 bodyParts.forEach(createSlot);
 updateOutputJSON();
 
 document.getElementById("presetGalaxyBtn").onclick = () => {
-  if (!selectedBlock) return alert("Select an item block first.");
+  if (!selectedBlock) return alert("Select an item first.");
   const inputs = selectedBlock.querySelectorAll("input[type=range]");
   inputs[0].value = 180;
   inputs[1].value = 117;
@@ -180,20 +173,41 @@ document.getElementById("clearBtn").onclick = () => {
 
 document.getElementById("downloadBtn").onclick = () => {
   const json = output.textContent;
-  const filename = (document.getElementById("filenameInput").value || "CrazyJsons") + ".json";
+  const name = document.getElementById("filenameInput").value || "CrazyJsons";
   const blob = new Blob([json], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = filename;
+  a.download = name + ".json";
   a.click();
 };
 
-document.getElementById("adminBtn").onclick = () => {
+async function hashPassword(text) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+document.getElementById("adminBtn").onclick = async () => {
   const pass = prompt("Enter admin password:");
-  if (pass === "ACJsonPassword") {
+  const hashed = await hashPassword(pass);
+  if (hashed === SHA256_HASH) {
     document.getElementById("adminPanel").style.display = "block";
     alert("Admin access granted!");
   } else {
     alert("Incorrect password.");
+  }
+};
+
+document.getElementById("addItemBtn").onclick = () => {
+  const name = prompt("Item name:");
+  const id = prompt("Item ID:");
+  if (name && id) {
+    items.push({ name, id });
+    items.sort((a, b) => a.name.localeCompare(b.name));
+    localStorage.setItem("customItems", JSON.stringify(items));
+    alert(`Added "${name}" (${id})! Reload to see in dropdown.`);
   }
 };
