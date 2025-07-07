@@ -58,9 +58,9 @@ function makeSlider(label, min, max, defaultVal) {
   valueSpan.textContent = input.value;
   labelElem.appendChild(valueSpan);
 
-  const toggleBtn = document.createElement("button");
-  toggleBtn.textContent = "🎲";
-  toggleBtn.onclick = () => {
+  const btn = document.createElement("button");
+  btn.textContent = "🎲";
+  btn.onclick = () => {
     const val = (label === "Scale")
       ? Math.floor(Math.random() * 256) - 128
       : (label === "Saturation")
@@ -75,14 +75,14 @@ function makeSlider(label, min, max, defaultVal) {
     updateOutputJSON();
   };
 
-  wrapper.append(labelElem, input, toggleBtn);
+  wrapper.append(labelElem, input, btn);
   return { input, wrapper };
 }
 
 function applyRandomization(inputs) {
   if (!inputs || inputs.length < 3) return;
-  inputs[0].value = Math.floor(Math.random() * 241); // hue 0–240
-  inputs[1].value = Math.floor(Math.random() * 321) - 120; // sat -120 to 200
+  inputs[0].value = Math.floor(Math.random() * 241); // hue
+  inputs[1].value = Math.floor(Math.random() * 321) - 120; // sat
   inputs[2].value = Math.floor(Math.random() * 256) - 128; // scale
   inputs.forEach(i => i.dispatchEvent(new Event("input")));
 }
@@ -174,7 +174,6 @@ function createSlot(slot) {
 bodyParts.forEach(createSlot);
 updateOutputJSON();
 
-// Button Handlers
 document.getElementById("presetGalaxyBtn").onclick = () => {
   if (!selectedBlock) return alert("Select an item block first.");
   const inputs = selectedBlock.querySelectorAll("input[type=range]");
@@ -201,7 +200,9 @@ document.getElementById("downloadBtn").onclick = () => {
   a.click();
 };
 
-// SHA-256 Hash Helper
+// Password: CrazyJson (SHA-256)
+const correctHash = "ac3d7a4f6f8ad10554a0edc0f61b8a5a1c1bb7a0718e4ce5e47c6eb1be14c5d4";
+
 async function hashPassword(password) {
   const encoder = new TextEncoder();
   const data = encoder.encode(password);
@@ -214,7 +215,6 @@ async function hashPassword(password) {
 document.getElementById("adminBtn").onclick = async () => {
   const input = prompt("Enter admin password:");
   const hashedInput = await hashPassword(input);
-  const correctHash = "a1f69735851206ef4990f44707db07c0a89d8e85a9c2f1cc2b46fe2efc2d1d46"; // Hash for "CrazyJson"
   if (hashedInput === correctHash) {
     isAdmin = true;
     document.getElementById("adminPanel").style.display = "block";
