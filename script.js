@@ -1,0 +1,154 @@
+const items = [
+  { name: "Apple", id: "item_apple" },
+  { name: "Backpack", id: "item_backpack" },
+  { name: "CEO Plaque", id: "item_ceo_plaque" },
+  { name: "D29", id: "item_d29" },
+  { name: "Finger Board", id: "item_finger_board" },
+  { name: "Gameboy", id: "item_gameboy" },
+  { name: "Golden Coin", id: "item_goldcoin" },
+  { name: "Golden Grenade", id: "item_grenade_gold" },
+  { name: "Heart Gun", id: "item_heart_gun" },
+  { name: "Landmine", id: "item_landmine" },
+  { name: "Large Backpack", id: "item_backpack_large_base" },
+  { name: "Pokémon Card", id: "item_rare_card" },
+  { name: "Small Backpack", id: "item_backpack_small_base" },
+  { name: "Teleport Gun", id: "item_teleport_gun" }
+].sort((a, b) => a.name.localeCompare(b.name));
+
+const bodyParts = ["leftHand", "rightHand", "leftHip", "rightHip", "back"];
+const builder = document.getElementById("builder");
+const output = document.getElementById("output");
+let selectedBlock = null;
+
+function updateOutputJSON() {
+  const result = { version: 1 };
+  document.querySelectorAll("[data-slot]").forEach(section => {
+    const block = section.querySelector(".item-block");
+    if (block) result[section.dataset.slot] = block.toJSON();
+  });
+  output.textContent = JSON.stringify(result, null, 2);
+}
+
+function makeSlider(label, min, max, defaultVal) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "input-column";
+
+  const input = document.createElement("input");
+  input.type = "range";
+  input.min = min;
+  input.max = max;
+  input.value = defaultVal;
+
+  const labelElem = document.createElement("label");
+  labelElem.textContent = label + ": ";
+  const valueSpan = document.createElement("span");
+  valueSpan.textContent = input.value;
+  labelElem.appendChild(valueSpan);
+
+  input.oninput = () => {
+    valueSpan.textContent = input.value;
+    updateOutputJSON();
+  };
+
+  wrapper.append(labelElem, input);
+  return { input, wrapper };
+}
+
+function createItemBlock() {
+  const wrapper = document.createElement("div");
+  wrapper.className = "item-block";
+
+  const select = document.createElement("select");
+  const none = document.createElement("option");
+  none.value = "";
+  none.textContent = "-- None --";
+  select.appendChild(none);
+  items.forEach(item => {
+    const option = document.createElement("option");
+    option.value = item.id;
+    option.textContent = item.name;
+    select.appendChild(option);
+  });
+
+  const row = document.createElement("div");
+  row.className = "input-row";
+  const hue = makeSlider("Hue", 0, 240, 0);
+  const sat = makeSlider("Saturation", -120, 200, 0);
+  const scale = makeSlider("Scale", -128, 127, 0);
+  row.append(hue.wrapper, sat.wrapper, scale.wrapper);
+
+  wrapper.append(select, row);
+  wrapper.toJSON = () => {
+    if (!select.value) return null;
+    return {
+      itemID: select.value,
+      colorHue: +hue.input.value,
+      colorSaturation: +sat.input.value,
+      scale: +scale.input.value
+    };
+  };
+
+  wrapper.onclick = e => {
+    e.stopPropagation();
+    if (selectedBlock) selectedBlock.style.outline = "";
+    selectedBlock = wrapper;
+    wrapper.style.outline = "2px solid red";
+  };
+
+  return wrapper;
+}
+
+function createSlot(slot) {
+  const container = document.createElement("div");
+  container.dataset.slot = slot;
+
+  const title = document.createElement("h2");
+  title.textContent = slot;
+  container.appendChild(title);
+
+  const block = createItemBlock();
+  container.appendChild(block);
+
+  builder.appendChild(container);
+}
+
+bodyParts.forEach(createSlot);
+updateOutputJSON();
+
+document.getElementById("presetDropdown").onchange = e => {
+  if (e.target.value === "galaxy" && selectedBlock) {
+    const inputs = selectedBlock.querySelectorAll("input[type=range]");
+    if (inputs.length >= 2) {
+      inputs[0].value = 180;
+      inputs[1].value = 117;
+      inputs.forEach(i => i.dispatchEvent(new Event("input")));
+    }
+  } else if (e.target.value === "clear") {
+    if (confirm("Clear all?")) {
+      builder.innerHTML = "";
+      bodyParts.forEach(createSlot);
+      output.textContent = "";
+    }
+  }
+  e.target.value = "";
+};
+
+document.getElementById("downloadBtn").onclick = () => {
+  const json = output.textContent;
+  const filename = (document.getElementById("filenameInput").value || "CrazyJsons") + ".json";
+  const blob = new Blob([json], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+};
+
+document.getElementById("adminBtn").onclick = () => {
+  const pass = prompt("Enter admin password:");
+  if (pass === "ACJsonPassword") {
+    document.getElementById("adminPanel").style.display = "block";
+    alert("Admin access granted!");
+  } else {
+    alert("Incorrect password.");
+  }
+};
