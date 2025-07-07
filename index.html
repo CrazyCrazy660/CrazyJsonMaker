@@ -14,10 +14,14 @@
   <div id="builder"></div>
 
   <div>
-    <button id="presetGalaxyBtn">🌌 Galaxy Preset</button>
-    <button id="clearBtn">🧹 Clear All</button>
+    <select id="presetDropdown">
+      <option value="">-- Select Preset --</option>
+      <option value="galaxy">🌌 Galaxy Preset</option>
+      <option value="clear">🧹 Clear All</option>
+    </select>
     <input id="filenameInput" placeholder="Filename..." />
     <button id="downloadBtn">⬇️ Download JSON</button>
+    <button id="releaseNotesBtn">📋 Release Notes</button>
   </div>
 
   <pre id="output"></pre>
@@ -27,7 +31,20 @@
   <div id="adminPanel" style="display: none;">
     <h2>Admin Panel</h2>
     <p>You have access to admin features.</p>
-    <!-- JS will add item input form here -->
+    <button id="addItemBtn">Add New Item</button>
+    <!-- You can add more admin options here in the future -->
+  </div>
+
+  <!-- Release notes popup -->
+  <div id="releaseNotesPopup" style="display: none; background: #111; color: white; padding: 20px; border: 1px solid #444; position: fixed; top: 20%; left: 10%; right: 10%; z-index: 999;">
+    <h2>Release Notes (v0.1)</h2>
+    <ul>
+      <li>✅ Added Every Item</li>
+      <li>🌌 Added Galaxy Preset</li>
+      <li>🌐 Added The Website</li>
+      <li>👨‍💻 Made By @Crazy on Discord</li>
+    </ul>
+    <button onclick="document.getElementById('releaseNotesPopup').style.display='none'">Close</button>
   </div>
 
   <script src="script.js"></script>
