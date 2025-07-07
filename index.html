@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Animal Company JSON Builder</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <h1>Animal Company JSON Builder</h1>
+
+  <div id="colorPreviewBox">No item selected</div>
+
+  <div id="builder"></div>
+
+  <div>
+    <select id="presetDropdown">
+      <option value="">-- Presets --</option>
+      <option value="galaxy">Galaxy Preset</option>
+      <option value="clear">Clear All</option>
+    </select>
+    <input id="filenameInput" placeholder="Filename..." />
+    <button id="downloadBtn">⬇️ Download JSON</button>
+    <button id="randomToggleBtn">🎲 Auto Random: OFF</button>
+  </div>
+
+  <pre id="output"></pre>
+
+  <button id="adminBtn" style="position: fixed; bottom: 10px; left: 10px;">Admin</button>
+
+  <div id="adminPanel" style="display: none;">
+    <h2>Admin Panel</h2>
+    <p>You have access to admin features.</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
