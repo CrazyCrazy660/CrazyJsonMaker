@@ -18,29 +18,9 @@ const items = [
 const bodyParts = ["leftHand", "rightHand", "leftHip", "rightHip", "back"];
 const builder = document.getElementById("builder");
 const output = document.getElementById("output");
+const presetSelect = document.getElementById("presetSelect");
 let selectedBlock = null;
-let autoRandomize = false;
-let isAdmin = false;
-
-const toggleRandomBtn = document.createElement("button");
-toggleRandomBtn.textContent = "🎲 Auto Random: OFF";
-toggleRandomBtn.onclick = () => {
-  autoRandomize = !autoRandomize;
-  toggleRandomBtn.textContent = "🎲 Auto Random: " + (autoRandomize ? "ON" : "OFF");
-};
-document.body.insertBefore(toggleRandomBtn, builder);
-
-function updateOutputJSON() {
-  const result = { version: 1 };
-  document.querySelectorAll("[data-slot]").forEach(section => {
-    const block = section.querySelector(".item-block");
-    if (block) {
-      result[section.dataset.slot] = block.toJSON() || {};
-    }
-  });
-  output.textContent = JSON.stringify(result, null, 2);
-  localStorage.setItem("animalCompanyJson", output.textContent);
-}
+let autoRandomize = true;
 
 function makeSlider(label, min, max, defaultVal) {
   const wrapper = document.createElement("div");
@@ -61,11 +41,11 @@ function makeSlider(label, min, max, defaultVal) {
   const btn = document.createElement("button");
   btn.textContent = "🎲";
   btn.onclick = () => {
-    const val = (label === "Scale")
-      ? Math.floor(Math.random() * 256) - 128
-      : (label === "Saturation")
+    const val = label === "Hue"
+      ? Math.floor(Math.random() * 241)
+      : label === "Saturation"
         ? Math.floor(Math.random() * 321) - 120
-        : Math.floor(Math.random() * 241);
+        : Math.floor(Math.random() * 256) - 128;
     input.value = val;
     input.dispatchEvent(new Event("input"));
   };
@@ -81,13 +61,13 @@ function makeSlider(label, min, max, defaultVal) {
 
 function applyRandomization(inputs) {
   if (!inputs || inputs.length < 3) return;
-  inputs[0].value = Math.floor(Math.random() * 241); // hue
-  inputs[1].value = Math.floor(Math.random() * 321) - 120; // sat
-  inputs[2].value = Math.floor(Math.random() * 256) - 128; // scale
+  inputs[0].value = Math.floor(Math.random() * 241);
+  inputs[1].value = Math.floor(Math.random() * 321) - 120;
+  inputs[2].value = Math.floor(Math.random() * 256) - 128;
   inputs.forEach(i => i.dispatchEvent(new Event("input")));
 }
 
-function originalCreateItemBlock() {
+function createItemBlock() {
   const wrapper = document.createElement("div");
   wrapper.className = "item-block";
 
@@ -111,6 +91,8 @@ function originalCreateItemBlock() {
   const scale = makeSlider("Scale", -128, 127, 0);
   row.append(hue.wrapper, sat.wrapper, scale.wrapper);
 
+  if (autoRandomize) applyRandomization([hue.input, sat.input, scale.input]);
+
   const children = document.createElement("div");
   children.className = "children";
 
@@ -132,9 +114,7 @@ function originalCreateItemBlock() {
       colorSaturation: +sat.input.value,
       scale: +scale.input.value
     };
-    const kids = Array.from(children.children)
-      .map(c => c.toJSON())
-      .filter(Boolean);
+    const kids = Array.from(children.children).map(c => c.toJSON()).filter(Boolean);
     if (kids.length) json.children = kids;
     return json;
   };
@@ -147,15 +127,6 @@ function originalCreateItemBlock() {
   };
 
   return wrapper;
-}
-
-function createItemBlock() {
-  const block = originalCreateItemBlock();
-  if (autoRandomize) {
-    const sliders = block.querySelectorAll("input[type=range]");
-    applyRandomization(sliders);
-  }
-  return block;
 }
 
 function createSlot(slot) {
@@ -171,23 +142,70 @@ function createSlot(slot) {
   builder.appendChild(container);
 }
 
-bodyParts.forEach(createSlot);
-updateOutputJSON();
+function updateOutputJSON() {
+  const result = { version: 1 };
+  document.querySelectorAll("[data-slot]").forEach(section => {
+    const block = section.querySelector(".item-block");
+    if (block) {
+      result[section.dataset.slot] = block.toJSON() || {};
+    }
+  });
+  output.textContent = JSON.stringify(result, null, 2);
+  localStorage.setItem("animalCompanyJson", output.textContent);
+}
 
-document.getElementById("presetGalaxyBtn").onclick = () => {
-  if (!selectedBlock) return alert("Select an item block first.");
-  const inputs = selectedBlock.querySelectorAll("input[type=range]");
-  inputs[0].value = 180;
-  inputs[1].value = 117;
-  inputs.forEach(i => i.dispatchEvent(new Event("input")));
-};
+function restoreFromStorage() {
+  const stored = localStorage.getItem("animalCompanyJson");
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      builder.innerHTML = "";
+      bodyParts.forEach(slot => {
+        const container = document.createElement("div");
+        container.dataset.slot = slot;
 
-document.getElementById("clearBtn").onclick = () => {
-  if (!confirm("Clear everything?")) return;
-  builder.innerHTML = "";
-  bodyParts.forEach(createSlot);
-  output.textContent = "";
-  selectedBlock = null;
+        const title = document.createElement("h2");
+        title.textContent = slot;
+        container.appendChild(title);
+
+        const block = createItemBlock();
+        const data = parsed[slot];
+        if (data && data.itemID) {
+          block.querySelector("select").value = data.itemID;
+          const sliders = block.querySelectorAll("input[type=range]");
+          if (sliders.length === 3) {
+            sliders[0].value = data.colorHue ?? 0;
+            sliders[1].value = data.colorSaturation ?? 0;
+            sliders[2].value = data.scale ?? 0;
+          }
+        }
+        container.appendChild(block);
+        builder.appendChild(container);
+      });
+      updateOutputJSON();
+    } catch (e) {
+      console.warn("Invalid JSON in storage.");
+    }
+  } else {
+    bodyParts.forEach(createSlot);
+    updateOutputJSON();
+  }
+}
+
+presetSelect.onchange = () => {
+  if (presetSelect.value === "galaxy") {
+    if (!selectedBlock) return alert("Select an item block first.");
+    const inputs = selectedBlock.querySelectorAll("input[type=range]");
+    inputs[0].value = 180;
+    inputs[1].value = 117;
+    inputs.forEach(i => i.dispatchEvent(new Event("input")));
+  } else if (presetSelect.value === "clear") {
+    if (!confirm("Clear all items?")) return;
+    builder.innerHTML = "";
+    bodyParts.forEach(createSlot);
+    updateOutputJSON();
+  }
+  presetSelect.value = "";
 };
 
 document.getElementById("downloadBtn").onclick = () => {
@@ -200,26 +218,19 @@ document.getElementById("downloadBtn").onclick = () => {
   a.click();
 };
 
-// Password: CrazyJson (SHA-256)
-const correctHash = "ac3d7a4f6f8ad10554a0edc0f61b8a5a1c1bb7a0718e4ce5e47c6eb1be14c5d4";
-
-async function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(hashBuffer))
-    .map(b => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
 document.getElementById("adminBtn").onclick = async () => {
-  const input = prompt("Enter admin password:");
-  const hashedInput = await hashPassword(input);
-  if (hashedInput === correctHash) {
-    isAdmin = true;
+  const pass = prompt("Enter admin password:");
+  if (!pass) return;
+  const hash = await hashPassword(pass);
+  if (hash === "c8d0c8f92043830a169b76b9cb3a1fef34d31d3a1c2d3e47cbe35a401f146cfb") {
     document.getElementById("adminPanel").style.display = "block";
     alert("Admin access granted!");
   } else {
     alert("Incorrect password.");
   }
 };
+
+async function hashPassword(str) {
+  const enc = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(n
