@@ -18,9 +18,30 @@ const items = [
 const bodyParts = ["leftHand", "rightHand", "leftHip", "rightHip", "back"];
 const builder = document.getElementById("builder");
 const output = document.getElementById("output");
-const presetSelect = document.getElementById("presetSelect");
 let selectedBlock = null;
-let autoRandomize = true;
+let autoRandomize = false;
+
+const toggleRandomBtn = document.createElement("button");
+toggleRandomBtn.textContent = "🎲 Auto Random: OFF";
+toggleRandomBtn.onclick = () => {
+  autoRandomize = !autoRandomize;
+  toggleRandomBtn.textContent = "🎲 Auto Random: " + (autoRandomize ? "ON" : "OFF");
+  saveBuilderState();
+};
+document.body.insertBefore(toggleRandomBtn, builder);
+
+function updateOutputJSON() {
+  const result = { version: 1 };
+  document.querySelectorAll("[data-slot]").forEach(section => {
+    const block = section.querySelector(".item-block");
+    if (block) {
+      result[section.dataset.slot] = block.toJSON() || {};
+    }
+  });
+  const jsonStr = JSON.stringify(result, null, 2);
+  output.textContent = jsonStr;
+  localStorage.setItem("animalCompanyJson", jsonStr);
+}
 
 function makeSlider(label, min, max, defaultVal) {
   const wrapper = document.createElement("div");
@@ -41,11 +62,11 @@ function makeSlider(label, min, max, defaultVal) {
   const btn = document.createElement("button");
   btn.textContent = "🎲";
   btn.onclick = () => {
-    const val = label === "Hue"
-      ? Math.floor(Math.random() * 241)
-      : label === "Saturation"
+    const val = (label === "Scale")
+      ? Math.floor(Math.random() * 256) - 128
+      : (label === "Saturation")
         ? Math.floor(Math.random() * 321) - 120
-        : Math.floor(Math.random() * 256) - 128;
+        : Math.floor(Math.random() * 241);
     input.value = val;
     input.dispatchEvent(new Event("input"));
   };
@@ -61,13 +82,13 @@ function makeSlider(label, min, max, defaultVal) {
 
 function applyRandomization(inputs) {
   if (!inputs || inputs.length < 3) return;
-  inputs[0].value = Math.floor(Math.random() * 241);
-  inputs[1].value = Math.floor(Math.random() * 321) - 120;
-  inputs[2].value = Math.floor(Math.random() * 256) - 128;
+  inputs[0].value = Math.floor(Math.random() * 241); // hue 0–240
+  inputs[1].value = Math.floor(Math.random() * 321) - 120; // sat -120 to 200
+  inputs[2].value = Math.floor(Math.random() * 256) - 128; // scale
   inputs.forEach(i => i.dispatchEvent(new Event("input")));
 }
 
-function createItemBlock() {
+function originalCreateItemBlock() {
   const wrapper = document.createElement("div");
   wrapper.className = "item-block";
 
@@ -91,20 +112,37 @@ function createItemBlock() {
   const scale = makeSlider("Scale", -128, 127, 0);
   row.append(hue.wrapper, sat.wrapper, scale.wrapper);
 
-  if (autoRandomize) applyRandomization([hue.input, sat.input, scale.input]);
-
   const children = document.createElement("div");
   children.className = "children";
 
+  const btnRow = document.createElement("div");
+  btnRow.style.marginTop = "10px";
+  btnRow.style.display = "flex";
+  btnRow.style.gap = "10px";
+
   const addChildBtn = document.createElement("button");
-  addChildBtn.textContent = "Add Child";
+  addChildBtn.textContent = "➕ Add Child";
   addChildBtn.onclick = () => {
     const child = createItemBlock();
     children.appendChild(child);
     updateOutputJSON();
   };
 
-  wrapper.append(select, row, addChildBtn, children);
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "🗑️ Delete";
+  deleteBtn.onclick = () => {
+    if (wrapper.parentElement.classList.contains("children")) {
+      wrapper.remove();
+      updateOutputJSON();
+    } else {
+      alert("You can't delete the root item block of a body part.");
+    }
+  };
+
+  btnRow.appendChild(addChildBtn);
+  btnRow.appendChild(deleteBtn);
+
+  wrapper.append(select, row, btnRow, children);
 
   wrapper.toJSON = () => {
     if (!select.value) return null;
@@ -114,7 +152,9 @@ function createItemBlock() {
       colorSaturation: +sat.input.value,
       scale: +scale.input.value
     };
-    const kids = Array.from(children.children).map(c => c.toJSON()).filter(Boolean);
+    const kids = Array.from(children.children)
+      .map(c => c.toJSON())
+      .filter(Boolean);
     if (kids.length) json.children = kids;
     return json;
   };
@@ -127,6 +167,15 @@ function createItemBlock() {
   };
 
   return wrapper;
+}
+
+function createItemBlock() {
+  const block = originalCreateItemBlock();
+  if (autoRandomize) {
+    const sliders = block.querySelectorAll("input[type=range]");
+    applyRandomization(sliders);
+  }
+  return block;
 }
 
 function createSlot(slot) {
@@ -142,49 +191,40 @@ function createSlot(slot) {
   builder.appendChild(container);
 }
 
-function updateOutputJSON() {
-  const result = { version: 1 };
-  document.querySelectorAll("[data-slot]").forEach(section => {
-    const block = section.querySelector(".item-block");
-    if (block) {
-      result[section.dataset.slot] = block.toJSON() || {};
-    }
-  });
-  output.textContent = JSON.stringify(result, null, 2);
-  localStorage.setItem("animalCompanyJson", output.textContent);
+function saveBuilderState() {
+  updateOutputJSON(); // already saves to localStorage
 }
 
-function restoreFromStorage() {
-  const stored = localStorage.getItem("animalCompanyJson");
-  if (stored) {
+function loadSavedBuilder() {
+  const saved = localStorage.getItem("animalCompanyJson");
+  if (saved) {
     try {
-      const parsed = JSON.parse(stored);
-      builder.innerHTML = "";
-      bodyParts.forEach(slot => {
-        const container = document.createElement("div");
-        container.dataset.slot = slot;
+      const data = JSON.parse(saved);
+      if (data.version === 1) {
+        builder.innerHTML = "";
+        bodyParts.forEach(slot => {
+          const container = document.createElement("div");
+          container.dataset.slot = slot;
+          const title = document.createElement("h2");
+          title.textContent = slot;
+          container.appendChild(title);
+          const block = createItemBlock();
+          container.appendChild(block);
+          builder.appendChild(container);
 
-        const title = document.createElement("h2");
-        title.textContent = slot;
-        container.appendChild(title);
-
-        const block = createItemBlock();
-        const data = parsed[slot];
-        if (data && data.itemID) {
-          block.querySelector("select").value = data.itemID;
-          const sliders = block.querySelectorAll("input[type=range]");
-          if (sliders.length === 3) {
-            sliders[0].value = data.colorHue ?? 0;
-            sliders[1].value = data.colorSaturation ?? 0;
-            sliders[2].value = data.scale ?? 0;
+          if (data[slot]) {
+            const s = block.querySelector("select");
+            s.value = data[slot].itemID;
+            const sliders = block.querySelectorAll("input[type=range]");
+            sliders[0].value = data[slot].colorHue;
+            sliders[1].value = data[slot].colorSaturation;
+            sliders[2].value = data[slot].scale;
           }
-        }
-        container.appendChild(block);
-        builder.appendChild(container);
-      });
-      updateOutputJSON();
+        });
+        updateOutputJSON();
+      }
     } catch (e) {
-      console.warn("Invalid JSON in storage.");
+      console.error("Error loading saved JSON", e);
     }
   } else {
     bodyParts.forEach(createSlot);
@@ -192,21 +232,47 @@ function restoreFromStorage() {
   }
 }
 
-presetSelect.onchange = () => {
-  if (presetSelect.value === "galaxy") {
-    if (!selectedBlock) return alert("Select an item block first.");
-    const inputs = selectedBlock.querySelectorAll("input[type=range]");
-    inputs[0].value = 180;
-    inputs[1].value = 117;
-    inputs.forEach(i => i.dispatchEvent(new Event("input")));
-  } else if (presetSelect.value === "clear") {
-    if (!confirm("Clear all items?")) return;
-    builder.innerHTML = "";
-    bodyParts.forEach(createSlot);
-    updateOutputJSON();
-  }
-  presetSelect.value = "";
+const ADMIN_PASSWORD_HASH = "dcbd7e4580ef2bdc5ce8aa3583fd4554b11e260fc7a99fdb18366e58a4edc0e5";
+
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+document.getElementById("adminBtn").addEventListener("click", () => {
+  setTimeout(async () => {
+    const pass = prompt("Enter admin password:");
+    if (!pass) return;
+    const hash = await hashPassword(pass);
+    if (hash === ADMIN_PASSWORD_HASH) {
+      document.getElementById("adminPanel").style.display = "block";
+      alert("Admin access granted!");
+    } else {
+      alert("Incorrect password.");
+    }
+  }, 50);
+});
+
+document.getElementById("presetGalaxyBtn").onclick = () => {
+  if (!selectedBlock) return alert("Select an item block first.");
+  const inputs = selectedBlock.querySelectorAll("input[type=range]");
+  inputs[0].value = 180;
+  inputs[1].value = 117;
+  inputs.forEach(i => i.dispatchEvent(new Event("input")));
 };
+
+document.getElementById("clearBtn")?.addEventListener("click", () => {
+  if (!confirm("Clear everything?")) return;
+  builder.innerHTML = "";
+  bodyParts.forEach(createSlot);
+  output.textContent = "";
+  selectedBlock = null;
+  localStorage.removeItem("animalCompanyJson");
+});
 
 document.getElementById("downloadBtn").onclick = () => {
   const json = output.textContent;
@@ -218,23 +284,4 @@ document.getElementById("downloadBtn").onclick = () => {
   a.click();
 };
 
-document.getElementById("adminBtn").onclick = async () => {
-  const pass = prompt("Enter admin password:");
-  if (!pass) return;
-  const hash = await hashPassword(pass);
-  if (hash === "c8d0c8f92043830a169b76b9cb3a1fef34d31d3a1c2d3e47cbe35a401f146cfb") {
-    document.getElementById("adminPanel").style.display = "block";
-    alert("Admin access granted!");
-  } else {
-    alert("Incorrect password.");
-  }
-};
-
-async function hashPassword(str) {
-  const enc = new TextEncoder().encode(str);
-  const buf = await crypto.subtle.digest("SHA-256", enc);
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-}
-
-// Initialize
-restoreFromStorage();
+loadSavedBuilder();
