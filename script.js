@@ -74,23 +74,46 @@ function applyRandomization(inputs) {
   inputs.forEach(i => i.dispatchEvent(new Event("input")));
 }
 
-// ————— ITEM‑BLOCK CREATION —————
+// ————— ITEM‑BLOCK CREATION (with SEARCH) —————
 function originalCreateItemBlock() {
   const wrapper = document.createElement("div");
   wrapper.className = "item-block";
 
-  // select
+  // Search + Select Container
+  const wrapperDiv = document.createElement("div");
+  wrapperDiv.style.display = "flex";
+  wrapperDiv.style.flexDirection = "column";
+
+  const searchInput = document.createElement("input");
+  searchInput.placeholder = "Search items...";
+  searchInput.style.marginBottom = "4px";
+
   const select = document.createElement("select");
+  const allOptions = [];
   const none = document.createElement("option");
   none.value = ""; none.textContent = "-- None --";
-  select.append(none);
+  select.append(none); allOptions.push(none);
+
   items.forEach(({ name, id }) => {
     const o = document.createElement("option");
     o.value = id; o.textContent = name;
     select.append(o);
+    allOptions.push(o);
   });
 
-  // sliders row
+  searchInput.addEventListener("input", () => {
+    const q = searchInput.value.toLowerCase();
+    select.innerHTML = "";
+    allOptions.forEach(opt => {
+      if (opt.textContent.toLowerCase().includes(q) || opt.value === "") {
+        select.append(opt);
+      }
+    });
+  });
+
+  wrapperDiv.append(searchInput, select);
+
+  // Sliders
   const row = document.createElement("div");
   row.className = "input-row";
   const hue = makeSlider("Hue", 0, 240, 0);
@@ -98,7 +121,7 @@ function originalCreateItemBlock() {
   const scale = makeSlider("Scale", -128, 127, 0);
   row.append(hue.wrapper, sat.wrapper, scale.wrapper);
 
-  // children + controls
+  // Children + Buttons
   const children = document.createElement("div");
   children.className = "children";
   const btnRow = document.createElement("div");
@@ -118,8 +141,8 @@ function originalCreateItemBlock() {
   };
   btnRow.append(addChildBtn, delBtn);
 
-  // assemble
-  wrapper.append(select, row, btnRow, children);
+  // Assemble
+  wrapper.append(wrapperDiv, row, btnRow, children);
   wrapper.toJSON = () => {
     if (!select.value) return null;
     const json = {
@@ -143,13 +166,15 @@ function originalCreateItemBlock() {
   return wrapper;
 }
 function createItemBlock() {
-  const block = originalCreateItemBlock();
+  const b = originalCreateItemBlock();
   if (autoRandomize) {
-    const s = block.querySelectorAll("input[type=range]");
+    const s = b.querySelectorAll("input[type=range]");
     applyRandomization(s);
   }
-  return block;
+  return b;
 }
+
+// ————— SLOTS, SAVE, LOAD —————
 function createSlot(slot) {
   const cont = document.createElement("div");
   cont.dataset.slot = slot;
