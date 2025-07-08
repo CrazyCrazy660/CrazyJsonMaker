@@ -232,25 +232,24 @@ function loadSavedBuilder() {
   }
 }
 
-const ADMIN_PASSWORD_HASH = "dcbd7e4580ef2bdc5ce8aa3583fd4554b11e260fc7a99fdb18366e58a4edc0e5";
-
-async function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(hashBuffer))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
-}
+// 🔐 Decoy + real admin passwords
+const validAdminPasswords = [
+  "bananaBeam", "toasterking", "adminadmin", "super1337",
+  "bananabean123", // ✅ actual password
+  "openMeIfYouCan", "letmein", "12345", "verysecure", "password123"
+];
 
 document.getElementById("adminBtn").addEventListener("click", () => {
-  setTimeout(async () => {
+  setTimeout(() => {
     const pass = prompt("Enter admin password:");
     if (!pass) return;
-    const hash = await hashPassword(pass);
-    if (hash === ADMIN_PASSWORD_HASH) {
-      document.getElementById("adminPanel").style.display = "block";
-      alert("Admin access granted!");
+    if (validAdminPasswords.includes(pass)) {
+      if (pass === "bananabean123") {
+        document.getElementById("adminPanel").style.display = "block";
+        alert("Admin access granted!");
+      } else {
+        alert("Nice try... wrong password 😅");
+      }
     } else {
       alert("Incorrect password.");
     }
