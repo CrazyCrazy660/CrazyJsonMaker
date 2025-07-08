@@ -1,3 +1,4 @@
+// ————— DATA & ELEMENT SETUP —————
 const items = [
   { name: "Apple", id: "item_apple" },
   { name: "Backpack", id: "item_backpack" },
@@ -21,65 +22,50 @@ const output = document.getElementById("output");
 let selectedBlock = null;
 let autoRandomize = false;
 
+// ————— AUTO‑RANDOM TOGGLE —————
 const toggleRandomBtn = document.createElement("button");
 toggleRandomBtn.textContent = "🎲 Auto Random: OFF";
 toggleRandomBtn.onclick = () => {
   autoRandomize = !autoRandomize;
-  toggleRandomBtn.textContent = "🎲 Auto Random: " + (autoRandomize ? "ON" : "OFF");
+  toggleRandomBtn.textContent = `🎲 Auto Random: ${autoRandomize ? "ON" : "OFF"}`;
   saveBuilderState();
 };
 document.body.insertBefore(toggleRandomBtn, builder);
 
+// ————— JSON OUTPUT & SAVE —————
 function updateOutputJSON() {
-  const result = { version: 1 };
-  document.querySelectorAll("[data-slot]").forEach(section => {
-    const block = section.querySelector(".item-block");
-    if (block) {
-      result[section.dataset.slot] = block.toJSON() || {};
-    }
+  const res = { version: 1 };
+  document.querySelectorAll("[data-slot]").forEach(sec => {
+    const blk = sec.querySelector(".item-block");
+    if (blk) res[sec.dataset.slot] = blk.toJSON() || {};
   });
-  const jsonStr = JSON.stringify(result, null, 2);
-  output.textContent = jsonStr;
-  localStorage.setItem("animalCompanyJson", jsonStr);
+  const str = JSON.stringify(res, null, 2);
+  output.textContent = str;
+  localStorage.setItem("animalCompanyJson", str);
 }
 
-function makeSlider(label, min, max, defaultVal) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "input-column";
-
-  const input = document.createElement("input");
-  input.type = "range";
-  input.min = min;
-  input.max = max;
-  input.value = defaultVal;
-
-  const labelElem = document.createElement("label");
-  labelElem.textContent = label + ": ";
-  const valueSpan = document.createElement("span");
-  valueSpan.textContent = input.value;
-  labelElem.appendChild(valueSpan);
-
-  const btn = document.createElement("button");
-  btn.textContent = "🎲";
+// ————— SLIDER CREATION —————
+function makeSlider(label, min, max, def) {
+  const w = document.createElement("div"), inp = document.createElement("input");
+  w.className = "input-column";
+  inp.type = "range"; inp.min = min; inp.max = max; inp.value = def;
+  const lbl = document.createElement("label"), span = document.createElement("span");
+  lbl.textContent = `${label}: `; span.textContent = inp.value; lbl.append(span);
+  const btn = document.createElement("button"); btn.textContent = "🎲";
   btn.onclick = () => {
-    const val = (label === "Scale")
+    const v = label === "Scale"
       ? Math.floor(Math.random() * 256) - 128
-      : (label === "Saturation")
+      : label === "Saturation"
         ? Math.floor(Math.random() * 321) - 120
         : Math.floor(Math.random() * 241);
-    input.value = val;
-    input.dispatchEvent(new Event("input"));
+    inp.value = v; inp.dispatchEvent(new Event("input"));
   };
-
-  input.oninput = () => {
-    valueSpan.textContent = input.value;
-    updateOutputJSON();
-  };
-
-  wrapper.append(labelElem, input, btn);
-  return { input, wrapper };
+  inp.oninput = () => (span.textContent = inp.value, updateOutputJSON());
+  w.append(lbl, inp, btn);
+  return { input: inp, wrapper: w };
 }
 
+// ————— RANDOMIZER —————
 function applyRandomization(inputs) {
   if (!inputs || inputs.length < 3) return;
   inputs[0].value = Math.floor(Math.random() * 241);
@@ -88,62 +74,52 @@ function applyRandomization(inputs) {
   inputs.forEach(i => i.dispatchEvent(new Event("input")));
 }
 
+// ————— ITEM‑BLOCK CREATION —————
 function originalCreateItemBlock() {
   const wrapper = document.createElement("div");
   wrapper.className = "item-block";
 
+  // select
   const select = document.createElement("select");
-  const empty = document.createElement("option");
-  empty.value = "";
-  empty.textContent = "-- None --";
-  select.appendChild(empty);
+  const none = document.createElement("option");
+  none.value = ""; none.textContent = "-- None --";
+  select.append(none);
   items.forEach(({ name, id }) => {
-    const opt = document.createElement("option");
-    opt.value = id;
-    opt.textContent = name;
-    select.appendChild(opt);
+    const o = document.createElement("option");
+    o.value = id; o.textContent = name;
+    select.append(o);
   });
 
+  // sliders row
   const row = document.createElement("div");
   row.className = "input-row";
-
   const hue = makeSlider("Hue", 0, 240, 0);
   const sat = makeSlider("Saturation", -120, 200, 0);
   const scale = makeSlider("Scale", -128, 127, 0);
   row.append(hue.wrapper, sat.wrapper, scale.wrapper);
 
+  // children + controls
   const children = document.createElement("div");
   children.className = "children";
-
   const btnRow = document.createElement("div");
-  btnRow.style.marginTop = "10px";
-  btnRow.style.display = "flex";
-  btnRow.style.gap = "10px";
-
+  btnRow.style = "margin-top:10px;display:flex;gap:10px";
   const addChildBtn = document.createElement("button");
   addChildBtn.textContent = "➕ Add Child";
   addChildBtn.onclick = () => {
-    const child = createItemBlock();
-    children.appendChild(child);
+    children.appendChild(createItemBlock());
     updateOutputJSON();
   };
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "🗑️ Delete";
-  deleteBtn.onclick = () => {
+  const delBtn = document.createElement("button");
+  delBtn.textContent = "🗑️ Delete";
+  delBtn.onclick = () => {
     if (wrapper.parentElement.classList.contains("children")) {
-      wrapper.remove();
-      updateOutputJSON();
-    } else {
-      alert("You can't delete the root item block of a body part.");
-    }
+      wrapper.remove(); updateOutputJSON();
+    } else alert("Can't delete the root block.");
   };
+  btnRow.append(addChildBtn, delBtn);
 
-  btnRow.appendChild(addChildBtn);
-  btnRow.appendChild(deleteBtn);
-
+  // assemble
   wrapper.append(select, row, btnRow, children);
-
   wrapper.toJSON = () => {
     if (!select.value) return null;
     const json = {
@@ -153,12 +129,10 @@ function originalCreateItemBlock() {
       scale: +scale.input.value
     };
     const kids = Array.from(children.children)
-      .map(c => c.toJSON())
-      .filter(Boolean);
+      .map(c => c.toJSON()).filter(Boolean);
     if (kids.length) json.children = kids;
     return json;
   };
-
   wrapper.onclick = e => {
     e.stopPropagation();
     if (selectedBlock) selectedBlock.style.outline = "";
@@ -168,33 +142,25 @@ function originalCreateItemBlock() {
 
   return wrapper;
 }
-
 function createItemBlock() {
   const block = originalCreateItemBlock();
   if (autoRandomize) {
-    const sliders = block.querySelectorAll("input[type=range]");
-    applyRandomization(sliders);
+    const s = block.querySelectorAll("input[type=range]");
+    applyRandomization(s);
   }
   return block;
 }
-
 function createSlot(slot) {
-  const container = document.createElement("div");
-  container.dataset.slot = slot;
-
-  const title = document.createElement("h2");
-  title.textContent = slot;
-  container.appendChild(title);
-
-  const block = createItemBlock();
-  container.appendChild(block);
-  builder.appendChild(container);
+  const cont = document.createElement("div");
+  cont.dataset.slot = slot;
+  const t = document.createElement("h2");
+  t.textContent = slot;
+  cont.append(t, createItemBlock());
+  builder.append(cont);
 }
-
 function saveBuilderState() {
   updateOutputJSON();
 }
-
 function loadSavedBuilder() {
   const saved = localStorage.getItem("animalCompanyJson");
   if (saved) {
@@ -203,84 +169,92 @@ function loadSavedBuilder() {
       if (data.version === 1) {
         builder.innerHTML = "";
         bodyParts.forEach(slot => {
-          const container = document.createElement("div");
-          container.dataset.slot = slot;
-          const title = document.createElement("h2");
-          title.textContent = slot;
-          container.appendChild(title);
-          const block = createItemBlock();
-          container.appendChild(block);
-          builder.appendChild(container);
+          const cont = document.createElement("div");
+          cont.dataset.slot = slot;
+          const t = document.createElement("h2");
+          t.textContent = slot;
+          cont.append(t, createItemBlock());
+          builder.append(cont);
 
           if (data[slot]) {
-            const s = block.querySelector("select");
-            s.value = data[slot].itemID;
-            const sliders = block.querySelectorAll("input[type=range]");
-            sliders[0].value = data[slot].colorHue;
-            sliders[1].value = data[slot].colorSaturation;
-            sliders[2].value = data[slot].scale;
+            const blk = cont.querySelector(".item-block");
+            blk.querySelector("select").value = data[slot].itemID;
+            const sl = blk.querySelectorAll("input[type=range]");
+            sl[0].value = data[slot].colorHue;
+            sl[1].value = data[slot].colorSaturation;
+            sl[2].value = data[slot].scale;
           }
         });
         updateOutputJSON();
+        return;
       }
-    } catch (e) {
-      console.error("Error loading saved JSON", e);
-    }
-  } else {
-    bodyParts.forEach(createSlot);
-    updateOutputJSON();
+    } catch {}
   }
+  bodyParts.forEach(createSlot);
+  updateOutputJSON();
 }
 
-// 🔐 Decoy + real admin passwords
-const validAdminPasswords = [
-  "bananaBeam", "toasterking", "adminadmin", "super1337",
-  "bananabean123", // ✅ actual password
-  "openMeIfYouCan", "letmein", "12345", "verysecure", "password123"
-];
+// ————— ADMIN PASSWORD OBSCURATION —————
+const actualPassword = "CrazyJson";
+function generateDecoys(count = 500) {
+  const adjectives = [
+    "Laser","Waffle","Octopus","Chair","Wizard","Sloth","Toaster","Glitch",
+    "Penguin","Yogurt","Tornado","Bagel","Fox","Train","Robot","Melon",
+    "Cactus","Beard","Spoon","Dragon","Umbrella","Bubble","Sword","Jetpack",
+    "Dino","Crayon","Kite","Hammer","Donut","Taco","Lamp","Parrot","Pizza",
+    "Ladder","Helmet","Planet","Storm","Banana","Pickle","Unicorn","Toast",
+    "Pineapple","Duck","Mushroom","Giraffe","Burrito","Waterfall","Llama",
+    "Snake","Glove","Cannon","Rocket","Mango","Alien","Saucer"
+  ];
+  const set = new Set();
+  while (set.size < count) {
+    const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+    set.add(`Crazy${adj}${Math.floor(Math.random() * 10000)}`);
+  }
+  return [...set];
+}
+const decoys = generateDecoys();
+const idx = Math.floor(Math.random() * 301) + 100;
+decoys.splice(idx, 0, actualPassword);
+const validAdminPasswords = decoys;
 
+// ————— ADMIN PANEL LOGIC —————
 document.getElementById("adminBtn").addEventListener("click", () => {
   setTimeout(() => {
-    const pass = prompt("Enter admin password:");
-    if (!pass) return;
-    if (validAdminPasswords.includes(pass)) {
-      if (pass === "bananabean123") {
+    const p = prompt("Enter admin password:");
+    if (!p) return;
+    if (validAdminPasswords.includes(p)) {
+      if (p === actualPassword) {
         document.getElementById("adminPanel").style.display = "block";
         alert("Admin access granted!");
-      } else {
-        alert("Nice try... wrong password 😅");
-      }
-    } else {
-      alert("Incorrect password.");
-    }
+      } else alert("Nice try... wrong password 😅");
+    } else alert("Incorrect password.");
   }, 50);
 });
 
+// ————— BUTTONS —————
 document.getElementById("presetGalaxyBtn").onclick = () => {
   if (!selectedBlock) return alert("Select an item block first.");
-  const inputs = selectedBlock.querySelectorAll("input[type=range]");
-  inputs[0].value = 180;
-  inputs[1].value = 117;
-  inputs.forEach(i => i.dispatchEvent(new Event("input")));
+  const sl = selectedBlock.querySelectorAll("input[type=range]");
+  sl[0].value = 180; sl[1].value = 117;
+  sl.forEach(i => i.dispatchEvent(new Event("input")));
 };
-
 document.getElementById("clearBtn")?.addEventListener("click", () => {
   if (!confirm("Clear everything?")) return;
-  builder.innerHTML = "";
+  builder.innerHTML = ""; selectedBlock = null;
   bodyParts.forEach(createSlot);
   output.textContent = "";
-  selectedBlock = null;
   localStorage.removeItem("animalCompanyJson");
 });
-
 document.getElementById("downloadBtn").onclick = () => {
-  const json = output.textContent;
-  const filename = (document.getElementById("filenameInput").value || "CrazyJsons") + ".json";
-  const blob = new Blob([json], { type: "application/json" });
+  const j = output.textContent;
+  const fn = (document.getElementById("filenameInput").value || "CrazyJsons") + ".json";
+  const blob = new Blob([j], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = filename;
+  a.download = fn;
   a.click();
 };
 
+// ————— INITIALIZE —————
 loadSavedBuilder();
