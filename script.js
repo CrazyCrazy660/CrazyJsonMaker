@@ -82,9 +82,9 @@ function makeSlider(label, min, max, defaultVal) {
 
 function applyRandomization(inputs) {
   if (!inputs || inputs.length < 3) return;
-  inputs[0].value = Math.floor(Math.random() * 241); // hue 0–240
-  inputs[1].value = Math.floor(Math.random() * 321) - 120; // sat -120 to 200
-  inputs[2].value = Math.floor(Math.random() * 256) - 128; // scale
+  inputs[0].value = Math.floor(Math.random() * 241);
+  inputs[1].value = Math.floor(Math.random() * 321) - 120;
+  inputs[2].value = Math.floor(Math.random() * 256) - 128;
   inputs.forEach(i => i.dispatchEvent(new Event("input")));
 }
 
@@ -192,7 +192,7 @@ function createSlot(slot) {
 }
 
 function saveBuilderState() {
-  updateOutputJSON(); // already saves to localStorage
+  updateOutputJSON();
 }
 
 function loadSavedBuilder() {
