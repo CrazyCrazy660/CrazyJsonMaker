@@ -10,7 +10,6 @@
   <h1>Animal Company JSON Builder</h1>
 
   <div id="colorPreviewBox">No item selected</div>
-
   <div id="builder"></div>
 
   <div class="button-bar">
@@ -30,14 +29,24 @@
   <div id="adminPanel" style="display: none;">
     <h2>Admin Panel</h2>
 
+    <!-- Override options -->
+    <div>
+      <h3>Override Options</h3>
+      <label><input type="checkbox" id="overrideHue" /> Hue to 1000</label><br>
+      <label><input type="checkbox" id="overrideSaturation" /> Saturation to 1000</label><br>
+      <label><input type="checkbox" id="overrideScale" /> Scale to 1000</label>
+    </div>
+
     <button id="adminOverrideBtn">Override Selected Block 🔥</button>
 
+    <!-- Add Item to List -->
     <div style="margin-top: 10px;">
       <input id="newItemName" placeholder="Item Name" />
       <input id="newItemID" placeholder="Item ID" />
       <button id="addNewItemBtn">Add Item</button>
     </div>
 
+    <!-- Feature Locks -->
     <div style="margin-top: 20px;">
       <h3>Feature Locks</h3>
       <label><input type="checkbox" id="lockDownloadBtn" /> Lock Download</label><br>
