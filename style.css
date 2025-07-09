@@ -105,8 +105,7 @@ button {
   cursor: pointer;
 }
 
-input,
-select {
+input, select {
   background: #111;
   color: white;
   border: 1px solid #555;
@@ -121,18 +120,16 @@ select {
   margin-top: 20px;
 }
 
+#adminPanel input {
+  margin: 4px 2px;
+}
+
+#adminPanel button {
+  margin: 6px 2px;
+}
+
 .floating-admin-btn {
   position: fixed;
   bottom: 10px;
   left: 10px;
-}
-
-.children {
-  margin-top: 10px;
-  padding-left: 10px;
-  border-left: 2px dashed #444;
-}
-
-.item-block button {
-  min-width: 100px;
 }
