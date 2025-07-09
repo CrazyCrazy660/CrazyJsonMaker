@@ -14,14 +14,13 @@
   <div id="builder"></div>
 
   <div class="button-bar">
-    <button id="presetGalaxyBtn">🌌 Galaxy Preset</button>
     <select id="presetDropdown">
       <option value="">-- Presets --</option>
+      <option value="galaxy">🌌 Galaxy Preset</option>
       <option value="clear">🧹 Clear All</option>
     </select>
     <input id="filenameInput" placeholder="Filename..." />
     <button id="downloadBtn">⬇️ Download JSON</button>
-    <button id="clearBtn">🗑️ Clear Builder</button>
   </div>
 
   <pre id="output"></pre>
@@ -30,13 +29,16 @@
 
   <div id="adminPanel" style="display: none;">
     <h2>Admin Panel</h2>
-    <p>You have access to admin features.</p>
-    <div>
+
+    <button id="adminOverrideBtn">Override Selected Block 🔥</button>
+
+    <div style="margin-top: 10px;">
       <input id="newItemName" placeholder="Item Name" />
       <input id="newItemID" placeholder="Item ID" />
       <button id="addNewItemBtn">Add Item</button>
     </div>
-    <div>
+
+    <div style="margin-top: 20px;">
       <h3>Feature Locks</h3>
       <label><input type="checkbox" id="lockDownloadBtn" /> Lock Download</label><br>
       <label><input type="checkbox" id="lockClearBtn" /> Lock Clear</label><br>
