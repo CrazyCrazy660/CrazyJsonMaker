@@ -23,18 +23,26 @@
   </div>
 
   <pre id="output"></pre>
-
   <button id="adminBtn" class="floating-admin-btn">Admin</button>
 
   <div id="adminPanel" style="display: none;">
     <h2>Admin Panel</h2>
 
-    <!-- Override options -->
+    <!-- Override Max Sliders -->
     <div>
-      <h3>Override Options</h3>
-      <label><input type="checkbox" id="overrideHue" /> Hue to 1000</label><br>
-      <label><input type="checkbox" id="overrideSaturation" /> Saturation to 1000</label><br>
-      <label><input type="checkbox" id="overrideScale" /> Scale to 1000</label>
+      <h3>Override Max Values</h3>
+      <label>Hue Max:
+        <input type="range" id="overrideHue" min="240" max="1000" value="240" />
+        <span id="hueMaxVal">240</span>
+      </label><br>
+      <label>Saturation Max:
+        <input type="range" id="overrideSaturation" min="200" max="1000" value="200" />
+        <span id="satMaxVal">200</span>
+      </label><br>
+      <label>Scale Max:
+        <input type="range" id="overrideScale" min="127" max="1000" value="127" />
+        <span id="scaleMaxVal">127</span>
+      </label>
     </div>
 
     <button id="adminOverrideBtn">Override Selected Block 🔥</button>
