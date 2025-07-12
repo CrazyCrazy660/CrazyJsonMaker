@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Animal Company JSON Builder</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <h1>Animal Company JSON Builder</h1>
 
-  <!-- Theme dropdown is injected by JS; placeholder for position awareness -->
+  <!-- Theme dropdown (JS injected) -->
   <div id="themePlaceholder"></div>
 
   <div id="colorPreviewBox">No item selected</div>
 
-  <!-- Centered slot selection -->
   <div class="positions-bar" id="positionsBar">
     <button class="pos-btn active" data-slot="leftHand">leftHand</button>
     <button class="pos-btn" data-slot="rightHand">rightHand</button>
@@ -25,7 +24,7 @@
 
   <div class="main-panel">
     <div class="item-panel">
-      <input id="itemSearch" placeholder="Search items..."/>
+      <input id="itemSearch" placeholder="Search items..." />
       <div class="categories" id="categories">
         <button class="cat-btn active" data-cat="all">All</button>
         <button class="cat-btn" data-cat="explosives">Explosives</button>
@@ -41,35 +40,41 @@
 
     <div class="properties-panel">
       <h2>Slot: <span id="selectedItemName">No item selected</span></h2>
+
       <label>Hue: <span id="hueVal">0</span></label>
-      <input type="range" id="hueSlider" min="0" max="240" value="0"/>
+      <input type="range" id="hueSlider" min="0" max="240" value="0" />
+
       <label>Saturation: <span id="satVal">0</span></label>
-      <input type="range" id="satSlider" min="-120" max="200" value="0"/>
+      <input type="range" id="satSlider" min="-120" max="200" value="0" />
+
       <label>Scale: <span id="scaleVal">0</span></label>
-      <input type="range" id="scaleSlider" min="-128" max="127" value="0"/>
+      <input type="range" id="scaleSlider" min="-128" max="127" value="0" />
 
       <label class="label-dark">State:</label>
-      <input type="number" id="stateInput" value="0"/>
+      <input type="number" id="stateInput" value="0" />
+
       <label class="label-dark">Count:</label>
-      <input type="number" id="countInput" value="1"/>
+      <input type="number" id="countInput" value="1" />
 
       <div class="swatches" id="swatchList">
-        <!-- swatches injected by JS -->
+        <!-- Swatches injected by JS -->
       </div>
     </div>
 
     <pre id="output"></pre>
   </div>
 
+  <!-- Admin Access -->
   <button id="adminBtn" class="floating-admin-btn">Admin</button>
 
+  <!-- Admin Panel -->
   <div id="adminPanel">
     <h2>Admin Panel</h2>
     <p>You have access to admin features.</p>
 
     <div>
-      <input id="newItemName" placeholder="Item Name"/>
-      <input id="newItemID" placeholder="Item ID"/>
+      <input id="newItemName" placeholder="Item Name" />
+      <input id="newItemID" placeholder="Item ID" />
       <select id="newItemCategory">
         <option value="misc">Misc</option>
         <option value="ammo">Ammo</option>
@@ -83,17 +88,20 @@
 
     <div>
       <h3>Feature Locks</h3>
-      <label><input type="checkbox" id="lockDownloadBtn"/> Lock Download</label><br/>
-      <label><input type="checkbox" id="lockPresets"/> Lock Presets</label>
+      <label><input type="checkbox" id="lockDownloadBtn" /> Lock Download</label><br />
+      <label><input type="checkbox" id="lockPresets" /> Lock Presets</label>
     </div>
 
     <h3>Override Sliders Max</h3>
     <label>Hue: <span id="hueMaxVal">240</span></label>
-    <input type="range" id="overrideHue" min="0" max="1000" value="240"/>
+    <input type="range" id="overrideHue" min="0" max="1000" value="240" />
+
     <label>Saturation: <span id="satMaxVal">200</span></label>
-    <input type="range" id="overrideSaturation" min="0" max="1000" value="200"/>
+    <input type="range" id="overrideSaturation" min="0" max="1000" value="200" />
+
     <label>Scale: <span id="scaleMaxVal">127</span></label>
-    <input type="range" id="overrideScale" min="0" max="1000" value="127"/>
+    <input type="range" id="overrideScale" min="0" max="1000" value="127" />
+
     <button id="adminOverrideBtn">Apply Override</button>
   </div>
 
