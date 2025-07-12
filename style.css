@@ -1,5 +1,5 @@
 :root {
-  --bg: linear-gradient(135deg, #87cefa, #000);
+  --bg: linear-gradient(135deg, #87cefa, #000000);
   --panel: #2e2e2e;
   --fg: white;
   --btn: #333;
@@ -14,12 +14,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: background 0.5s, color 0.5s;
   text-align: center;
+  transition: background 0.5s, color 0.5s;
 }
 body.light-mode {
-  --bg: linear-gradient(135deg, #001f3f, #fff);
-  --panel: #fff;
+  --bg: linear-gradient(135deg, #001f3f, #ffffff);
+  --panel: #ffffff;
   --fg: black;
   --btn: #ddd;
   --swatch-border: #000;
@@ -101,13 +101,14 @@ h1 {
   gap: 10px;
   margin-bottom: 15px;
 }
-
-.categories .cat-btn {
-  background: var(--btn);
-  color: var(--fg);
+.categories .cat-btn,
+.positions-bar .pos-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }
-
-.categories .cat-btn.active {
+.categories .cat-btn.active,
+.positions-bar .pos-btn.active {
   background: cyan;
   color: black;
 }
@@ -179,7 +180,8 @@ h1 {
   text-align: left;
 }
 
-button, .item-grid button {
+button,
+.item-grid button {
   background: var(--btn);
   color: var(--fg);
   border: none;
@@ -225,10 +227,42 @@ body.theme-animalcompany #themeDropdown:hover {
   display: none;
   overflow-y: auto;
 }
-
 #adminOverrideBtn {
   display: block;
   margin: 20px auto;
+}
+
+/* Show Add Child buttons within item-blocks */
+.item-block > button {
+  display: inline-block;
+  margin: 8px 0;
+  padding: 6px 10px;
+  background: var(--btn);
+  color: var(--fg);
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: bold;
+  cursor: pointer;
+}
+.item-block > button:hover {
+  background: #555;
+}
+
+/* Indent and style nested children container */
+.item-block .children {
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 1px solid #555;
+}
+
+/* Style each item block for clarity */
+.item-block {
+  margin: 12px 0;
+  padding: 12px;
+  background-color: var(--panel);
+  border: 2px solid #444;
+  border-radius: 6px;
 }
 
 @media (max-width: 600px) {
