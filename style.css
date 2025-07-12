@@ -63,17 +63,19 @@ h1 {
   color: black;
 }
 
+/* 🔄 Updated layout to vertical */
 .main-panel {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 20px;
   padding: 20px;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: auto;
 }
 
-.item-panel, .properties-panel {
-  flex: 1;
+.item-panel,
+.properties-panel {
+  width: 100%;
   background: var(--panel-bg);
   padding: 20px;
   border-radius: 12px;
@@ -119,7 +121,6 @@ h1 {
 }
 
 #catUnreleased {
-  /* Initially hidden; shown by JS after admin login */
   display: none;
   opacity: 0.6;
 }
