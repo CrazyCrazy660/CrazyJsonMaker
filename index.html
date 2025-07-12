@@ -7,129 +7,100 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Theme Toggle -->
-  <button id="themeToggleBtn">🌓 Toggle Theme</button>
-
   <h1>Animal Company JSON Builder</h1>
 
-  <!-- Position Tabs -->
+  <!-- Theme dropdown will be injected via JS at top-left -->
+
+  <div id="colorPreviewBox">No item selected</div>
+
+  <!-- Centered slot selector -->
   <div class="positions-bar" id="positionsBar">
-    <button data-slot="leftHand" class="pos-btn active">Left Hand</button>
-    <button data-slot="rightHand" class="pos-btn">Right Hand</button>
-    <button data-slot="leftHip" class="pos-btn">Left Hip</button>
-    <button data-slot="rightHip" class="pos-btn">Right Hip</button>
-    <button data-slot="back" class="pos-btn">Back</button>
+    <button class="pos-btn active" data-slot="leftHand">leftHand</button>
+    <button class="pos-btn" data-slot="rightHand">rightHand</button>
+    <button class="pos-btn" data-slot="leftHip">leftHip</button>
+    <button class="pos-btn" data-slot="rightHip">rightHip</button>
+    <button class="pos-btn" data-slot="back">back</button>
   </div>
 
-  <!-- Main Panels: Item Picker & Properties -->
   <div class="main-panel">
-    <!-- Left: Item Selection -->
     <div class="item-panel">
-      <div class="item-toolbar">
-        <h2>Add Item</h2>
-        <button id="randomItemsBtn">✨ Random Items</button>
-      </div>
-      <input type="text" id="itemSearch" placeholder="Search items..." />
-
+      <input id="itemSearch" placeholder="Search items..." />
       <div class="categories" id="categories">
         <button class="cat-btn active" data-cat="all">All</button>
-        <button class="cat-btn" data-cat="backpacks">Backpacks</button>
-        <button class="cat-btn" data-cat="weapons">Weapons</button>
-        <button class="cat-btn" data-cat="food">Food</button>
-        <button class="cat-btn" data-cat="misc">Misc</button>
-        <button class="cat-btn" data-cat="ammo">Ammo</button>
         <button class="cat-btn" data-cat="explosives">Explosives</button>
-        <!-- Unreleased category hidden until admin unlock -->
-        <button class="cat-btn" data-cat="unreleased" id="catUnreleased">Unreleased</button>
+        <button class="cat-btn" data-cat="ammo">Ammo</button>
+        <button class="cat-btn" data-cat="backpacks">Backpacks</button>
+        <button class="cat-btn" data-cat="misc">Misc</button>
+        <button class="cat-btn" data-cat="food">Food</button>
+        <button class="cat-btn" id="catUnreleased" data-cat="unreleased">Unreleased</button>
       </div>
-
-      <div class="item-grid" id="itemGrid">
-        <!-- JS will populate this -->
-      </div>
+      <div class="item-grid" id="itemGrid"></div>
+      <button id="randomItemsBtn">Random Item</button>
     </div>
 
-    <!-- Right: Item Properties -->
     <div class="properties-panel" id="propertiesPanel">
-      <h2>Properties</h2>
-      <div id="selectedItemName">No item selected</div>
-      <button id="randomizeSelected">🔄 Random</button>
+      <h2>Slot: <span id="selectedItemName">No item selected</span></h2>
+      <label>Hue: <span id="hueVal">0</span></label>
+      <input type="range" id="hueSlider" min="0" max="240" value="0" />
+
+      <label>Saturation: <span id="satVal">0</span></label>
+      <input type="range" id="satSlider" min="-120" max="200" value="0" />
+
+      <label>Scale: <span id="scaleVal">0</span></label>
+      <input type="range" id="scaleSlider" min="-128" max="127" value="0" />
+
+      <label class="label-dark">State:</label>
+      <input type="number" id="stateInput" value="0" />
+
+      <label class="label-dark">Count:</label>
+      <input type="number" id="countInput" value="1" />
 
       <div class="swatches" id="swatchList">
-        <button class="swatch" style="background:#845ec2" data-hue="180" data-sat="117">Galaxy Purple</button>
-        <button class="swatch" style="background:#d65db1" data-hue="200" data-sat="100">Galaxy Pink</button>
-        <button class="swatch" style="background:gold" data-hue="50" data-sat="100">Gold</button>
-        <button class="swatch" style="background:blue" data-hue="160" data-sat="90">Blue</button>
-        <button class="swatch" style="background:green" data-hue="100" data-sat="90">Green</button>
-        <button class="swatch" style="background:#ff4b5c" data-hue="10" data-sat="100">Ruby</button>
+        <!-- Presets will be injected by JS -->
       </div>
-
-      <label>Color Hue (0–210)
-        <input type="range" id="hueSlider" min="0" max="210" value="0" />
-        <span id="hueVal">0</span>
-      </label>
-
-      <label>Color Saturation (0–120)
-        <input type="range" id="satSlider" min="0" max="120" value="0" />
-        <span id="satVal">0</span>
-      </label>
-
-      <label>Scale Modifier (‑128 to 127)
-        <input type="range" id="scaleSlider" min="-128" max="127" value="0" />
-        <span id="scaleVal">0</span>
-      </label>
-
-      <label>State: <input type="number" id="stateInput" value="0" /></label>
-      <label>Count: <input type="number" id="countInput" value="1" /></label>
     </div>
+
+    <pre id="output"></pre>
   </div>
 
-  <!-- JSON Output -->
-  <pre id="output"></pre>
-
-  <!-- Admin Access & Panel -->
   <button id="adminBtn" class="floating-admin-btn">Admin</button>
 
-  <div id="adminPanel" style="display: none;">
+  <div id="adminPanel">
     <h2>Admin Panel</h2>
+    <p>You have access to admin features.</p>
 
     <div>
-      <h3>Override Max Values</h3>
-      <label>Hue Max:
-        <input type="range" id="overrideHue" min="240" max="1000" value="240" />
-        <span id="hueMaxVal">240</span>
-      </label><br>
-      <label>Saturation Max:
-        <input type="range" id="overrideSaturation" min="200" max="1000" value="200" />
-        <span id="satMaxVal">200</span>
-      </label><br>
-      <label>Scale Max:
-        <input type="range" id="overrideScale" min="127" max="1000" value="127" />
-        <span id="scaleMaxVal">127</span>
-      </label><br>
-      <button id="adminOverrideBtn">Override Selected Block 🔥</button>
-    </div>
-
-    <div style="margin-top: 20px;">
-      <h3>Add Custom Item</h3>
       <input id="newItemName" placeholder="Item Name" />
       <input id="newItemID" placeholder="Item ID" />
       <select id="newItemCategory">
-        <option value="backpacks">Backpacks</option>
-        <option value="weapons">Weapons</option>
-        <option value="food">Food</option>
         <option value="misc">Misc</option>
         <option value="ammo">Ammo</option>
         <option value="explosives">Explosives</option>
+        <option value="backpacks">Backpacks</option>
+        <option value="food">Food</option>
         <option value="unreleased">Unreleased</option>
       </select>
       <button id="addNewItemBtn">Add Item</button>
     </div>
 
-    <div style="margin-top: 20px;">
+    <div>
       <h3>Feature Locks</h3>
-      <label><input type="checkbox" id="lockDownloadBtn" /> Lock Download</label><br>
-      <label><input type="checkbox" id="lockPresets" /> Lock Presets</label>
+      <label><input type="checkbox" id="lockDownloadBtn" /> Lock Download</label><br/>
+      <label><input type="checkbox" id="lockPresets" /> Lock Presets</label><br/>
+      <!-- other lock options -->
     </div>
+
+    <h3>Override Sliders Max</h3>
+    <label>Hue: <span id="hueMaxVal">240</span></label>
+    <input type="range" id="overrideHue" min="0" max="1000" value="240" />
+
+    <label>Saturation: <span id="satMaxVal">200</span></label>
+    <input type="range" id="overrideSaturation" min="0" max="1000" value="200" />
+
+    <label>Scale: <span id="scaleMaxVal">127</span></label>
+    <input type="range" id="overrideScale" min="0" max="1000" value="127" />
+
+    <button id="adminOverrideBtn">Apply Override to Selected Slot</button>
   </div>
 
   <script src="script.js"></script>
