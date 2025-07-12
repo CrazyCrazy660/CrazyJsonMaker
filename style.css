@@ -22,14 +22,14 @@ body.theme-animalcompany {
   --swatch-border: #00ff00;
 }
 
-/* Center container and content */
+/* Center page layout */
 body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 40px;
   min-height: 100vh;
   margin: 0;
+  padding-top: 40px;
   background: var(--bg-gradient);
   color: var(--text-color);
   font-family: 'Segoe UI', sans-serif;
@@ -44,22 +44,28 @@ body {
   width: calc(100% - 40px);
 }
 
-/* Header */
+/* Heading */
 h1 {
   text-align: center;
-  margin: 0 0 20px;
+  margin-bottom: 20px;
 }
 
-/* Center theme dropdown */
+/* Theme dropdown styling */
 #themeDropdown {
   position: fixed;
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 200;
+  padding: 10px;
+  background: var(--btn-bg);
+  color: var(--text-color);
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
 }
 
-/* Center slot selectors */
+/* Center slot position buttons */
 .positions-bar {
   display: flex;
   justify-content: center;
@@ -67,15 +73,11 @@ h1 {
   margin-bottom: 20px;
 }
 
-.positions-bar .pos-btn {
-  /* Uses shared button styling */
-}
-
-/* Item panel layout centering */
+/* Item panel alignment */
 .item-panel {
   margin: 0 auto 30px;
-  max-width: 800px;
   text-align: center;
+  max-width: 800px;
 }
 
 #itemSearch {
@@ -89,48 +91,76 @@ h1 {
   border-radius: 5px;
 }
 
+/* Category selection centered */
 .categories {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
+/* Item grid layout */
 .item-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 10px;
   justify-items: center;
 }
 
-/* Random item button center */
+/* Unified button styles */
+button,
+.item-grid button {
+  padding: 10px;
+  background: var(--btn-bg);
+  color: var(--text-color);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  transition: background 0.2s ease;
+}
+
+button:hover,
+.item-grid button:hover,
+#themeDropdown:hover {
+  background: #555;
+}
+
+body.theme-animalcompany button:hover,
+body.theme-animalcompany #themeDropdown:hover {
+  background: #005500;
+}
+
+/* Random item button centering */
 #randomItemsBtn {
   display: block;
   margin: 15px auto 0;
 }
 
-/* Properties panel layout centering */
+/* Properties panel styles */
 .properties-panel {
   margin: 0 auto 30px;
-  max-width: 600px;
   text-align: center;
+  max-width: 600px;
 }
 
+/* Slider labels and inputs centered */
 .properties-panel label,
-.properties-panel input,
+.properties-panel input[type="range"],
 .properties-panel h2 {
   margin: 10px auto;
 }
 
-/* Labels for state/count now centered and dark if .label-dark */
-.properties-panel label.label-dark {
+/* Dark labels for state and count */
+.label-dark {
   color: black !important;
   display: block;
   text-align: center;
 }
 
-/* Center number inputs */
+/* Centered number inputs */
 .properties-panel input[type="number"] {
   display: inline-block;
   width: 60px;
@@ -138,16 +168,15 @@ h1 {
   text-align: center;
 }
 
-/* Swatches preset centering */
+/* Swatch presets centered */
 .swatches {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 15px auto;
 }
 
-/* Preset button styling */
 .swatch {
   width: 60px;
   height: 30px;
@@ -167,7 +196,7 @@ h1 {
   opacity: 0.8;
 }
 
-/* Output box center */
+/* Output JSON centered */
 #output {
   margin: 30px auto;
   max-width: 800px;
@@ -178,70 +207,52 @@ h1 {
   text-align: left;
 }
 
-/* Admin panel center */
+/* Floating admin button centered bottom */
 .floating-admin-btn {
   position: fixed;
   bottom: 10px;
   left: calc(50% - 40px);
   z-index: 99;
+  background: var(--btn-bg);
+  color: var(--text-color);
+  padding: 10px;
+  border-radius: 6px;
 }
 
+/* Admin panel hidden until unlocked and centered */
 #adminPanel {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   background: var(--panel-bg);
-  color: var(--text-color);
-  border: 2px solid #444;
   padding: 20px;
   width: 320px;
   max-height: 80vh;
   overflow-y: auto;
   border-radius: 12px 12px 0 0;
+  border: 2px solid #444;
   display: none;
   z-index: 98;
 }
 
-/* Shared button styles */
-button,
-.item-grid button,
-#themeDropdown {
-  padding: 10px;
-  background: var(--btn-bg);
-  color: var(--text-color);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  text-align: center;
-  transition: background 0.2s ease;
+#adminPanel h2 {
+  margin-top: 0;
 }
 
-button:hover,
-.item-grid button:hover,
-#themeDropdown:hover {
-  background: #555;
-}
-
-body.theme-animalcompany button:hover {
-  background: #005500;
-}
-
-/* Override button center in admin */
-#adminPanel button#adminOverrideBtn {
+/* Center override button in admin panel */
+#adminOverrideBtn {
   display: block;
   margin: 15px auto;
 }
 
-/* Responsive tweaks */
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .main-panel {
     width: calc(100% - 20px);
     padding: 15px;
   }
-  .item-panel,
-  .properties-panel {
+  .item-panel, .properties-panel {
     max-width: calc(100% - 20px);
   }
   .item-grid {
