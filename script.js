@@ -1,15 +1,40 @@
-// — DATA & SETUP
-let items = [
-  /* your full items array here, with some entries having category: "unreleased" */
+// — ITEMS ARRAY (with selected random items included)
+const items = [
+  { name: "Anti Gravity Grenade", id: "item_anti_gravity_grenade", category: "explosives" },
+  { name: "Arrow", id: "item_arrow", category: "weapons" },
+  { name: "Backpack", id: "item_backpack", category: "backpacks" },
+  { name: "Baseball Bat", id: "item_baseball_bat", category: "weapons" },
+  { name: "Balloon", id: "item_balloon", category: "misc" },
+  { name: "Banana", id: "item_banana", category: "food" },
+  { name: "Big Mob Loot Box", id: "item_randombox_mobloot_big", category: "misc" },
+  { name: "Bone Shield", id: "item_shield_bones", category: "weapons" },
+  { name: "CEO Plaque", id: "item_ceo_plaque", category: "misc" },
+  { name: "Cola", id: "item_cola", category: "food" },
+  { name: "Company Ration", id: "item_company_ration", category: "food" },
+  { name: "Crossbow", id: "item_crossbow", category: "weapons" },
+  { name: "Dynamite", id: "item_dynamite", category: "explosives" },
+  { name: "Egg RPG Ammo", id: "item_rpg_ammo_egg", category: "ammo" },
+  { name: "Gameboy", id: "item_gameboy", category: "misc" },
+  { name: "Golden Coin", id: "item_goldcoin", category: "misc" },
+  { name: "Grenade", id: "item_grenade", category: "explosives" },
+  { name: "Heart Gun", id: "item_heart_gun", category: "weapons" },
+  { name: "Landmine", id: "item_landmine", category: "explosives" },
+  { name: "Large Basketball Backpack", id: "item_backpack_large_basketball", category: "backpacks" },
+  { name: "Pokémon Card", id: "item_rare_card", category: "misc" },
+  { name: "Revolver Ammo", id: "item_revolver_ammo", category: "ammo" },
+  { name: "Shotgun Ammo", id: "item_shotgun_ammo", category: "ammo" },
+  { name: "Spear RPG Ammo", id: "item_rpg_ammo_spear", category: "ammo" },
+  { name: "Turkey", id: "item_turkey_whole", category: "food" }
+  // … include rest of your list here
 ];
 items.sort((a, b) => a.name.localeCompare(b.name));
 
 const bodyParts = ["leftHand", "rightHand", "leftHip", "rightHip", "back"];
-let currentSlot = "leftHand";
+let currentSlot = bodyParts[0];
 const slotData = {};
 const adminPassword = "CrazyJson";
 
-// — UI References
+// — UI references
 const positionsBar = document.getElementById("positionsBar");
 const itemSearch = document.getElementById("itemSearch");
 const categoriesBar = document.getElementById("categories");
@@ -27,7 +52,6 @@ const stateInput = document.getElementById("stateInput");
 const countInput = document.getElementById("countInput");
 const outputEl = document.getElementById("output");
 const themeToggleBtn = document.getElementById("themeToggleBtn");
-
 const adminBtn = document.getElementById("adminBtn");
 const adminPanel = document.getElementById("adminPanel");
 const overrideHue = document.getElementById("overrideHue");
@@ -43,19 +67,19 @@ const newItemCategory = document.getElementById("newItemCategory");
 const addNewItemBtn = document.getElementById("addNewItemBtn");
 const lockPresets = document.getElementById("lockPresets");
 const lockDownloadBtn = document.getElementById("lockDownloadBtn");
-
 const catUnreleasedBtn = document.getElementById("catUnreleased");
 
-// — INITIAL STATE: hide unreleased category tab
+// — Hide Unreleased by default
 if (catUnreleasedBtn) catUnreleasedBtn.style.display = "none";
 
-// — HELPERS
+// — Helpers
 function updateOutputJSON() {
-  const res = { version: 1 };
+  const result = { version: 1 };
   bodyParts.forEach(slot => {
-    if (slotData[slot]?.itemID) res[slot] = slotData[slot];
+    const d = slotData[slot];
+    if (d?.itemID) result[slot] = d;
   });
-  outputEl.textContent = JSON.stringify(res, null, 2);
+  outputEl.textContent = JSON.stringify(result, null, 2);
 }
 
 function saveSlotToData() {
@@ -84,12 +108,11 @@ function loadSlotData(slot) {
   countInput.value = d.count ?? 1;
 }
 
-// — RENDER ITEM GRID
 function renderItemGrid(filter = "", category = "all") {
   itemGrid.innerHTML = "";
   items.filter(it => {
     return (category === "all" || it.category === category) &&
-           it.name.toLowerCase().includes(filter.toLowerCase());
+      it.name.toLowerCase().includes(filter.toLowerCase());
   }).forEach(it => {
     const btn = document.createElement("button");
     btn.textContent = it.name;
@@ -103,9 +126,7 @@ function renderItemGrid(filter = "", category = "all") {
   });
 }
 
-// — EVENT WIRING
-
-// Category filter
+// — Event wiring
 categoriesBar.querySelectorAll(".cat-btn").forEach(b => {
   b.onclick = () => {
     categoriesBar.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
@@ -114,13 +135,11 @@ categoriesBar.querySelectorAll(".cat-btn").forEach(b => {
   };
 });
 
-// Search
 itemSearch.oninput = () => {
-  const activeCat = categoriesBar.querySelector(".cat-btn.active").dataset.cat;
-  renderItemGrid(itemSearch.value, activeCat);
+  const cat = categoriesBar.querySelector(".cat-btn.active")?.dataset.cat || "all";
+  renderItemGrid(itemSearch.value, cat);
 };
 
-// Slot selection
 positionsBar.querySelectorAll(".pos-btn").forEach(b => {
   b.onclick = () => {
     positionsBar.querySelectorAll(".pos-btn").forEach(x => x.classList.remove("active"));
@@ -130,7 +149,6 @@ positionsBar.querySelectorAll(".pos-btn").forEach(b => {
   };
 });
 
-// Randomize
 randomizeSelected.onclick = () => {
   hueSlider.value = Math.floor(Math.random() * 211);
   satSlider.value = Math.floor(Math.random() * 121);
@@ -140,17 +158,18 @@ randomizeSelected.onclick = () => {
   scaleSlider.dispatchEvent(new Event("input"));
 };
 
-// Swatch presets
 swatchList.querySelectorAll(".swatch").forEach(btn => {
   btn.onclick = () => {
+    document.querySelectorAll('.swatch').forEach(b => b.classList.remove('active-swatch'));
+    btn.classList.add('active-swatch');
     hueSlider.value = btn.dataset.hue;
     satSlider.value = btn.dataset.sat;
-    hueSlider.dispatchEvent(new Event("input"));
-    satSlider.dispatchEvent(new Event("input"));
+    hueSlider.dispatchEvent(new Event('input'));
+    satSlider.dispatchEvent(new Event('input'));
+    saveSlotToData();
   };
 });
 
-// Slider value updates
 [hueSlider, satSlider, scaleSlider].forEach(sl => {
   sl.oninput = () => {
     hueVal.textContent = hueSlider.value;
@@ -159,15 +178,12 @@ swatchList.querySelectorAll(".swatch").forEach(btn => {
   };
   sl.onchange = saveSlotToData;
 });
-
 stateInput.onchange = saveSlotToData;
 countInput.onchange = saveSlotToData;
 
-// Theme toggle
 themeToggleBtn.onclick = () => document.body.classList.toggle("light-mode");
 
-// — ADMIN PANEL BEHAVIOR
-
+// — Admin panel logic
 adminBtn.onclick = () => {
   const p = prompt("Enter admin password:");
   if (p === adminPassword) {
@@ -178,6 +194,10 @@ adminBtn.onclick = () => {
     alert("Incorrect password.");
   }
 };
+
+overrideHue.oninput = () => overrideHueVal.textContent = overrideHue.value;
+overrideSat.oninput = () => overrideSatVal.textContent = overrideSat.value;
+overrideScale.oninput = () => overrideScaleVal.textContent = overrideScale.value;
 
 adminOverrideBtn.onclick = () => {
   if (!slotData[currentSlot]?.itemID) return alert("Assign an item first.");
@@ -191,32 +211,46 @@ adminOverrideBtn.onclick = () => {
   satSlider.dispatchEvent(new Event("input"));
   scaleSlider.dispatchEvent(new Event("input"));
   saveSlotToData();
-  alert("Override applied for this slot!");
+  alert("Override applied!");
 };
-
-overrideHue.oninput = () => overrideHueVal.textContent = overrideHue.value;
-overrideSat.oninput = () => overrideSatVal.textContent = overrideSat.value;
-overrideScale.oninput = () => overrideScaleVal.textContent = overrideScale.value;
 
 addNewItemBtn.onclick = () => {
   const name = newItemName.value.trim();
   const id = newItemID.value.trim();
   const cat = newItemCategory.value;
-  if (!name || !id) return alert("Fill fields");
+  if (!name || !id) return alert("Fill out both name and ID");
   if (items.some(x => x.id === id)) return alert("Duplicate ID");
   items.push({ name, id, category: cat });
   items.sort((a, b) => a.name.localeCompare(b.name));
-  renderItemGrid(itemSearch.value, categoriesBar.querySelector(".cat-btn.active").dataset.cat);
-  alert(`Added item: ${name}`);
+  renderItemGrid(itemSearch.value, categoriesBar.querySelector(".cat-btn.active")?.dataset.cat || "all");
+  alert(`Added: ${name}`);
   newItemName.value = "";
   newItemID.value = "";
 };
 
-// Feature Locks
 lockPresets.onchange = () => randomizeSelected.disabled = lockPresets.checked;
 lockDownloadBtn.onchange = () => outputEl.style.display = lockDownloadBtn.checked ? "none" : "block";
 
-// — INITIALIZE
+// — Preset CSS injection
+const styleTag = document.createElement('style');
+styleTag.innerHTML = `
+  .swatch.active-swatch {
+    outline: 3px solid yellow;
+    transform: scale(1.1);
+  }
+`;
+document.head.append(styleTag);
+
+// — Random Items button
+document.getElementById('randomItemsBtn')?.addEventListener('click', () => {
+  const btns = Array.from(document.querySelectorAll('.item-grid button'));
+  if (!btns.length) return;
+  const choice = btns[Math.floor(Math.random() * btns.length)];
+  choice.click();
+  choice.focus();
+});
+
+// — Initialize
 renderItemGrid("", "all");
 loadSlotData(currentSlot);
 updateOutputJSON();
