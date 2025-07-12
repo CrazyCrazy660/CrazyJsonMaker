@@ -1,271 +1,209 @@
+/* --- Base & Theme Variables --- */
 :root {
-  --bg: linear-gradient(135deg, #87cefa, #000000);
-  --panel: #2e2e2e;
-  --fg: white;
-  --btn: #333;
-  --swatch-border: #fff;
+  --bg-gradient: linear-gradient(135deg, #87cefa, #000000);
+  --panel-bg: #2e2e2e;
+  --text-color: white;
+  --btn-bg: #333;
+  --swatch-border: white;
 }
-body {
-  margin: 0;
-  padding: 40px 0 20px;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: background 0.5s, color 0.5s;
-}
+
 body.light-mode {
-  --bg: linear-gradient(135deg, #001f3f, #ffffff);
-  --panel: #ffffff;
-  --fg: black;
-  --btn: #ddd;
-  --swatch-border: #000;
+  --bg-gradient: linear-gradient(135deg, #001f3f, #ffffff);
+  --panel-bg: #ffffff;
+  --text-color: black;
+  --btn-bg: #ddd;
+  --swatch-border: black;
 }
+
 body.theme-animalcompany {
-  --bg: linear-gradient(135deg, #002200, #004400);
-  --panel: #001000;
-  --fg: #00ff00;
-  --btn: #003300;
+  --bg-gradient: linear-gradient(135deg, #002200, #004400);
+  --panel-bg: #001000;
+  --text-color: #00ff00;
+  --btn-bg: #003300;
   --swatch-border: #00ff00;
 }
 
-#themeDropdown {
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--btn);
-  color: var(--fg);
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  z-index: 200;
-  font-weight: bold;
+/* --- General Styling --- */
+body,
+body.theme-animalcompany,
+body.theme-animalcompany h1,
+body.theme-animalcompany button,
+body.theme-animalcompany input,
+body.theme-animalcompany select {
+  color: var(--text-color);
 }
 
-.main-panel {
-  background: var(--panel);
-  border-radius: 12px;
-  padding: 20px;
-  max-width: 900px;
-  width: 90%;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg-gradient);
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
-h1 {
-  margin-bottom: 20px;
-}
-
-#colorPreviewBox {
-  width: 100%;
-  max-width: 900px;
-  height: 40px;
-  background: var(--panel);
-  line-height: 40px;
-  margin-bottom: 30px;
-  border-radius: 6px;
-}
-
+/* --- Center Slot Buttons --- */
 .positions-bar {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 30px;
+  padding: 10px;
 }
 
-.positions-bar .pos-btn {
-  background: var(--btn);
-  color: var(--fg);
-}
-
-.item-panel {
-  margin-bottom: 30px;
-}
-#itemSearch {
-  width: 100%;
-  max-width: 400px;
-  padding: 8px;
-  margin: 0 auto 15px;
-  background: var(--panel);
-  color: var(--fg);
-  border: 1px solid #888;
-  border-radius: 6px;
-}
-
-.categories {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-.categories .cat-btn,
-.positions-bar .pos-btn {
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.categories .cat-btn.active,
-.positions-bar .pos-btn.active {
-  background: cyan;
-  color: black;
-}
-
-.item-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
-  justify-items: center;
-}
-
-.properties-panel {
-  margin: 0 auto 30px;
-  max-width: 650px;
-}
-.properties-panel h2,
-.properties-panel label {
-  display: block;
-  margin-bottom: 6px;
-}
-.properties-panel input[type=range],
-.properties-panel input[type=number] {
-  width: calc(100% - 20px);
-  margin: 5px auto 20px;
-}
-.label-dark {
-  color: black !important;
-}
-
-.swatches {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 15px auto;
-}
-.swatch {
-  width: 60px;
-  height: 30px;
-  background: var(--btn);
-  border: 2px solid var(--swatch-border);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85em;
-  font-weight: bold;
-  color: black !important;
-  cursor: pointer;
-}
-.swatch:hover {
-  opacity: 0.8;
-}
-
-#randomItemsBtn {
-  display: block;
-  margin: 20px auto 0;
-}
-
-#output {
-  background: var(--panel);
-  color: var(--fg);
-  max-width: 900px;
-  width: 90%;
-  margin: 30px auto 50px;
-  padding: 15px;
-  border-radius: 8px;
-  white-space: pre-wrap;
-  text-align: left;
-}
-
+/* --- Unified Button Style --- */
 button,
-.item-grid button {
-  background: var(--btn);
-  color: var(--fg);
+.item-grid button,
+#themeDropdown {
+  padding: 10px;
+  background: var(--btn-bg);
+  color: var(--text-color);
   border: none;
-  padding: 10px 14px;
   border-radius: 6px;
   cursor: pointer;
+  text-align: center;
   font-weight: bold;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
 }
+
 button:hover,
 .item-grid button:hover,
 #themeDropdown:hover {
   background: #555;
 }
-body.theme-animalcompany button:hover,
-body.theme-animalcompany #themeDropdown:hover {
+
+body.theme-animalcompany button:hover {
   background: #005500;
 }
 
+/* --- Theme Dropdown Styling --- */
+#themeDropdown {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 200;
+}
+
+/* --- Item Grid and Categories --- */
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* --- Category Buttons --- */
+.cat-btn {
+  /* inherits unified button style */
+}
+.cat-btn.active {
+  background: cyan;
+  color: black;
+}
+
+/* --- Swatches (Presets) --- */
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.swatch {
+  width: 60px;
+  height: 30px;
+  border: 2px solid var(--swatch-border);
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--btn-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: black !important;
+  text-align: center;
+}
+.swatch:hover {
+  opacity: 0.8;
+}
+
+/* --- Properties Panel Labels: State & Count in Black Text --- */
+.properties-panel label {
+  display: block;
+  margin-top: 10px;
+}
+.properties-panel .label-dark {
+  color: black !important;
+}
+.properties-panel input[type="number"] {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* --- Output & Panel Layout --- */
+.main-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.item-panel,
+.properties-panel,
+#output,
+#adminPanel {
+  width: 100%;
+  background: var(--panel-bg);
+  padding: 20px;
+  border-radius: 12px;
+  transition: background 0.3s ease;
+}
+
+#itemSearch {
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  background: var(--panel-bg);
+}
+
+#output {
+  margin: 30px auto;
+  max-width: 1000px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+}
+
+/* --- Admin Panel Floating Button --- */
 .floating-admin-btn {
   position: fixed;
   bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--btn);
-  color: var(--fg);
-  padding: 12px 16px;
-  border-radius: 6px;
+  left: 10px;
+  background: var(--btn-bg);
+  color: var(--text-color);
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 99;
 }
 
-#adminPanel {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 340px;
-  max-height: 80vh;
-  background: var(--panel);
-  color: var(--fg);
-  border-radius: 12px 12px 0 0;
-  border: 2px solid #444;
-  padding: 20px;
-  display: none;
-  overflow-y: auto;
-}
-#adminOverrideBtn {
-  display: block;
-  margin: 20px auto;
-}
-
-/* Show Add Child buttons within item-blocks */
-.item-block > button {
-  display: inline-block;
-  margin: 8px 0;
-  padding: 6px 10px;
-  background: var(--btn);
-  color: var(--fg);
-  border: none;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-weight: bold;
-  cursor: pointer;
-}
-.item-block > button:hover {
-  background: #555;
-}
-
-/* Indent and style nested children container */
-.item-block .children {
-  margin-left: 20px;
-  padding-left: 10px;
-  border-left: 1px solid #555;
-}
-
-/* Style each item block for clarity */
-.item-block {
-  margin: 12px 0;
-  padding: 12px;
-  background-color: var(--panel);
-  border: 2px solid #444;
-  border-radius: 6px;
-}
-
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .main-panel {
+    padding: 10px;
+    align-items: center;
+  }
+  .item-panel,
+  .properties-panel {
+    max-width: 90%;
+    margin: 0 auto;
+  }
   .item-grid {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   }
