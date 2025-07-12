@@ -1,5 +1,5 @@
 :root {
-  --bg-gradient: linear-gradient(to bottom, #001f3f, #ffffff);
+  --bg-gradient: linear-gradient(135deg, #87cefa, #000000); /* light palette in dark mode */
   --panel-bg: #2e2e2e;
   --text-color: white;
   --btn-bg: #333;
@@ -7,7 +7,7 @@
 }
 
 body.light-mode {
-  --bg-gradient: linear-gradient(to bottom, #87cefa, #000000);
+  --bg-gradient: linear-gradient(135deg, #001f3f, #ffffff); /* rich dark palette for light mode */
   --panel-bg: #ffffff;
   --text-color: black;
   --btn-bg: #ddd;
@@ -20,7 +20,7 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: var(--bg-gradient);
   color: var(--text-color);
-  transition: background 0.4s ease, color 0.4s ease;
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
 h1 {
@@ -63,7 +63,6 @@ h1 {
   color: black;
 }
 
-/* 🔄 Updated layout to vertical */
 .main-panel {
   display: flex;
   flex-direction: column;
@@ -241,4 +240,22 @@ h1 {
   border-radius: 6px;
   cursor: pointer;
   width: 100%;
+}
+
+/* Center layout on mobile */
+@media (max-width: 768px) {
+  .main-panel {
+    padding: 10px;
+    align-items: center;
+  }
+
+  .item-panel,
+  .properties-panel {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+
+  .item-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
 }
