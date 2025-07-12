@@ -1,5 +1,5 @@
 :root {
-  --bg-gradient: linear-gradient(135deg, #87cefa, #000000); /* original diagonal gradient */
+  --bg-gradient: linear-gradient(135deg, #87cefa, #000000);
   --panel-bg: #2e2e2e;
   --text-color: white;
   --btn-bg: #333;
@@ -14,7 +14,6 @@ body.light-mode {
   --swatch-border: black;
 }
 
-/* Animal Company Theme */
 body.theme-animalcompany {
   --bg-gradient: linear-gradient(135deg, #002200, #004400);
   --panel-bg: #001000;
@@ -23,6 +22,7 @@ body.theme-animalcompany {
   --swatch-border: #00ff00;
 }
 
+body,
 body.theme-animalcompany,
 body.theme-animalcompany h1,
 body.theme-animalcompany h2,
@@ -43,18 +43,37 @@ body.theme-animalcompany button {
   background: var(--btn-bg);
 }
 
-/* Ensure swatches adapt */
-body.theme-animalcompany .swatch {
-  border-color: var(--swatch-border);
-  color: black !important;
+/* Unified button style (includes item buttons, admin, random, presets, etc.) */
+button,
+.item-grid button,
+#themeDropdown {
+  padding: 10px;
+  background: var(--btn-bg);
+  color: var(--text-color);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  transition: background 0.2s ease;
 }
 
+button:hover,
+.item-grid button:hover,
+#themeDropdown:hover {
+  background: #555;
+}
+
+body.theme-animalcompany button:hover {
+  background: #005500;
+}
+
+/* Layout */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', sans-serif;
   background: var(--bg-gradient);
-  color: var(--text-color);
   transition: background 0.5s ease, color 0.5s ease;
 }
 
@@ -64,21 +83,15 @@ h1 {
   margin: 0;
 }
 
-/* Style theme dropdown for visibility */
+/* Theme dropdown positioning */
 #themeDropdown {
   position: fixed;
   top: 10px;
   left: 10px;
   z-index: 200;
-  background: var(--btn-bg);
-  color: var(--text-color);
-  border: 1px solid #999;
-  padding: 6px 10px;
-  border-radius: 5px;
-  font-weight: bold;
 }
 
-/* Layout and panels */
+/* Panels and content */
 .main-panel {
   display: flex;
   flex-direction: column;
@@ -104,7 +117,12 @@ h1 {
   border: 1px solid #999;
   border-radius: 5px;
   background: var(--panel-bg);
-  color: var(--text-color);
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
 }
 
 .categories {
@@ -115,33 +133,12 @@ h1 {
 }
 
 .cat-btn {
-  background: var(--btn-bg);
-  border: none;
-  color: var(--text-color);
-  padding: 6px 10px;
-  border-radius: 5px;
-  cursor: pointer;
+  /* already inherits unified button style */
 }
 
 .cat-btn.active {
   background: cyan;
   color: black;
-}
-
-.item-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
-}
-
-.item-grid button {
-  padding: 10px;
-  background: var(--btn-bg);
-  color: var(--text-color);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  text-align: center;
 }
 
 .swatches {
@@ -185,7 +182,6 @@ h1 {
   padding: 15px;
   border-radius: 8px;
   white-space: pre-wrap;
-  color: var(--text-color);
 }
 
 .floating-admin-btn {
@@ -194,10 +190,8 @@ h1 {
   left: 10px;
   background: var(--btn-bg);
   color: var(--text-color);
-  padding: 10px 14px;
+  padding: 10px;
   border-radius: 8px;
-  border: none;
-  cursor: pointer;
   z-index: 99;
 }
 
@@ -217,51 +211,16 @@ h1 {
   z-index: 98;
 }
 
-#adminPanel h2 {
-  margin-top: 0;
-}
-
-#adminPanel label {
-  display: block;
-  margin: 10px 0 4px;
-}
-
-#adminPanel input[type="range"],
-#adminPanel input[type="text"],
-#adminPanel select {
-  width: 100%;
-  margin-top: 4px;
-  padding: 6px;
-  background: var(--panel-bg);
-  color: var(--text-color);
-  border: 1px solid #888;
-  border-radius: 4px;
-}
-
-#adminPanel button {
-  margin-top: 10px;
-  background: var(--btn-bg);
-  border: none;
-  color: var(--text-color);
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  width: 100%;
-}
-
-/* Responsive mobile centering */
 @media (max-width: 768px) {
   .main-panel {
     padding: 10px;
     align-items: center;
   }
-
   .item-panel,
   .properties-panel {
     max-width: 90%;
     margin: 0 auto;
   }
-
   .item-grid {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   }
