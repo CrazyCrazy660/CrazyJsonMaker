@@ -1,4 +1,4 @@
-// — ITEMS ARRAY (with selected random items included)
+// -------------- ITEMS --------------
 const items = [
   { name: "Anti Gravity Grenade", id: "item_anti_gravity_grenade", category: "explosives" },
   { name: "Arrow", id: "item_arrow", category: "weapons" },
@@ -24,21 +24,21 @@ const items = [
   { name: "Revolver Ammo", id: "item_revolver_ammo", category: "ammo" },
   { name: "Shotgun Ammo", id: "item_shotgun_ammo", category: "ammo" },
   { name: "Spear RPG Ammo", id: "item_rpg_ammo_spear", category: "ammo" },
-  { name: "Turkey", id: "item_turkey_whole", category: "food" }
-  // … include rest of your list here
+  { name: "Turkey", id: "item_turkey_whole", category: "food" },
 ];
+
 items.sort((a, b) => a.name.localeCompare(b.name));
 
-const bodyParts = ["leftHand", "rightHand", "leftHip", "rightHip", "back"];
+// -------------- STATE & UI REFERENCES --------------
+const bodyParts = ["leftHand","rightHand","leftHip","rightHip","back"];
 let currentSlot = bodyParts[0];
 const slotData = {};
 const adminPassword = "CrazyJson";
 
-// — UI references
 const positionsBar = document.getElementById("positionsBar");
-const itemSearch = document.getElementById("itemSearch");
 const categoriesBar = document.getElementById("categories");
 const itemGrid = document.getElementById("itemGrid");
+const itemSearch = document.getElementById("itemSearch");
 const selectedItemName = document.getElementById("selectedItemName");
 const randomizeSelected = document.getElementById("randomizeSelected");
 const swatchList = document.getElementById("swatchList");
@@ -51,7 +51,6 @@ const scaleVal = document.getElementById("scaleVal");
 const stateInput = document.getElementById("stateInput");
 const countInput = document.getElementById("countInput");
 const outputEl = document.getElementById("output");
-const themeToggleBtn = document.getElementById("themeToggleBtn");
 const adminBtn = document.getElementById("adminBtn");
 const adminPanel = document.getElementById("adminPanel");
 const overrideHue = document.getElementById("overrideHue");
@@ -69,20 +68,20 @@ const lockPresets = document.getElementById("lockPresets");
 const lockDownloadBtn = document.getElementById("lockDownloadBtn");
 const catUnreleasedBtn = document.getElementById("catUnreleased");
 
-// — Hide Unreleased by default
+// hide unreleased tab until unlocked
 if (catUnreleasedBtn) catUnreleasedBtn.style.display = "none";
 
-// — Helpers
-function updateOutputJSON() {
+// ---------------- UTILITY FUNCTIONS ----------------
+function updateOutputJSON(){
   const result = { version: 1 };
-  bodyParts.forEach(slot => {
-    const d = slotData[slot];
-    if (d?.itemID) result[slot] = d;
+  bodyParts.forEach(s => {
+    const d = slotData[s];
+    if (d?.itemID) result[s] = d;
   });
   outputEl.textContent = JSON.stringify(result, null, 2);
 }
 
-function saveSlotToData() {
+function saveSlotToData(){
   slotData[currentSlot] = slotData[currentSlot] || {};
   Object.assign(slotData[currentSlot], {
     itemID: slotData[currentSlot].itemID || "",
@@ -95,7 +94,7 @@ function saveSlotToData() {
   updateOutputJSON();
 }
 
-function loadSlotData(slot) {
+function loadSlotData(slot){
   const d = slotData[slot] || {};
   selectedItemName.textContent = d.itemID || "No item selected";
   hueSlider.value = d.colorHue ?? 0;
@@ -108,12 +107,12 @@ function loadSlotData(slot) {
   countInput.value = d.count ?? 1;
 }
 
-function renderItemGrid(filter = "", category = "all") {
+function renderItemGrid(filterText = "", cat = "all"){
   itemGrid.innerHTML = "";
-  items.filter(it => {
-    return (category === "all" || it.category === category) &&
-      it.name.toLowerCase().includes(filter.toLowerCase());
-  }).forEach(it => {
+  items.filter(it =>
+    (cat === "all" || it.category === cat) &&
+    it.name.toLowerCase().includes(filterText.toLowerCase())
+  ).forEach(it => {
     const btn = document.createElement("button");
     btn.textContent = it.name;
     btn.onclick = () => {
@@ -126,7 +125,16 @@ function renderItemGrid(filter = "", category = "all") {
   });
 }
 
-// — Event wiring
+// ---------------- EVENTS ----------------
+positionsBar.querySelectorAll(".pos-btn").forEach(b => {
+  b.onclick = () => {
+    positionsBar.querySelectorAll(".pos-btn").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    currentSlot = b.dataset.slot;
+    loadSlotData(currentSlot);
+  };
+});
+
 categoriesBar.querySelectorAll(".cat-btn").forEach(b => {
   b.onclick = () => {
     categoriesBar.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
@@ -140,15 +148,6 @@ itemSearch.oninput = () => {
   renderItemGrid(itemSearch.value, cat);
 };
 
-positionsBar.querySelectorAll(".pos-btn").forEach(b => {
-  b.onclick = () => {
-    positionsBar.querySelectorAll(".pos-btn").forEach(x => x.classList.remove("active"));
-    b.classList.add("active");
-    currentSlot = b.dataset.slot;
-    loadSlotData(currentSlot);
-  };
-});
-
 randomizeSelected.onclick = () => {
   hueSlider.value = Math.floor(Math.random() * 211);
   satSlider.value = Math.floor(Math.random() * 121);
@@ -156,19 +155,8 @@ randomizeSelected.onclick = () => {
   hueSlider.dispatchEvent(new Event("input"));
   satSlider.dispatchEvent(new Event("input"));
   scaleSlider.dispatchEvent(new Event("input"));
+  saveSlotToData();
 };
-
-swatchList.querySelectorAll(".swatch").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.swatch').forEach(b => b.classList.remove('active-swatch'));
-    btn.classList.add('active-swatch');
-    hueSlider.value = btn.dataset.hue;
-    satSlider.value = btn.dataset.sat;
-    hueSlider.dispatchEvent(new Event('input'));
-    satSlider.dispatchEvent(new Event('input'));
-    saveSlotToData();
-  };
-});
 
 [hueSlider, satSlider, scaleSlider].forEach(sl => {
   sl.oninput = () => {
@@ -178,12 +166,70 @@ swatchList.querySelectorAll(".swatch").forEach(btn => {
   };
   sl.onchange = saveSlotToData;
 });
+
 stateInput.onchange = saveSlotToData;
 countInput.onchange = saveSlotToData;
 
-themeToggleBtn.onclick = () => document.body.classList.toggle("light-mode");
+// ------------- THEME DROPDOWN (with persistence) -------------
+const themeSelect = document.createElement('select');
+themeSelect.id = 'themeDropdown';
+themeSelect.style.position = 'fixed';
+themeSelect.style.top = '10px';
+themeSelect.style.left = '10px';
+themeSelect.style.zIndex = 200;
+["default","light","animalcompany"].forEach(name => {
+  const opt = document.createElement("option");
+  opt.value = name;
+  opt.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+  themeSelect.appendChild(opt);
+});
+themeSelect.addEventListener("change", () => {
+  document.body.classList.remove("light-mode","theme-animalcompany");
+  const val = themeSelect.value;
+  if (val === "light") document.body.classList.add("light-mode");
+  if (val === "animalcompany") document.body.classList.add("theme-animalcompany");
+  localStorage.setItem("selectedTheme", val);
+});
+document.body.appendChild(themeSelect);
 
-// — Admin panel logic
+// restore saved theme
+const savedTheme = localStorage.getItem("selectedTheme");
+if (savedTheme) {
+  themeSelect.value = savedTheme;
+  themeSelect.dispatchEvent(new Event("change"));
+}
+
+// -------- SWATCH PRESETS ----------
+swatchList.querySelectorAll(".swatch").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".swatch").forEach(b => b.classList.remove('active-swatch'));
+    btn.classList.add('active-swatch');
+    hueSlider.value = btn.dataset.hue;
+    satSlider.value = btn.dataset.sat;
+    hueSlider.dispatchEvent(new Event('input'));
+    satSlider.dispatchEvent(new Event('input'));
+    saveSlotToData();
+  };
+});
+const styleTag = document.createElement('style');
+styleTag.innerHTML = `
+  .swatch.active-swatch {
+    outline: 3px solid yellow;
+    transform: scale(1.1);
+  }
+`;
+document.head.append(styleTag);
+
+// -------------- RANDOM ITEMS BUTTON ----------
+document.getElementById("randomItemsBtn")?.addEventListener("click", () => {
+  const btns = Array.from(document.querySelectorAll(".item-grid button"));
+  if (!btns.length) return;
+  const choice = btns[Math.floor(Math.random() * btns.length)];
+  choice.click();
+  choice.focus();
+});
+
+// -------------- ADMIN PANEL LOGIC ----------
 adminBtn.onclick = () => {
   const p = prompt("Enter admin password:");
   if (p === adminPassword) {
@@ -218,7 +264,7 @@ addNewItemBtn.onclick = () => {
   const name = newItemName.value.trim();
   const id = newItemID.value.trim();
   const cat = newItemCategory.value;
-  if (!name || !id) return alert("Fill out both name and ID");
+  if (!name || !id) return alert("Fill both name & ID");
   if (items.some(x => x.id === id)) return alert("Duplicate ID");
   items.push({ name, id, category: cat });
   items.sort((a, b) => a.name.localeCompare(b.name));
@@ -231,26 +277,7 @@ addNewItemBtn.onclick = () => {
 lockPresets.onchange = () => randomizeSelected.disabled = lockPresets.checked;
 lockDownloadBtn.onchange = () => outputEl.style.display = lockDownloadBtn.checked ? "none" : "block";
 
-// — Preset CSS injection
-const styleTag = document.createElement('style');
-styleTag.innerHTML = `
-  .swatch.active-swatch {
-    outline: 3px solid yellow;
-    transform: scale(1.1);
-  }
-`;
-document.head.append(styleTag);
-
-// — Random Items button
-document.getElementById('randomItemsBtn')?.addEventListener('click', () => {
-  const btns = Array.from(document.querySelectorAll('.item-grid button'));
-  if (!btns.length) return;
-  const choice = btns[Math.floor(Math.random() * btns.length)];
-  choice.click();
-  choice.focus();
-});
-
-// — Initialize
+// -------------- INITIALIZATION ----------
 renderItemGrid("", "all");
 loadSlotData(currentSlot);
 updateOutputJSON();
