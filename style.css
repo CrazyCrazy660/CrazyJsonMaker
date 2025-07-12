@@ -1,83 +1,73 @@
-/* CORE VARIABLES */
 :root {
-  --bg-gradient: linear-gradient(135deg, #87cefa, #000000);
-  --panel-bg: #2e2e2e;
-  --text-color: white;
-  --btn-bg: #333;
-  --swatch-border: white;
+  --bg: linear-gradient(135deg, #87cefa, #000);
+  --panel: #2e2e2e;
+  --fg: white;
+  --btn: #333;
+  --swatch-border: #fff;
 }
-
+body {
+  margin: 0;
+  padding: 40px 0 20px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background 0.5s, color 0.5s;
+  text-align: center;
+}
 body.light-mode {
-  --bg-gradient: linear-gradient(135deg, #001f3f, #ffffff);
-  --panel-bg: #ffffff;
-  --text-color: black;
-  --btn-bg: #ddd;
-  --swatch-border: black;
+  --bg: linear-gradient(135deg, #001f3f, #fff);
+  --panel: #fff;
+  --fg: black;
+  --btn: #ddd;
+  --swatch-border: #000;
 }
-
 body.theme-animalcompany {
-  --bg-gradient: linear-gradient(135deg, #002200, #004400);
-  --panel-bg: #001000;
-  --text-color: #00ff00;
-  --btn-bg: #003300;
+  --bg: linear-gradient(135deg, #002200, #004400);
+  --panel: #001000;
+  --fg: #00ff00;
+  --btn: #003300;
   --swatch-border: #00ff00;
 }
 
-/* FULL-PAGE CENTERING */
-body {
-  margin: 0;
-  padding: 40px 0 0 0;
-  background: var(--bg-gradient);
-  color: var(--text-color);
-  font-family: sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  text-align: center;
-  transition: background 0.5s, color 0.5s;
-}
-
-/* WRAPPED CONTENT */
-.main-panel {
-  max-width: 800px;
-  width: 100%;
-  padding: 20px;
-  background: var(--panel-bg);
-  border-radius: 12px;
-  margin: 0 auto;
-}
-
-/* THEME SELECTOR */
 #themeDropdown {
   position: fixed;
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 8px 12px;
-  background: var(--btn-bg);
-  color: var(--text-color);
+  background: var(--btn);
+  color: var(--fg);
   border: none;
+  padding: 8px 12px;
   border-radius: 6px;
   z-index: 200;
+  font-weight: bold;
 }
 
-/* HEADER & COLOR PREVIEW */
-h1 {
-  margin: 0 0 20px;
+.main-panel {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 900px;
+  width: 90%;
 }
+
+h1 {
+  margin-bottom: 20px;
+}
+
 #colorPreviewBox {
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
   height: 40px;
-  margin: 0 auto 20px;
-  background: var(--panel-bg);
-  color: var(--text-color);
+  background: var(--panel);
   line-height: 40px;
+  margin-bottom: 30px;
   border-radius: 6px;
 }
 
-/* SLOT BUTTONS CENTERED */
 .positions-bar {
   display: flex;
   justify-content: center;
@@ -85,71 +75,79 @@ h1 {
   margin-bottom: 30px;
 }
 
-/* SEARCH, CATEGORY, GRID */
+.positions-bar .pos-btn {
+  background: var(--btn);
+  color: var(--fg);
+}
+
 .item-panel {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 #itemSearch {
   width: 100%;
   max-width: 400px;
   padding: 8px;
   margin: 0 auto 15px;
-  background: var(--panel-bg);
-  color: var(--text-color);
+  background: var(--panel);
+  color: var(--fg);
   border: 1px solid #888;
   border-radius: 6px;
 }
+
 .categories {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
   margin-bottom: 15px;
 }
+
+.categories .cat-btn {
+  background: var(--btn);
+  color: var(--fg);
+}
+
+.categories .cat-btn.active {
+  background: cyan;
+  color: black;
+}
+
 .item-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
   justify-items: center;
 }
 
-/* RANDOM BUTTON */
-#randomItemsBtn {
-  display: block;
-  margin: 20px auto 0 auto;
-}
-
-/* PROPERTIES PANEL */
 .properties-panel {
-  max-width: 600px;
-  margin: 0 auto 40px;
+  margin: 0 auto 30px;
+  max-width: 650px;
 }
-.properties-panel label,
-.properties-panel h2 {
+.properties-panel h2,
+.properties-panel label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
-.properties-panel input[type="range"],
-.properties-panel input[type="number"] {
+.properties-panel input[type=range],
+.properties-panel input[type=number] {
   width: calc(100% - 20px);
-  margin: 8px auto 20px auto;
+  margin: 5px auto 20px;
 }
 .label-dark {
   color: black !important;
 }
 
-/* SWATCH PRESETS */
 .swatches {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 20px 0;
+  gap: 8px;
+  margin: 15px auto;
 }
 .swatch {
   width: 60px;
   height: 30px;
-  background: var(--btn-bg);
+  background: var(--btn);
   border: 2px solid var(--swatch-border);
   border-radius: 6px;
   display: flex;
@@ -164,27 +162,31 @@ h1 {
   opacity: 0.8;
 }
 
-/* OUTPUT JSON */
+#randomItemsBtn {
+  display: block;
+  margin: 20px auto 0;
+}
+
 #output {
-  max-width: 800px;
-  margin: 0 auto 60px;
+  background: var(--panel);
+  color: var(--fg);
+  max-width: 900px;
+  width: 90%;
+  margin: 30px auto 50px;
   padding: 15px;
-  background: var(--panel-bg);
-  border-radius: 6px;
+  border-radius: 8px;
   white-space: pre-wrap;
   text-align: left;
 }
 
-/* BUTTON STYLING */
-button,
-.item-grid button {
-  padding: 10px 14px;
-  background: var(--btn-bg);
-  color: var(--text-color);
+button, .item-grid button {
+  background: var(--btn);
+  color: var(--fg);
   border: none;
+  padding: 10px 14px;
   border-radius: 6px;
-  font-weight: bold;
   cursor: pointer;
+  font-weight: bold;
   transition: background 0.2s;
 }
 button:hover,
@@ -197,38 +199,38 @@ body.theme-animalcompany #themeDropdown:hover {
   background: #005500;
 }
 
-/* ADMIN PANEL & BUTTON */
 .floating-admin-btn {
   position: fixed;
   bottom: 10px;
-  left: calc(50% - 40px);
-  background: var(--btn-bg);
-  color: var(--text-color);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--btn);
+  color: var(--fg);
   padding: 12px 16px;
   border-radius: 6px;
 }
+
 #adminPanel {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 320px;
+  width: 340px;
   max-height: 80vh;
-  background: var(--panel-bg);
-  border: 2px solid #444;
+  background: var(--panel);
+  color: var(--fg);
   border-radius: 12px 12px 0 0;
+  border: 2px solid #444;
   padding: 20px;
   display: none;
   overflow-y: auto;
 }
 
-/* ADMIN OVERRIDE BUTTON CENTER */
 #adminOverrideBtn {
   display: block;
-  margin: 20px auto 0;
+  margin: 20px auto;
 }
 
-/* MEDIA MOBILE */
 @media (max-width: 600px) {
   .item-grid {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
