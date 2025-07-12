@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Animal Company JSON Builder</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
 </head>
 <body>
   <h1>Animal Company JSON Builder</h1>
 
+  <!-- Theme dropdown will be injected via JS at top-left -->
+
   <div id="colorPreviewBox">No item selected</div>
 
-  <!-- Slot selector -->
+  <!-- Centered slot selector -->
   <div class="positions-bar" id="positionsBar">
     <button class="pos-btn active" data-slot="leftHand">leftHand</button>
     <button class="pos-btn" data-slot="rightHand">rightHand</button>
@@ -22,7 +23,6 @@
   </div>
 
   <div class="main-panel">
-    <!-- Item Selector -->
     <div class="item-panel">
       <input id="itemSearch" placeholder="Search items..." />
       <div class="categories" id="categories">
@@ -38,10 +38,8 @@
       <button id="randomItemsBtn">Random Item</button>
     </div>
 
-    <!-- Slot Properties -->
     <div class="properties-panel" id="propertiesPanel">
       <h2>Slot: <span id="selectedItemName">No item selected</span></h2>
-
       <label>Hue: <span id="hueVal">0</span></label>
       <input type="range" id="hueSlider" min="0" max="240" value="0" />
 
@@ -57,25 +55,20 @@
       <label class="label-dark">Count:</label>
       <input type="number" id="countInput" value="1" />
 
-      <div class="swatches" id="swatchList"></div>
+      <div class="swatches" id="swatchList">
+        <!-- Presets will be injected by JS -->
+      </div>
     </div>
 
-    <!-- Add Child Button -->
-    <button id="addChildBtn">➕ Add Child</button>
-
-    <!-- Output -->
     <pre id="output"></pre>
   </div>
 
-  <!-- Admin Button -->
   <button id="adminBtn" class="floating-admin-btn">Admin</button>
 
-  <!-- Admin Panel -->
-  <div id="adminPanel" style="display: none;">
+  <div id="adminPanel">
     <h2>Admin Panel</h2>
     <p>You have access to admin features.</p>
 
-    <!-- New Item -->
     <div>
       <input id="newItemName" placeholder="Item Name" />
       <input id="newItemID" placeholder="Item ID" />
@@ -90,22 +83,26 @@
       <button id="addNewItemBtn">Add Item</button>
     </div>
 
-    <!-- Feature Locks -->
     <div>
       <h3>Feature Locks</h3>
       <label><input type="checkbox" id="lockDownloadBtn" /> Lock Download</label><br/>
-      <label><input type="checkbox" id="lockPresets" /> Lock Presets</label>
+      <label><input type="checkbox" id="lockPresets" /> Lock Presets</label><br/>
+      <!-- other lock options -->
     </div>
 
-    <!-- Slider Overrides -->
     <h3>Override Sliders Max</h3>
     <label>Hue: <span id="hueMaxVal">240</span></label>
     <input type="range" id="overrideHue" min="0" max="1000" value="240" />
+
     <label>Saturation: <span id="satMaxVal">200</span></label>
     <input type="range" id="overrideSaturation" min="0" max="1000" value="200" />
+
     <label>Scale: <span id="scaleMaxVal">127</span></label>
     <input type="range" id="overrideScale" min="0" max="1000" value="127" />
+
     <button id="adminOverrideBtn">Apply Override to Selected Slot</button>
   </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
