@@ -1,5 +1,5 @@
 :root {
-  --bg-gradient: linear-gradient(135deg, #87cefa, #000000); /* Light palette in dark mode */
+  --bg-gradient: linear-gradient(135deg, #87cefa, #000000); /* original diagonal gradient */
   --panel-bg: #2e2e2e;
   --text-color: white;
   --btn-bg: #333;
@@ -7,11 +7,46 @@
 }
 
 body.light-mode {
-  --bg-gradient: linear-gradient(135deg, #001f3f, #ffffff); /* Dark palette in light mode */
+  --bg-gradient: linear-gradient(135deg, #001f3f, #ffffff);
   --panel-bg: #ffffff;
   --text-color: black;
   --btn-bg: #ddd;
   --swatch-border: black;
+}
+
+/* Animal Company Theme */
+body.theme-animalcompany {
+  --bg-gradient: linear-gradient(135deg, #002200, #004400);
+  --panel-bg: #001000;
+  --text-color: #00ff00;
+  --btn-bg: #003300;
+  --swatch-border: #00ff00;
+}
+
+body.theme-animalcompany,
+body.theme-animalcompany h1,
+body.theme-animalcompany h2,
+body.theme-animalcompany button,
+body.theme-animalcompany input,
+body.theme-animalcompany select {
+  color: var(--text-color);
+}
+
+body.theme-animalcompany .item-panel,
+body.theme-animalcompany .properties-panel,
+body.theme-animalcompany #output,
+body.theme-animalcompany #adminPanel {
+  background: var(--panel-bg);
+}
+
+body.theme-animalcompany button {
+  background: var(--btn-bg);
+}
+
+/* Ensure swatches adapt */
+body.theme-animalcompany .swatch {
+  border-color: var(--swatch-border);
+  color: black !important;
 }
 
 body {
@@ -29,41 +64,21 @@ h1 {
   margin: 0;
 }
 
-#themeToggleBtn {
+/* Style theme dropdown for visibility */
+#themeDropdown {
   position: fixed;
   top: 10px;
-  right: 10px;
+  left: 10px;
+  z-index: 200;
   background: var(--btn-bg);
-  border: none;
   color: var(--text-color);
-  padding: 10px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  z-index: 100;
+  border: 1px solid #999;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-weight: bold;
 }
 
-.positions-bar {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  padding: 10px;
-}
-
-.pos-btn {
-  background: transparent;
-  border: 2px solid var(--text-color);
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: var(--text-color);
-}
-
-.pos-btn.active {
-  background: cyan;
-  color: black;
-}
-
-/* Main vertical layout */
+/* Layout and panels */
 .main-panel {
   display: flex;
   flex-direction: column;
@@ -80,12 +95,6 @@ h1 {
   padding: 20px;
   border-radius: 12px;
   transition: background 0.3s ease;
-}
-
-.item-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 #itemSearch {
@@ -112,22 +121,11 @@ h1 {
   padding: 6px 10px;
   border-radius: 5px;
   cursor: pointer;
-  display: inline-block;
 }
 
 .cat-btn.active {
   background: cyan;
   color: black;
-}
-
-#catUnreleased {
-  display: none;
-  opacity: 0.6;
-}
-
-#catUnreleased.unreleased-unlocked {
-  display: inline-block;
-  opacity: 1;
 }
 
 .item-grid {
@@ -153,7 +151,6 @@ h1 {
   margin: 15px 0;
 }
 
-/* 🎨 Preset swatch styling */
 .swatch {
   width: 60px;
   height: 30px;
@@ -186,9 +183,9 @@ h1 {
   max-width: 1000px;
   background: var(--panel-bg);
   padding: 15px;
-  color: var(--text-color);
   border-radius: 8px;
   white-space: pre-wrap;
+  color: var(--text-color);
 }
 
 .floating-admin-btn {
@@ -252,7 +249,7 @@ h1 {
   width: 100%;
 }
 
-/* Center layout on mobile */
+/* Responsive mobile centering */
 @media (max-width: 768px) {
   .main-panel {
     padding: 10px;
