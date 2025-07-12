@@ -26,15 +26,15 @@ const items = [
   { name: "Spear RPG Ammo", id: "item_rpg_ammo_spear", category: "ammo" },
   { name: "Turkey", id: "item_turkey_whole", category: "food" },
 ];
-
 items.sort((a, b) => a.name.localeCompare(b.name));
 
-// -------------- STATE & UI REFERENCES --------------
+// -------------- STATE & UI REFS --------------
 const bodyParts = ["leftHand","rightHand","leftHip","rightHip","back"];
 let currentSlot = bodyParts[0];
 const slotData = {};
 const adminPassword = "CrazyJson";
 
+// UI references
 const positionsBar = document.getElementById("positionsBar");
 const categoriesBar = document.getElementById("categories");
 const itemGrid = document.getElementById("itemGrid");
@@ -67,12 +67,10 @@ const addNewItemBtn = document.getElementById("addNewItemBtn");
 const lockPresets = document.getElementById("lockPresets");
 const lockDownloadBtn = document.getElementById("lockDownloadBtn");
 const catUnreleasedBtn = document.getElementById("catUnreleased");
-
-// hide unreleased tab until unlocked
 if (catUnreleasedBtn) catUnreleasedBtn.style.display = "none";
 
-// ---------------- UTILITY FUNCTIONS ----------------
-function updateOutputJSON(){
+// -------------- UTILS --------------
+function updateOutputJSON() {
   const result = { version: 1 };
   bodyParts.forEach(s => {
     const d = slotData[s];
@@ -81,7 +79,7 @@ function updateOutputJSON(){
   outputEl.textContent = JSON.stringify(result, null, 2);
 }
 
-function saveSlotToData(){
+function saveSlotToData() {
   slotData[currentSlot] = slotData[currentSlot] || {};
   Object.assign(slotData[currentSlot], {
     itemID: slotData[currentSlot].itemID || "",
@@ -94,7 +92,7 @@ function saveSlotToData(){
   updateOutputJSON();
 }
 
-function loadSlotData(slot){
+function loadSlotData(slot) {
   const d = slotData[slot] || {};
   selectedItemName.textContent = d.itemID || "No item selected";
   hueSlider.value = d.colorHue ?? 0;
@@ -107,7 +105,7 @@ function loadSlotData(slot){
   countInput.value = d.count ?? 1;
 }
 
-function renderItemGrid(filterText = "", cat = "all"){
+function renderItemGrid(filterText = "", cat = "all") {
   itemGrid.innerHTML = "";
   items.filter(it =>
     (cat === "all" || it.category === cat) &&
@@ -125,7 +123,7 @@ function renderItemGrid(filterText = "", cat = "all"){
   });
 }
 
-// ---------------- EVENTS ----------------
+// -------------- EVENTS --------------
 positionsBar.querySelectorAll(".pos-btn").forEach(b => {
   b.onclick = () => {
     positionsBar.querySelectorAll(".pos-btn").forEach(x => x.classList.remove("active"));
@@ -134,7 +132,6 @@ positionsBar.querySelectorAll(".pos-btn").forEach(b => {
     loadSlotData(currentSlot);
   };
 });
-
 categoriesBar.querySelectorAll(".cat-btn").forEach(b => {
   b.onclick = () => {
     categoriesBar.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
@@ -142,12 +139,10 @@ categoriesBar.querySelectorAll(".cat-btn").forEach(b => {
     renderItemGrid(itemSearch.value, b.dataset.cat);
   };
 });
-
 itemSearch.oninput = () => {
   const cat = categoriesBar.querySelector(".cat-btn.active")?.dataset.cat || "all";
   renderItemGrid(itemSearch.value, cat);
 };
-
 randomizeSelected.onclick = () => {
   hueSlider.value = Math.floor(Math.random() * 211);
   satSlider.value = Math.floor(Math.random() * 121);
@@ -157,7 +152,6 @@ randomizeSelected.onclick = () => {
   scaleSlider.dispatchEvent(new Event("input"));
   saveSlotToData();
 };
-
 [hueSlider, satSlider, scaleSlider].forEach(sl => {
   sl.oninput = () => {
     hueVal.textContent = hueSlider.value;
@@ -166,40 +160,32 @@ randomizeSelected.onclick = () => {
   };
   sl.onchange = saveSlotToData;
 });
-
 stateInput.onchange = saveSlotToData;
 countInput.onchange = saveSlotToData;
 
-// ------------- THEME DROPDOWN (with persistence) -------------
+// -------------- THEME DROPDOWN with persistence --------------
 const themeSelect = document.createElement('select');
 themeSelect.id = 'themeDropdown';
-themeSelect.style.position = 'fixed';
-themeSelect.style.top = '10px';
-themeSelect.style.left = '10px';
-themeSelect.style.zIndex = 200;
-["default","light","animalcompany"].forEach(name => {
+["default", "light", "animalcompany"].forEach(val => {
   const opt = document.createElement("option");
-  opt.value = name;
-  opt.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+  opt.value = val;
+  opt.textContent = val.charAt(0).toUpperCase() + val.slice(1);
   themeSelect.appendChild(opt);
 });
-themeSelect.addEventListener("change", () => {
-  document.body.classList.remove("light-mode","theme-animalcompany");
-  const val = themeSelect.value;
-  if (val === "light") document.body.classList.add("light-mode");
-  if (val === "animalcompany") document.body.classList.add("theme-animalcompany");
-  localStorage.setItem("selectedTheme", val);
-});
+themeSelect.onchange = () => {
+  document.body.classList.remove("light-mode", "theme-animalcompany");
+  if (themeSelect.value === "light") document.body.classList.add("light-mode");
+  if (themeSelect.value === "animalcompany") document.body.classList.add("theme-animalcompany");
+  localStorage.setItem("selectedTheme", themeSelect.value);
+};
 document.body.appendChild(themeSelect);
-
-// restore saved theme
-const savedTheme = localStorage.getItem("selectedTheme");
-if (savedTheme) {
-  themeSelect.value = savedTheme;
+const saved = localStorage.getItem("selectedTheme");
+if (saved) {
+  themeSelect.value = saved;
   themeSelect.dispatchEvent(new Event("change"));
 }
 
-// -------- SWATCH PRESETS ----------
+// -------------- SWATCH PRESETS highlight --------------
 swatchList.querySelectorAll(".swatch").forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll(".swatch").forEach(b => b.classList.remove('active-swatch'));
@@ -211,7 +197,7 @@ swatchList.querySelectorAll(".swatch").forEach(btn => {
     saveSlotToData();
   };
 });
-const styleTag = document.createElement('style');
+const styleTag = document.createElement("style");
 styleTag.innerHTML = `
   .swatch.active-swatch {
     outline: 3px solid yellow;
@@ -220,7 +206,7 @@ styleTag.innerHTML = `
 `;
 document.head.append(styleTag);
 
-// -------------- RANDOM ITEMS BUTTON ----------
+// -------------- RANDOM ITEMS button --------------
 document.getElementById("randomItemsBtn")?.addEventListener("click", () => {
   const btns = Array.from(document.querySelectorAll(".item-grid button"));
   if (!btns.length) return;
@@ -229,7 +215,7 @@ document.getElementById("randomItemsBtn")?.addEventListener("click", () => {
   choice.focus();
 });
 
-// -------------- ADMIN PANEL LOGIC ----------
+// -------------- ADMIN PANEL logic --------------
 adminBtn.onclick = () => {
   const p = prompt("Enter admin password:");
   if (p === adminPassword) {
@@ -240,11 +226,9 @@ adminBtn.onclick = () => {
     alert("Incorrect password.");
   }
 };
-
 overrideHue.oninput = () => overrideHueVal.textContent = overrideHue.value;
 overrideSat.oninput = () => overrideSatVal.textContent = overrideSat.value;
 overrideScale.oninput = () => overrideScaleVal.textContent = overrideScale.value;
-
 adminOverrideBtn.onclick = () => {
   if (!slotData[currentSlot]?.itemID) return alert("Assign an item first.");
   hueSlider.max = +overrideHue.value;
@@ -277,7 +261,7 @@ addNewItemBtn.onclick = () => {
 lockPresets.onchange = () => randomizeSelected.disabled = lockPresets.checked;
 lockDownloadBtn.onchange = () => outputEl.style.display = lockDownloadBtn.checked ? "none" : "block";
 
-// -------------- INITIALIZATION ----------
+// -------------- INITIALIZE --------------
 renderItemGrid("", "all");
 loadSlotData(currentSlot);
 updateOutputJSON();
