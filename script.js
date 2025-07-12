@@ -1,205 +1,222 @@
 // — DATA & SETUP
 let items = [
-  { name: "Apple", id: "item_apple" },
-  /* …rest of your items... */
-  { name: "Zombie Mob Loot Box", id: "item_randombox_mobloot_zombie" }
+  /* your full items array here, with some entries having category: "unreleased" */
 ];
 items.sort((a, b) => a.name.localeCompare(b.name));
 
-const bodyParts = ["leftHand","rightHand","leftHip","rightHip","back"];
-const builder = document.getElementById("builder");
-const output = document.getElementById("output");
-let selectedBlock = null, autoRandomize = false;
+const bodyParts = ["leftHand", "rightHand", "leftHip", "rightHip", "back"];
+let currentSlot = "leftHand";
+const slotData = {};
+const adminPassword = "CrazyJson";
 
-// — AUTO-RANDOM TOGGLE
-const toggleBtn = document.createElement("button");
-toggleBtn.textContent = "🎲 Auto Random: OFF";
-toggleBtn.onclick = () => {
-  autoRandomize = !autoRandomize;
-  toggleBtn.textContent = `🎲 Auto Random: ${autoRandomize ? "ON" : "OFF"}`;
-  saveBuilderState();
-};
-document.body.insertBefore(toggleBtn, builder);
+// — UI References
+const positionsBar = document.getElementById("positionsBar");
+const itemSearch = document.getElementById("itemSearch");
+const categoriesBar = document.getElementById("categories");
+const itemGrid = document.getElementById("itemGrid");
+const selectedItemName = document.getElementById("selectedItemName");
+const randomizeSelected = document.getElementById("randomizeSelected");
+const swatchList = document.getElementById("swatchList");
+const hueSlider = document.getElementById("hueSlider");
+const satSlider = document.getElementById("satSlider");
+const scaleSlider = document.getElementById("scaleSlider");
+const hueVal = document.getElementById("hueVal");
+const satVal = document.getElementById("satVal");
+const scaleVal = document.getElementById("scaleVal");
+const stateInput = document.getElementById("stateInput");
+const countInput = document.getElementById("countInput");
+const outputEl = document.getElementById("output");
+const themeToggleBtn = document.getElementById("themeToggleBtn");
 
-// — JSON OUTPUT & SAVE
+const adminBtn = document.getElementById("adminBtn");
+const adminPanel = document.getElementById("adminPanel");
+const overrideHue = document.getElementById("overrideHue");
+const overrideSat = document.getElementById("overrideSaturation");
+const overrideScale = document.getElementById("overrideScale");
+const overrideHueVal = document.getElementById("hueMaxVal");
+const overrideSatVal = document.getElementById("satMaxVal");
+const overrideScaleVal = document.getElementById("scaleMaxVal");
+const adminOverrideBtn = document.getElementById("adminOverrideBtn");
+const newItemName = document.getElementById("newItemName");
+const newItemID = document.getElementById("newItemID");
+const newItemCategory = document.getElementById("newItemCategory");
+const addNewItemBtn = document.getElementById("addNewItemBtn");
+const lockPresets = document.getElementById("lockPresets");
+const lockDownloadBtn = document.getElementById("lockDownloadBtn");
+
+const catUnreleasedBtn = document.getElementById("catUnreleased");
+
+// — INITIAL STATE: hide unreleased category tab
+if (catUnreleasedBtn) catUnreleasedBtn.style.display = "none";
+
+// — HELPERS
 function updateOutputJSON() {
   const res = { version: 1 };
-  document.querySelectorAll("[data-slot]").forEach(slotDiv => {
-    const blk = slotDiv.querySelector(".item-block");
-    if (blk) res[slotDiv.dataset.slot] = blk.toJSON() || {};
+  bodyParts.forEach(slot => {
+    if (slotData[slot]?.itemID) res[slot] = slotData[slot];
   });
-  const jsonStr = JSON.stringify(res, null, 2);
-  output.textContent = jsonStr;
-  localStorage.setItem("animalCompanyJson", jsonStr);
+  outputEl.textContent = JSON.stringify(res, null, 2);
 }
 
-// — SLIDER BUILDER
-function makeSlider(label, min, max, def) {
-  const w = document.createElement("div"), inp = document.createElement("input");
-  w.className = "input-column";
-  inp.type = "range"; inp.min = min; inp.max = max; inp.value = def;
-  const lbl = document.createElement("label"), span = document.createElement("span");
-  lbl.textContent = `${label}: `; span.textContent = inp.value; lbl.append(span);
-  const btn = document.createElement("button");
-  btn.textContent = "🎲";
-  btn.onclick = () => {
-    inp.value = label === "Scale"
-      ? Math.floor(Math.random() * 256) - 128
-      : label === "Saturation"
-        ? Math.floor(Math.random() * 321) - 120
-        : Math.floor(Math.random() * 241);
-    inp.dispatchEvent(new Event("input"));
-  };
-  inp.oninput = () => {
-    span.textContent = inp.value;
-    updateOutputJSON();
-  };
-  w.append(lbl, inp, btn);
-  return { input: inp, wrapper: w };
-}
-
-// — ITEM BLOCK WITH AUTO-REGISTER
-function originalCreateItemBlock() {
-  const wrapper = document.createElement("div");
-  wrapper.className = "item-block";
-
-  const sd = document.createElement("div");
-  sd.style.cssText = "display:flex;flex-direction:column";
-  const search = document.createElement("input");
-  search.placeholder = "Search items...";
-  search.style.marginBottom = "4px";
-  const select = document.createElement("select");
-  const options = [];
-  const noneOpt = document.createElement("option");
-  noneOpt.value = ""; noneOpt.textContent = "-- None --";
-  select.append(noneOpt); options.push(noneOpt);
-
-  items.forEach(it => {
-    const o = document.createElement("option");
-    o.value = it.id; o.textContent = it.name;
-    select.append(o); options.push(o);
+function saveSlotToData() {
+  slotData[currentSlot] = slotData[currentSlot] || {};
+  Object.assign(slotData[currentSlot], {
+    itemID: slotData[currentSlot].itemID || "",
+    colorHue: +hueSlider.value,
+    colorSaturation: +satSlider.value,
+    scale: +scaleSlider.value,
+    state: +stateInput.value,
+    count: +countInput.value
   });
-
-  // 🔄 AUTO-REGISTER ON FIRST SELECTION
-  let firstSelection = true;
-  select.addEventListener("change", () => {
-    if (!firstSelection || !select.value) return;
-    firstSelection = false;
-    updateOutputJSON(); // auto-save
-  });
-
-  search.oninput = () => {
-    const q = search.value.toLowerCase();
-    select.innerHTML = "";
-    options.forEach(o => {
-      if (!o.value || o.textContent.toLowerCase().includes(q)) select.append(o);
-    });
-  };
-  sd.append(search, select);
-
-  const row = document.createElement("div");
-  row.className = "input-row";
-  const hue = makeSlider("Hue", 0, 240, 0);
-  const sat = makeSlider("Saturation", -120, 200, 0);
-  const scale = makeSlider("Scale", -128, 127, 0);
-  row.append(hue.wrapper, sat.wrapper, scale.wrapper);
-
-  const children = document.createElement("div");
-  children.className = "children";
-  const ctrl = document.createElement("div");
-  ctrl.style.cssText = "margin-top:10px;display:flex;gap:10px";
-  const addBtn = document.createElement("button");
-  addBtn.textContent = "➕ Add Child";
-  addBtn.onclick = () => {
-    children.appendChild(createItemBlock());
-    updateOutputJSON();
-  };
-  const delBtn = document.createElement("button");
-  delBtn.textContent = "🗑️ Delete";
-  delBtn.onclick = () => {
-    if (wrapper.parentElement.classList.contains("children")) {
-      wrapper.remove();
-      updateOutputJSON();
-    } else alert("Can't delete the root block.");
-  };
-  ctrl.append(addBtn, delBtn);
-
-  wrapper.append(sd, row, ctrl, children);
-
-  wrapper.toJSON = () => {
-    if (!select.value) return null;
-    const json = {
-      itemID: select.value,
-      colorHue: +hue.input.value,
-      colorSaturation: +sat.input.value,
-      scale: +scale.input.value
-    };
-    const kidArr = Array.from(children.children)
-      .map(c => c.toJSON())
-      .filter(Boolean);
-    if (kidArr.length) json.children = kidArr;
-    return json;
-  };
-
-  wrapper.onclick = e => {
-    e.stopPropagation();
-    if (selectedBlock) selectedBlock.style.outline = "";
-    selectedBlock = wrapper;
-    wrapper.style.outline = "2px solid red";
-  };
-
-  return wrapper;
-}
-
-function createItemBlock() {
-  const b = originalCreateItemBlock();
-  if (autoRandomize) {
-    b.querySelectorAll("input[type=range]").forEach(i => i.dispatchEvent(new Event("input")));
-  }
-  return b;
-}
-
-// — SLOTS & INIT
-function createSlot(slotName) {
-  const div = document.createElement("div");
-  div.dataset.slot = slotName;
-  const h2 = document.createElement("h2");
-  h2.textContent = slotName;
-  div.append(h2, createItemBlock());
-  builder.append(div);
-}
-
-function loadSavedBuilder() {
-  const sv = localStorage.getItem("animalCompanyJson");
-  if (sv) {
-    try {
-      const data = JSON.parse(sv);
-      if (data.version === 1) {
-        builder.innerHTML = "";
-        bodyParts.forEach(slot => {
-          const div = document.createElement("div");
-          div.dataset.slot = slot;
-          const h2 = document.createElement("h2");
-          h2.textContent = slot;
-          div.append(h2, createItemBlock());
-          builder.append(div);
-          if (data[slot]) {
-            const blk = div.querySelector(".item-block");
-            blk.querySelector("select").value = data[slot].itemID;
-            const sls = blk.querySelectorAll("input[type=range]");
-            sls[0].value = data[slot].colorHue;
-            sls[1].value = data[slot].colorSaturation;
-            sls[2].value = data[slot].scale;
-          }
-        });
-        updateOutputJSON();
-        return;
-      }
-    } catch {}
-  }
-  bodyParts.forEach(createSlot);
   updateOutputJSON();
 }
 
-// — ADMIN PASSWORD, OVERRIDE, ADD ITEM, PRESETS... (no change from previous)
-// [Rest of your script remains unchanged]
+function loadSlotData(slot) {
+  const d = slotData[slot] || {};
+  selectedItemName.textContent = d.itemID || "No item selected";
+  hueSlider.value = d.colorHue ?? 0;
+  satSlider.value = d.colorSaturation ?? 0;
+  scaleSlider.value = d.scale ?? 0;
+  hueVal.textContent = hueSlider.value;
+  satVal.textContent = satSlider.value;
+  scaleVal.textContent = scaleSlider.value;
+  stateInput.value = d.state ?? 0;
+  countInput.value = d.count ?? 1;
+}
+
+// — RENDER ITEM GRID
+function renderItemGrid(filter = "", category = "all") {
+  itemGrid.innerHTML = "";
+  items.filter(it => {
+    return (category === "all" || it.category === category) &&
+           it.name.toLowerCase().includes(filter.toLowerCase());
+  }).forEach(it => {
+    const btn = document.createElement("button");
+    btn.textContent = it.name;
+    btn.onclick = () => {
+      slotData[currentSlot] = slotData[currentSlot] || {};
+      slotData[currentSlot].itemID = it.id;
+      loadSlotData(currentSlot);
+      saveSlotToData();
+    };
+    itemGrid.append(btn);
+  });
+}
+
+// — EVENT WIRING
+
+// Category filter
+categoriesBar.querySelectorAll(".cat-btn").forEach(b => {
+  b.onclick = () => {
+    categoriesBar.querySelectorAll(".cat-btn").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    renderItemGrid(itemSearch.value, b.dataset.cat);
+  };
+});
+
+// Search
+itemSearch.oninput = () => {
+  const activeCat = categoriesBar.querySelector(".cat-btn.active").dataset.cat;
+  renderItemGrid(itemSearch.value, activeCat);
+};
+
+// Slot selection
+positionsBar.querySelectorAll(".pos-btn").forEach(b => {
+  b.onclick = () => {
+    positionsBar.querySelectorAll(".pos-btn").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    currentSlot = b.dataset.slot;
+    loadSlotData(currentSlot);
+  };
+});
+
+// Randomize
+randomizeSelected.onclick = () => {
+  hueSlider.value = Math.floor(Math.random() * 211);
+  satSlider.value = Math.floor(Math.random() * 121);
+  scaleSlider.value = Math.floor(Math.random() * 256) - 128;
+  hueSlider.dispatchEvent(new Event("input"));
+  satSlider.dispatchEvent(new Event("input"));
+  scaleSlider.dispatchEvent(new Event("input"));
+};
+
+// Swatch presets
+swatchList.querySelectorAll(".swatch").forEach(btn => {
+  btn.onclick = () => {
+    hueSlider.value = btn.dataset.hue;
+    satSlider.value = btn.dataset.sat;
+    hueSlider.dispatchEvent(new Event("input"));
+    satSlider.dispatchEvent(new Event("input"));
+  };
+});
+
+// Slider value updates
+[hueSlider, satSlider, scaleSlider].forEach(sl => {
+  sl.oninput = () => {
+    hueVal.textContent = hueSlider.value;
+    satVal.textContent = satSlider.value;
+    scaleVal.textContent = scaleSlider.value;
+  };
+  sl.onchange = saveSlotToData;
+});
+
+stateInput.onchange = saveSlotToData;
+countInput.onchange = saveSlotToData;
+
+// Theme toggle
+themeToggleBtn.onclick = () => document.body.classList.toggle("light-mode");
+
+// — ADMIN PANEL BEHAVIOR
+
+adminBtn.onclick = () => {
+  const p = prompt("Enter admin password:");
+  if (p === adminPassword) {
+    adminPanel.style.display = "block";
+    if (catUnreleasedBtn) catUnreleasedBtn.style.display = "inline-block";
+    alert("Admin access granted!");
+  } else {
+    alert("Incorrect password.");
+  }
+};
+
+adminOverrideBtn.onclick = () => {
+  if (!slotData[currentSlot]?.itemID) return alert("Assign an item first.");
+  hueSlider.max = +overrideHue.value;
+  satSlider.max = +overrideSat.value;
+  scaleSlider.max = +overrideScale.value;
+  hueSlider.value = hueSlider.max;
+  satSlider.value = satSlider.max;
+  scaleSlider.value = scaleSlider.max;
+  hueSlider.dispatchEvent(new Event("input"));
+  satSlider.dispatchEvent(new Event("input"));
+  scaleSlider.dispatchEvent(new Event("input"));
+  saveSlotToData();
+  alert("Override applied for this slot!");
+};
+
+overrideHue.oninput = () => overrideHueVal.textContent = overrideHue.value;
+overrideSat.oninput = () => overrideSatVal.textContent = overrideSat.value;
+overrideScale.oninput = () => overrideScaleVal.textContent = overrideScale.value;
+
+addNewItemBtn.onclick = () => {
+  const name = newItemName.value.trim();
+  const id = newItemID.value.trim();
+  const cat = newItemCategory.value;
+  if (!name || !id) return alert("Fill fields");
+  if (items.some(x => x.id === id)) return alert("Duplicate ID");
+  items.push({ name, id, category: cat });
+  items.sort((a, b) => a.name.localeCompare(b.name));
+  renderItemGrid(itemSearch.value, categoriesBar.querySelector(".cat-btn.active").dataset.cat);
+  alert(`Added item: ${name}`);
+  newItemName.value = "";
+  newItemID.value = "";
+};
+
+// Feature Locks
+lockPresets.onchange = () => randomizeSelected.disabled = lockPresets.checked;
+lockDownloadBtn.onchange = () => outputEl.style.display = lockDownloadBtn.checked ? "none" : "block";
+
+// — INITIALIZE
+renderItemGrid("", "all");
+loadSlotData(currentSlot);
+updateOutputJSON();
