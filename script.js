@@ -1,7 +1,6 @@
 window.addEventListener("DOMContentLoaded", () => {
   const adminPassword = "CrazyJson";
 
-  // Elements
   const adminBtn = document.getElementById("adminBtn");
   const adminPanel = document.getElementById("adminPanel");
   const randomItemsBtn = document.getElementById("randomItemsBtn");
@@ -21,7 +20,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const stateInput = document.getElementById("stateInput");
   const countInput = document.getElementById("countInput");
 
-  // Data
   const slotData = {};
   let currentSlot = "leftHand";
 
@@ -32,7 +30,6 @@ window.addEventListener("DOMContentLoaded", () => {
     { name: "Crossbow", id: "item_crossbow", category: "weapons" }
   ];
 
-  // Load item into slot
   function selectItem(item) {
     slotData[currentSlot] = {
       itemID: item.id,
@@ -46,13 +43,11 @@ window.addEventListener("DOMContentLoaded", () => {
     updateOutput();
   }
 
-  // Output JSON
   function updateOutput() {
     const outputObj = { version: 1, ...slotData };
     output.textContent = JSON.stringify(outputObj, null, 2);
   }
 
-  // Render grid
   function renderItems(filter = "", category = "all") {
     itemGrid.innerHTML = "";
     items.filter(item =>
@@ -66,7 +61,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Random item
   randomItemsBtn.addEventListener("click", () => {
     const btns = Array.from(itemGrid.querySelectorAll("button"));
     if (!btns.length) return;
@@ -74,7 +68,6 @@ window.addEventListener("DOMContentLoaded", () => {
     choice.click();
   });
 
-  // Admin login
   adminBtn.addEventListener("click", () => {
     const pass = prompt("Enter admin password:");
     if (pass === adminPassword) {
@@ -85,7 +78,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Slot selection
   positionsBar.querySelectorAll(".pos-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       positionsBar.querySelectorAll(".pos-btn").forEach(b => b.classList.remove("active"));
@@ -96,7 +88,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Category filter
   categories.querySelectorAll(".cat-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       categories.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
@@ -110,7 +101,6 @@ window.addEventListener("DOMContentLoaded", () => {
     renderItems(itemSearch.value, activeCat);
   });
 
-  // Slider update
   [hueSlider, satSlider, scaleSlider].forEach(sl => {
     sl.addEventListener("input", () => {
       hueVal.textContent = hueSlider.value;
@@ -138,7 +128,25 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Initialize
+  // THEME SELECTOR
+  const themeDropdown = document.getElementById("themeDropdown");
+  themeDropdown.addEventListener("change", () => {
+    document.body.classList.remove("light-mode", "theme-animalcompany");
+    if (themeDropdown.value === "light") {
+      document.body.classList.add("light-mode");
+    } else if (themeDropdown.value === "animalcompany") {
+      document.body.classList.add("theme-animalcompany");
+    }
+    localStorage.setItem("selectedTheme", themeDropdown.value);
+  });
+
+  const savedTheme = localStorage.getItem("selectedTheme");
+  if (savedTheme) {
+    themeDropdown.value = savedTheme;
+    themeDropdown.dispatchEvent(new Event("change"));
+  }
+
+  // Init
   renderItems();
   updateOutput();
 });
