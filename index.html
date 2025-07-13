@@ -12,6 +12,7 @@
 
   <div id="colorPreviewBox">No item selected</div>
 
+  <!-- Slots -->
   <div class="positions-bar" id="positionsBar">
     <button class="pos-btn active" data-slot="leftHand">leftHand</button>
     <button class="pos-btn" data-slot="rightHand">rightHand</button>
@@ -20,7 +21,9 @@
     <button class="pos-btn" data-slot="back">back</button>
   </div>
 
+  <!-- Main layout -->
   <div class="main-panel">
+    <!-- Item panel -->
     <div class="item-panel">
       <input id="itemSearch" placeholder="Search items..." />
       <div class="categories" id="categories">
@@ -30,12 +33,12 @@
         <button class="cat-btn" data-cat="backpacks">Backpacks</button>
         <button class="cat-btn" data-cat="misc">Misc</button>
         <button class="cat-btn" data-cat="food">Food</button>
-        <button class="cat-btn" id="catUnreleased" data-cat="unreleased">Unreleased</button>
       </div>
       <div class="item-grid" id="itemGrid"></div>
       <button id="randomItemsBtn">Random Item</button>
     </div>
 
+    <!-- Properties -->
     <div class="properties-panel" id="propertiesPanel">
       <h2>Slot: <span id="selectedItemName">No item selected</span></h2>
 
@@ -48,22 +51,20 @@
       <label>Scale: <span id="scaleVal">0</span></label>
       <input type="range" id="scaleSlider" min="-128" max="127" value="0" />
 
-      <label class="label-dark">State:</label>
+      <label>State:</label>
       <input type="number" id="stateInput" value="0" />
 
-      <label class="label-dark">Count:</label>
+      <label>Count:</label>
       <input type="number" id="countInput" value="1" />
-
-      <div class="swatches" id="swatchList"></div>
     </div>
-
-    <button id="addChildBtn">➕ Add Child</button>
 
     <pre id="output"></pre>
   </div>
 
+  <!-- Admin Access -->
   <button id="adminBtn" class="floating-admin-btn">Admin</button>
 
+  <!-- Admin Panel -->
   <div id="adminPanel" style="display: none;">
     <h2>Admin Panel</h2>
     <p>You have access to admin features.</p>
@@ -77,25 +78,9 @@
         <option value="explosives">Explosives</option>
         <option value="backpacks">Backpacks</option>
         <option value="food">Food</option>
-        <option value="unreleased">Unreleased</option>
       </select>
       <button id="addNewItemBtn">Add Item</button>
     </div>
-
-    <div>
-      <h3>Feature Locks</h3>
-      <label><input type="checkbox" id="lockDownloadBtn" /> Lock Download</label><br/>
-      <label><input type="checkbox" id="lockPresets" /> Lock Presets</label>
-    </div>
-
-    <h3>Override Sliders Max</h3>
-    <label>Hue: <span id="hueMaxVal">240</span></label>
-    <input type="range" id="overrideHue" min="0" max="1000" value="240" />
-    <label>Saturation: <span id="satMaxVal">200</span></label>
-    <input type="range" id="overrideSaturation" min="0" max="1000" value="200" />
-    <label>Scale: <span id="scaleMaxVal">127</span></label>
-    <input type="range" id="overrideScale" min="0" max="1000" value="127" />
-    <button id="adminOverrideBtn">Apply Override to Selected Slot</button>
   </div>
 </body>
 </html>
