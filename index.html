@@ -8,16 +8,16 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <h1>Animal Company JSON Builder</h1>
+  <h1 id="title">Animal Company JSON Builder</h1>
 
+  <!-- Theme Selector -->
   <select id="themeDropdown">
     <option value="default">Dark</option>
     <option value="light">Light</option>
     <option value="animalcompany">Animal Company</option>
   </select>
 
-  <div id="colorPreviewBox">No item selected</div>
-
+  <!-- Slot Buttons -->
   <div class="positions-bar" id="positionsBar">
     <button class="pos-btn active" data-slot="leftHand">leftHand</button>
     <button class="pos-btn" data-slot="rightHand">rightHand</button>
@@ -26,7 +26,9 @@
     <button class="pos-btn" data-slot="back">back</button>
   </div>
 
+  <!-- Main Layout -->
   <div class="main-panel">
+    <!-- Item Panel -->
     <div class="item-panel">
       <input id="itemSearch" placeholder="Search items..." />
       <div class="categories" id="categories">
@@ -41,6 +43,7 @@
       <button id="randomItemsBtn">Random Item</button>
     </div>
 
+    <!-- Properties Panel -->
     <div class="properties-panel" id="propertiesPanel">
       <h2>Slot: <span id="selectedItemName">No item selected</span></h2>
 
@@ -60,11 +63,14 @@
       <input type="number" id="countInput" value="1" />
     </div>
 
+    <!-- JSON Output -->
     <pre id="output"></pre>
   </div>
 
+  <!-- Admin Button -->
   <button id="adminBtn" class="floating-admin-btn">Admin</button>
 
+  <!-- Admin Panel -->
   <div id="adminPanel" style="display: none;">
     <h2>Admin Panel</h2>
     <p>You have access to admin features.</p>
