@@ -1,210 +1,178 @@
-/* --- Base & Theme Variables --- */
-:root {
-  --bg-gradient: linear-gradient(135deg, #87cefa, #000000);
-  --panel-bg: #2e2e2e;
-  --text-color: white;
-  --btn-bg: #333;
-  --swatch-border: white;
+/* General Reset */
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: sans-serif;
+  background: linear-gradient(135deg, #001024, #ffffff);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Themes */
 body.light-mode {
-  --bg-gradient: linear-gradient(135deg, #001f3f, #ffffff);
-  --panel-bg: #ffffff;
-  --text-color: black;
-  --btn-bg: #ddd;
-  --swatch-border: black;
+  background: linear-gradient(135deg, #cceaff, #000000);
+  color: #000;
 }
 
 body.theme-animalcompany {
-  --bg-gradient: linear-gradient(135deg, #002200, #004400);
-  --panel-bg: #001000;
-  --text-color: #00ff00;
-  --btn-bg: #003300;
-  --swatch-border: #00ff00;
+  background: radial-gradient(circle at center, #ffe0b2, #795548);
+  color: #000;
 }
 
-/* --- General Styling --- */
-body,
-body.theme-animalcompany,
-body.theme-animalcompany h1,
-body.theme-animalcompany button,
+body.light-mode input,
+body.light-mode select,
+body.light-mode button {
+  background: #f0f0f0;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
 body.theme-animalcompany input,
-body.theme-animalcompany select {
-  color: var(--text-color);
+body.theme-animalcompany select,
+body.theme-animalcompany button {
+  background: #ffffff;
+  color: #333;
+  border: 1px solid #bbb;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--bg-gradient);
-  transition: background 0.5s ease, color 0.5s ease;
+/* Headings */
+h1 {
+  margin-top: 0;
+  text-align: center;
 }
 
-/* --- Center Slot Buttons --- */
+/* Position Buttons */
 .positions-bar {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  padding: 10px;
-}
-
-/* --- Unified Button Style --- */
-button,
-.item-grid button,
-#themeDropdown {
-  padding: 10px;
-  background: var(--btn-bg);
-  color: var(--text-color);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  text-align: center;
-  font-weight: bold;
-  transition: background 0.2s ease;
-}
-
-button:hover,
-.item-grid button:hover,
-#themeDropdown:hover {
-  background: #555;
-}
-
-body.theme-animalcompany button:hover {
-  background: #005500;
-}
-
-/* --- Theme Dropdown Styling --- */
-#themeDropdown {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 200;
-}
-
-/* --- Item Grid and Categories --- */
-.item-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
-}
-
-.categories {
-  display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-/* --- Category Buttons --- */
-.cat-btn {
-  /* inherits unified button style */
-}
-.cat-btn.active {
-  background: cyan;
+.pos-btn.active {
+  background-color: #0cf;
   color: black;
 }
 
-/* --- Swatches (Presets) --- */
-.swatches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 15px 0;
-}
-
-.swatch {
-  width: 60px;
-  height: 30px;
-  border: 2px solid var(--swatch-border);
-  border-radius: 6px;
-  cursor: pointer;
-  background: var(--btn-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9em;
-  font-weight: bold;
-  color: black !important;
-  text-align: center;
-}
-.swatch:hover {
-  opacity: 0.8;
-}
-
-/* --- Properties Panel Labels: State & Count in Black Text --- */
-.properties-panel label {
-  display: block;
-  margin-top: 10px;
-}
-.properties-panel .label-dark {
-  color: black !important;
-}
-.properties-panel input[type="number"] {
-  width: 100%;
-  margin-top: 4px;
-}
-
-/* --- Output & Panel Layout --- */
+/* Layout */
 .main-panel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  align-items: center;
+  width: 100%;
   max-width: 1000px;
-  margin: auto;
 }
 
-.item-panel,
-.properties-panel,
-#output,
-#adminPanel {
+/* Item Panel */
+.item-panel {
   width: 100%;
-  background: var(--panel-bg);
-  padding: 20px;
-  border-radius: 12px;
-  transition: background 0.3s ease;
+  max-width: 1000px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#itemSearch {
-  width: 100%;
+.item-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
   margin: 10px 0;
-  padding: 8px;
-  border: 1px solid #999;
-  border-radius: 5px;
-  background: var(--panel-bg);
 }
 
-#output {
-  margin: 30px auto;
+/* Properties Panel */
+.properties-panel {
+  width: 100%;
   max-width: 1000px;
-  border-radius: 8px;
-  white-space: pre-wrap;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* --- Admin Panel Floating Button --- */
+.properties-panel label {
+  margin: 4px 0 0;
+}
+
+/* Output JSON */
+#output {
+  width: 100%;
+  max-width: 1000px;
+  background-color: #111;
+  padding: 10px;
+  border: 1px solid #555;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Form Inputs */
+input[type="range"],
+input[type="number"],
+input[type="text"],
+select {
+  padding: 5px;
+  margin: 4px;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background: #111;
+  color: white;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Buttons */
+button {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  margin: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+/* Theme dropdown */
+#themeDropdown {
+  margin-bottom: 20px;
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+
+/* Admin */
+#adminPanel {
+  background: #222;
+  padding: 10px;
+  margin-top: 20px;
+  border: 1px solid #444;
+  width: 100%;
+  max-width: 1000px;
+}
+
 .floating-admin-btn {
   position: fixed;
   bottom: 10px;
   left: 10px;
-  background: var(--btn-bg);
-  color: var(--text-color);
-  padding: 10px;
-  border-radius: 8px;
-  z-index: 99;
+  z-index: 999;
 }
 
-@media (max-width: 768px) {
-  .main-panel {
-    padding: 10px;
+/* Mobile Fixes */
+@media (max-width: 600px) {
+  .item-grid {
+    flex-direction: column;
     align-items: center;
   }
-  .item-panel,
-  .properties-panel {
-    max-width: 90%;
-    margin: 0 auto;
-  }
-  .item-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+
+  .properties-panel,
+  .item-panel {
+    width: 100%;
   }
 }
