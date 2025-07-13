@@ -1,46 +1,67 @@
-/* General Reset */
-body {
+/* Global Reset and Base */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
-  padding: 20px;
-  font-family: sans-serif;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
   background: linear-gradient(135deg, #001024, #ffffff);
   color: white;
+  font-family: sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
 }
 
-/* Themes */
+/* Title Centering */
+#title, h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin: 0 0 20px;
+}
+
+/* Light Mode Override */
 body.light-mode {
   background: linear-gradient(135deg, #cceaff, #000000);
   color: #000;
 }
 
+body.light-mode #title {
+  color: white;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* Animal Company Theme */
 body.theme-animalcompany {
   background: radial-gradient(circle at center, #ffe0b2, #795548);
   color: #000;
 }
 
-body.light-mode input,
-body.light-mode select,
-body.light-mode button {
-  background: #f0f0f0;
-  color: #000;
-  border: 1px solid #ccc;
-}
-
 body.theme-animalcompany input,
 body.theme-animalcompany select,
 body.theme-animalcompany button {
-  background: #ffffff;
+  background-color: #ffffff;
   color: #333;
   border: 1px solid #bbb;
 }
 
-/* Headings */
-h1 {
-  margin-top: 0;
-  text-align: center;
+/* UI Panels */
+.main-panel,
+.item-panel,
+.properties-panel,
+#adminPanel,
+#output {
+  width: 100%;
+  max-width: 960px;
+  padding: 10px;
+  margin-bottom: 20px;
 }
 
 /* Position Buttons */
@@ -57,53 +78,29 @@ h1 {
   color: black;
 }
 
-/* Layout */
-.main-panel {
+/* Categories */
+.categories {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 1000px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-/* Item Panel */
-.item-panel {
-  width: 100%;
-  max-width: 1000px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+/* Item Grid */
 .item-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  margin: 10px 0;
-}
-
-/* Properties Panel */
-.properties-panel {
+  margin-bottom: 10px;
   width: 100%;
-  max-width: 1000px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.properties-panel label {
-  margin: 4px 0 0;
 }
 
 /* Output JSON */
 #output {
-  width: 100%;
-  max-width: 1000px;
   background-color: #111;
-  padding: 10px;
+  color: #0f0;
   border: 1px solid #555;
   white-space: pre-wrap;
   word-break: break-word;
@@ -140,23 +137,20 @@ button:hover {
   background-color: #555;
 }
 
-/* Theme dropdown */
+/* Theme Dropdown */
 #themeDropdown {
   margin-bottom: 20px;
   padding: 6px 10px;
   border-radius: 5px;
 }
 
-/* Admin */
+/* Admin Panel */
 #adminPanel {
   background: #222;
-  padding: 10px;
-  margin-top: 20px;
   border: 1px solid #444;
-  width: 100%;
-  max-width: 1000px;
 }
 
+/* Admin Button */
 .floating-admin-btn {
   position: fixed;
   bottom: 10px;
@@ -164,15 +158,16 @@ button:hover {
   z-index: 999;
 }
 
-/* Mobile Fixes */
+/* Mobile */
 @media (max-width: 600px) {
   .item-grid {
     flex-direction: column;
     align-items: center;
   }
 
-  .properties-panel,
-  .item-panel {
+  .item-panel,
+  .properties-panel {
     width: 100%;
+    padding: 0;
   }
 }
