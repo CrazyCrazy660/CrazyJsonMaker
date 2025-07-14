@@ -1,4 +1,4 @@
-/* Reset & Base Layout */
+/* Reset & Layout Base */
 * {
   box-sizing: border-box;
 }
@@ -39,19 +39,53 @@ body.theme-animalcompany #title {
   font-family: 'Courier New', monospace;
 }
 
-/* Grouped Sections with Borders */
+/* Grouped Panel Styles */
 .positions-bar,
 .item-panel,
 .properties-panel,
 #output,
 #adminPanel {
-  border: 1px solid #666;
-  border-radius: 10px;
   background-color: #111;
-  padding: 12px;
+  border: 2px solid #444;
+  border-radius: 16px;
+  padding: 16px;
   margin-bottom: 20px;
   width: 100%;
   max-width: 960px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.25);
+}
+
+/* Buttons & Inputs */
+button,
+input,
+select,
+#themeDropdown {
+  border-radius: 8px;
+  border: 1px solid #555;
+  padding: 8px 12px;
+  background-color: #222;
+  color: white;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #444;
+}
+
+input:focus,
+select:focus,
+button:focus {
+  outline: 2px solid #0cf;
+  outline-offset: 2px;
+}
+
+/* Centered Search Bar */
+#itemSearch {
+  display: block;
+  margin: 0 auto 12px auto;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
 }
 
 /* Position Buttons */
@@ -67,7 +101,7 @@ body.theme-animalcompany #title {
   color: black;
 }
 
-/* Categories & Items */
+/* Categories & Item Grid */
 .categories {
   display: flex;
   flex-wrap: wrap;
@@ -84,7 +118,7 @@ body.theme-animalcompany #title {
   width: 100%;
 }
 
-/* Properties */
+/* Properties Panel */
 .properties-panel {
   display: flex;
   flex-direction: column;
@@ -99,48 +133,9 @@ body.theme-animalcompany #title {
 #output {
   background-color: #111;
   color: #0f0;
-  border: 1px solid #555;
   white-space: pre-wrap;
   word-break: break-word;
   padding: 10px;
-}
-
-/* Form Inputs */
-input[type="range"],
-input[type="number"],
-input[type="text"],
-select {
-  padding: 5px;
-  margin: 4px;
-  border-radius: 4px;
-  border: 1px solid #555;
-  background: #111;
-  color: white;
-  width: 100%;
-  max-width: 300px;
-}
-
-/* Buttons */
-button {
-  background: #333;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  margin: 4px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-button:hover {
-  background-color: #555;
-}
-
-/* Theme Selector */
-#themeDropdown {
-  margin-bottom: 20px;
-  padding: 6px 10px;
-  border-radius: 5px;
 }
 
 /* Admin Button */
@@ -171,7 +166,7 @@ body.light-mode #output {
   border-color: #ccc;
 }
 
-/* === ANIMAL COMPANY THEME (terminal style) === */
+/* === ANIMAL COMPANY THEME === */
 body.theme-animalcompany {
   background-color: #000;
   background-image: 
@@ -197,8 +192,10 @@ body.theme-animalcompany .item-panel,
 body.theme-animalcompany .properties-panel,
 body.theme-animalcompany #adminPanel,
 body.theme-animalcompany .positions-bar {
-  background-color: rgba(0, 255, 0, 0.05);
-  border: 1px solid #00ff00;
+  background-color: rgba(0, 255, 0, 0.08);
+  border: 2px solid #00ff00;
+  border-radius: 16px;
+  box-shadow: 0 0 10px #00ff00;
 }
 
 body.theme-animalcompany button:hover {
@@ -212,7 +209,7 @@ body.theme-animalcompany .cat-btn.active {
   box-shadow: 0 0 6px #00ff00;
 }
 
-/* Optional: flicker animation */
+/* Flicker Animation */
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   45% { opacity: 0.85; }
@@ -220,7 +217,7 @@ body.theme-animalcompany .cat-btn.active {
   60% { opacity: 0.9; }
 }
 
-/* Responsive Layout */
+/* Responsive */
 @media (max-width: 600px) {
   .item-grid {
     flex-direction: column;
