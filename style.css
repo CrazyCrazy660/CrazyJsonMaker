@@ -1,4 +1,4 @@
-/* Reset and Base Styles */
+/* Reset & Base Layout */
 * {
   box-sizing: border-box;
 }
@@ -33,11 +33,13 @@ body.light-mode #title {
 }
 
 body.theme-animalcompany #title {
-  color: #5a3c20;
-  text-shadow: 1px 1px 0 #fff;
+  color: #00ff00;
+  text-shadow: 0 0 8px #00ff00;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
 }
 
-/* Section Group Styling */
+/* Grouped Sections with Borders */
 .positions-bar,
 .item-panel,
 .properties-panel,
@@ -65,13 +67,7 @@ body.theme-animalcompany #title {
   color: black;
 }
 
-/* Item Panel */
-.item-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+/* Categories & Items */
 .categories {
   display: flex;
   flex-wrap: wrap;
@@ -88,7 +84,7 @@ body.theme-animalcompany #title {
   width: 100%;
 }
 
-/* Properties Panel */
+/* Properties */
 .properties-panel {
   display: flex;
   flex-direction: column;
@@ -99,7 +95,7 @@ body.theme-animalcompany #title {
   margin: 4px 0 0;
 }
 
-/* Output JSON */
+/* JSON Output */
 #output {
   background-color: #111;
   color: #0f0;
@@ -109,7 +105,7 @@ body.theme-animalcompany #title {
   padding: 10px;
 }
 
-/* Inputs */
+/* Form Inputs */
 input[type="range"],
 input[type="number"],
 input[type="text"],
@@ -140,18 +136,14 @@ button:hover {
   background-color: #555;
 }
 
-/* Theme Dropdown */
+/* Theme Selector */
 #themeDropdown {
   margin-bottom: 20px;
   padding: 6px 10px;
   border-radius: 5px;
 }
 
-/* Admin Panel */
-#adminPanel {
-  background: #222;
-}
-
+/* Admin Button */
 .floating-admin-btn {
   position: fixed;
   bottom: 10px;
@@ -159,7 +151,7 @@ button:hover {
   z-index: 999;
 }
 
-/* THEME: Light Mode */
+/* === LIGHT MODE === */
 body.light-mode {
   background: linear-gradient(135deg, #cceaff, #000000);
   color: #000;
@@ -179,29 +171,56 @@ body.light-mode #output {
   border-color: #ccc;
 }
 
-/* THEME: Animal Company */
+/* === ANIMAL COMPANY THEME (terminal style) === */
 body.theme-animalcompany {
-  background: linear-gradient(to bottom right, #ffe8cc, #a87f5d);
-  color: #000;
+  background-color: #000;
+  background-image: 
+    linear-gradient(#003300 1px, transparent 1px),
+    linear-gradient(90deg, #003300 1px, transparent 1px);
+  background-size: 64px 64px;
+  color: #00ff00;
+  font-family: 'Courier New', Courier, monospace;
+  animation: flicker 6s infinite;
 }
 
 body.theme-animalcompany input,
 body.theme-animalcompany select,
 body.theme-animalcompany button,
 body.theme-animalcompany #output {
-  background: #fff4e0;
-  color: #000;
-  border: 1px solid #a87f5d;
+  background-color: rgba(0, 255, 0, 0.05);
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  text-shadow: 0 0 4px #00ff00;
 }
 
 body.theme-animalcompany .item-panel,
 body.theme-animalcompany .properties-panel,
-body.theme-animalcompany #adminPanel {
-  background: #fff8ee;
-  border-color: #a87f5d;
+body.theme-animalcompany #adminPanel,
+body.theme-animalcompany .positions-bar {
+  background-color: rgba(0, 255, 0, 0.05);
+  border: 1px solid #00ff00;
 }
 
-/* Mobile Responsive */
+body.theme-animalcompany button:hover {
+  background-color: rgba(0, 255, 0, 0.1);
+}
+
+body.theme-animalcompany .pos-btn.active,
+body.theme-animalcompany .cat-btn.active {
+  background-color: #00ff00;
+  color: black;
+  box-shadow: 0 0 6px #00ff00;
+}
+
+/* Optional: flicker animation */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 0.85; }
+  55% { opacity: 0.65; }
+  60% { opacity: 0.9; }
+}
+
+/* Responsive Layout */
 @media (max-width: 600px) {
   .item-grid {
     flex-direction: column;
