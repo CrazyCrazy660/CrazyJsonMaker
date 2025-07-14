@@ -1,4 +1,4 @@
-/* Global Reset and Base */
+/* Reset and Base Styles */
 * {
   box-sizing: border-box;
 }
@@ -11,26 +11,20 @@ html, body {
 }
 
 body {
+  font-family: sans-serif;
   background: linear-gradient(135deg, #001024, #ffffff);
   color: white;
-  font-family: sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
 }
 
-/* Title Centering */
+/* Title */
 #title, h1 {
   text-align: center;
   font-size: 2rem;
   margin: 0 0 20px;
-}
-
-/* Light Mode Override */
-body.light-mode {
-  background: linear-gradient(135deg, #cceaff, #000000);
-  color: #000;
 }
 
 body.light-mode #title {
@@ -38,30 +32,24 @@ body.light-mode #title {
   text-shadow: 1px 1px 2px #000;
 }
 
-/* Animal Company Theme */
-body.theme-animalcompany {
-  background: radial-gradient(circle at center, #ffe0b2, #795548);
-  color: #000;
+body.theme-animalcompany #title {
+  color: #5a3c20;
+  text-shadow: 1px 1px 0 #fff;
 }
 
-body.theme-animalcompany input,
-body.theme-animalcompany select,
-body.theme-animalcompany button {
-  background-color: #ffffff;
-  color: #333;
-  border: 1px solid #bbb;
-}
-
-/* UI Panels */
-.main-panel,
+/* Section Group Styling */
+.positions-bar,
 .item-panel,
 .properties-panel,
-#adminPanel,
-#output {
+#output,
+#adminPanel {
+  border: 1px solid #666;
+  border-radius: 10px;
+  background-color: #111;
+  padding: 12px;
+  margin-bottom: 20px;
   width: 100%;
   max-width: 960px;
-  padding: 10px;
-  margin-bottom: 20px;
 }
 
 /* Position Buttons */
@@ -70,7 +58,6 @@ body.theme-animalcompany button {
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 20px;
 }
 
 .pos-btn.active {
@@ -78,23 +65,38 @@ body.theme-animalcompany button {
   color: black;
 }
 
-/* Categories */
+/* Item Panel */
+.item-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .categories {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
 
-/* Item Grid */
 .item-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 10px;
   width: 100%;
+}
+
+/* Properties Panel */
+.properties-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.properties-panel label {
+  margin: 4px 0 0;
 }
 
 /* Output JSON */
@@ -104,9 +106,10 @@ body.theme-animalcompany button {
   border: 1px solid #555;
   white-space: pre-wrap;
   word-break: break-word;
+  padding: 10px;
 }
 
-/* Form Inputs */
+/* Inputs */
 input[type="range"],
 input[type="number"],
 input[type="text"],
@@ -147,10 +150,8 @@ button:hover {
 /* Admin Panel */
 #adminPanel {
   background: #222;
-  border: 1px solid #444;
 }
 
-/* Admin Button */
 .floating-admin-btn {
   position: fixed;
   bottom: 10px;
@@ -158,7 +159,49 @@ button:hover {
   z-index: 999;
 }
 
-/* Mobile */
+/* THEME: Light Mode */
+body.light-mode {
+  background: linear-gradient(135deg, #cceaff, #000000);
+  color: #000;
+}
+
+body.light-mode input,
+body.light-mode select,
+body.light-mode button {
+  background: #f0f0f0;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+body.light-mode #output {
+  background-color: #fff;
+  color: #111;
+  border-color: #ccc;
+}
+
+/* THEME: Animal Company */
+body.theme-animalcompany {
+  background: linear-gradient(to bottom right, #ffe8cc, #a87f5d);
+  color: #000;
+}
+
+body.theme-animalcompany input,
+body.theme-animalcompany select,
+body.theme-animalcompany button,
+body.theme-animalcompany #output {
+  background: #fff4e0;
+  color: #000;
+  border: 1px solid #a87f5d;
+}
+
+body.theme-animalcompany .item-panel,
+body.theme-animalcompany .properties-panel,
+body.theme-animalcompany #adminPanel {
+  background: #fff8ee;
+  border-color: #a87f5d;
+}
+
+/* Mobile Responsive */
 @media (max-width: 600px) {
   .item-grid {
     flex-direction: column;
