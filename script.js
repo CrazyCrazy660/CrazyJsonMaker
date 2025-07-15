@@ -1,17 +1,21 @@
 window.addEventListener("DOMContentLoaded", () => {
   const themeDropdown = document.getElementById("themeDropdown");
   const bgSpeedSlider = document.getElementById("bgSpeedSlider");
+  const gridSpeedDisplay = document.getElementById("gridSpeedDisplay");
+
   const adminBtn = document.getElementById("adminBtn");
   const adminPanel = document.getElementById("adminPanel");
   const newItemName = document.getElementById("newItemName");
   const newItemID = document.getElementById("newItemID");
   const newItemCategory = document.getElementById("newItemCategory");
   const addNewItemBtn = document.getElementById("addNewItemBtn");
+
   const itemSearch = document.getElementById("itemSearch");
   const itemGrid = document.getElementById("itemGrid");
   const categories = document.getElementById("categories");
   const positionsBar = document.getElementById("positionsBar");
   const selectedItemName = document.getElementById("selectedItemName");
+
   const hueSlider = document.getElementById("hueSlider");
   const satSlider = document.getElementById("satSlider");
   const scaleSlider = document.getElementById("scaleSlider");
@@ -26,9 +30,8 @@ window.addEventListener("DOMContentLoaded", () => {
   const ADMIN_PASSWORD = "CrazyJson";
   let currentSlot = "leftHand";
   const slotData = {};
-  const items = []; // Preload or add via admin panel
+  const items = [];
 
-  /*** THEME + GRID SPEED ***/
   function applyTheme(theme) {
     document.body.classList.remove("light-mode", "theme-animalcompany");
     if (theme === "light") document.body.classList.add("light-mode");
@@ -39,6 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
   function applyGridSpeed(speed) {
     document.body.style.setProperty("--gridSpeed", `${speed}s`);
     localStorage.setItem("acGridSpeed", speed);
+    if (gridSpeedDisplay) gridSpeedDisplay.textContent = speed;
   }
 
   themeDropdown.addEventListener("change", () => applyTheme(themeDropdown.value));
@@ -52,7 +56,6 @@ window.addEventListener("DOMContentLoaded", () => {
   bgSpeedSlider.value = savedSpeed;
   applyGridSpeed(savedSpeed);
 
-  /*** ADMIN PANEL ***/
   adminBtn.addEventListener("click", () => {
     const pass = prompt("Enter admin password:");
     if (pass === ADMIN_PASSWORD) {
@@ -74,7 +77,6 @@ window.addEventListener("DOMContentLoaded", () => {
     newItemID.value = "";
   });
 
-  /*** SLOT & ITEM SELECTION ***/
   positionsBar.querySelectorAll(".pos-btn").forEach(btn =>
     btn.addEventListener("click", () => {
       positionsBar.querySelectorAll(".pos-btn").forEach(b => b.classList.remove("active"));
@@ -141,7 +143,6 @@ window.addEventListener("DOMContentLoaded", () => {
     renderItems(itemSearch.value, cat);
   });
 
-  /*** SLIDER & INPUT HANDLING ***/
   [hueSlider, satSlider, scaleSlider].forEach(slider =>
     slider.addEventListener("input", () => {
       hueVal.textContent = hueSlider.value;
@@ -168,7 +169,6 @@ window.addEventListener("DOMContentLoaded", () => {
     })
   );
 
-  /*** OUTPUT JSON ***/
   function updateOutputJSON() {
     const out = { version: 1 };
     Object.entries(slotData).forEach(([slot, d]) => {
@@ -184,7 +184,6 @@ window.addEventListener("DOMContentLoaded", () => {
     output.textContent = JSON.stringify(out, null, 2);
   }
 
-  /*** INIT ***/
   renderItems();
   updateOutputJSON();
 });
