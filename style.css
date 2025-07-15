@@ -39,14 +39,14 @@ body.theme-animalcompany #title {
   font-family: 'Courier New', monospace;
 }
 
-/* Grouped Panel Styles */
+/* Group Panel Styles */
 .positions-bar,
 .item-panel,
 .properties-panel,
 #output,
 #adminPanel {
   background-color: #111;
-  border: 2px solid #444;
+  border: 2px solid #000;
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 20px;
@@ -55,7 +55,17 @@ body.theme-animalcompany #title {
   box-shadow: 0 0 12px rgba(0,0,0,0.25);
 }
 
-/* Buttons & Inputs */
+/* Light Mode Panel Borders */
+body.light-mode .positions-bar,
+body.light-mode .item-panel,
+body.light-mode .properties-panel,
+body.light-mode #output,
+body.light-mode #adminPanel {
+  border: 2px solid white;
+  background-color: #f9f9f9;
+}
+
+/* Inputs & Buttons */
 button,
 input,
 select,
@@ -101,7 +111,7 @@ button:focus {
   color: black;
 }
 
-/* Categories & Item Grid */
+/* Categories & Items */
 .categories {
   display: flex;
   flex-wrap: wrap;
@@ -166,18 +176,31 @@ body.light-mode #output {
   border-color: #ccc;
 }
 
-/* === ANIMAL COMPANY THEME === */
+/* === ANIMAL COMPANY THEME with Grid Speed Variable === */
 body.theme-animalcompany {
+  --gridSpeed: 60s;
   background-color: #000;
-  background-image: 
+  background-image:
     linear-gradient(#003300 1px, transparent 1px),
     linear-gradient(90deg, #003300 1px, transparent 1px);
   background-size: 64px 64px;
+  background-repeat: repeat;
+  background-position: 0 0;
   color: #00ff00;
   font-family: 'Courier New', Courier, monospace;
-  animation: flicker 6s infinite;
+  animation: flicker 6s infinite, scrollGrid var(--gridSpeed) linear infinite;
 }
 
+@keyframes scrollGrid {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -512px 512px;
+  }
+}
+
+/* Animal Company UI Styling */
 body.theme-animalcompany input,
 body.theme-animalcompany select,
 body.theme-animalcompany button,
@@ -209,7 +232,7 @@ body.theme-animalcompany .cat-btn.active {
   box-shadow: 0 0 6px #00ff00;
 }
 
-/* Flicker Animation */
+/* Flicker animation */
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   45% { opacity: 0.85; }
