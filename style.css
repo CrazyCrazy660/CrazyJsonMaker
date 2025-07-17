@@ -23,46 +23,15 @@ body.light-mode {
 }
 
 body.theme-animalcompany {
-  background: linear-gradient(to bottom right, #f6f0e0, #ae9860);
+  --gridSpeed: 37s;
+  background: linear-gradient(to bottom right, #0f3d0f, #7acb6c);
   animation: scrollGrid var(--gridSpeed) linear infinite;
-  color: black;
+  color: #eaffea;
 }
 
-#title {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 2em;
-  color: white;
-}
-
-body.light-mode #title {
-  color: white;
-}
-
-select, input, button {
-  margin: 5px;
-  padding: 6px;
-  font-size: 1em;
-  border-radius: 5px;
-}
-
-.positions-bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 5px;
-}
-
-.main-panel {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 10px;
-  gap: 20px;
-  width: 100%;
-}
-
-.item-panel, .properties-panel {
+/* Themed Panels */
+.item-panel,
+.properties-panel {
   border: 2px solid white;
   padding: 10px;
   min-width: 300px;
@@ -76,11 +45,18 @@ body.light-mode .properties-panel {
   background: rgba(0, 0, 0, 0.05);
 }
 
-.item-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 8px;
-  margin-top: 10px;
+body.theme-animalcompany .item-panel,
+body.theme-animalcompany .properties-panel {
+  border: 2px solid #bdf7c2;
+  background: rgba(0, 64, 0, 0.4);
+}
+
+/* Buttons */
+button, select, input {
+  margin: 5px;
+  padding: 6px;
+  font-size: 1em;
+  border-radius: 5px;
 }
 
 .item-button {
@@ -112,6 +88,21 @@ body.light-mode .properties-panel {
   color: black;
 }
 
+/* Green Theme Buttons */
+body.theme-animalcompany .item-button,
+body.theme-animalcompany .cat-btn,
+body.theme-animalcompany .pos-btn {
+  background-color: #1f5820;
+  border-color: #bdf7c2;
+  color: white;
+}
+
+body.theme-animalcompany .item-button:hover,
+body.theme-animalcompany .cat-btn:hover,
+body.theme-animalcompany .pos-btn:hover {
+  background-color: #286c2b;
+}
+
 #output {
   white-space: pre-wrap;
   word-break: break-word;
@@ -121,6 +112,17 @@ body.light-mode .properties-panel {
   margin-top: 20px;
   width: 90%;
   max-width: 600px;
+}
+
+#title {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 2em;
+  color: white;
+}
+
+body.light-mode #title {
+  color: white;
 }
 
 #adminPanel {
@@ -135,6 +137,29 @@ body.light-mode .properties-panel {
   position: fixed;
   bottom: 10px;
   left: 10px;
+}
+
+.positions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.main-panel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 20px;
+  width: 100%;
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
 }
 
 /* Animations */
