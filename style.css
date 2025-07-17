@@ -1,173 +1,81 @@
-:root {
-  --gridSpeed: 37s;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom right, #000428, #004e92);
-  background-size: 400% 400%;
-  animation: scrollGrid var(--gridSpeed) linear infinite;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding-bottom: 50px;
-}
-
-/* Themes */
-body.light-mode {
-  background: linear-gradient(to bottom right, #b3e5fc, #000);
-  color: black;
-}
-
 body.theme-animalcompany {
   --gridSpeed: 37s;
-  background: linear-gradient(to bottom right, #0f3d0f, #7acb6c);
-  animation: scrollGrid var(--gridSpeed) linear infinite;
-  color: #eaffea;
+  background: #000;
+  background-image:
+    linear-gradient(rgba(0, 255, 0, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.2) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: scrollGrid var(--gridSpeed) linear infinite, flicker 4s infinite;
+  color: #39ff14;
+  font-family: 'Courier New', Courier, monospace;
 }
 
-/* Themed Panels */
+/* Background scroll effect */
+@keyframes scrollGrid {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: -120px 120px, -120px 120px;
+  }
+}
+
+/* Neon flicker */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  5%, 10%, 95% { opacity: 0.85; }
+  50% { opacity: 0.92; }
+}
+
+/* Panel Styling */
 .item-panel,
-.properties-panel {
-  border: 2px solid white;
-  padding: 10px;
-  min-width: 300px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-body.light-mode .item-panel,
-body.light-mode .properties-panel {
-  border-color: black;
-  background: rgba(0, 0, 0, 0.05);
-}
-
-body.theme-animalcompany .item-panel,
-body.theme-animalcompany .properties-panel {
-  border: 2px solid #bdf7c2;
-  background: rgba(0, 64, 0, 0.4);
-}
-
-/* Buttons */
-button, select, input {
-  margin: 5px;
-  padding: 6px;
-  font-size: 1em;
-  border-radius: 5px;
-}
-
-.item-button {
-  background-color: #333;
-  color: white;
-  padding: 6px;
-  border: 1px solid #555;
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 0.9em;
-}
-
-.item-button:hover {
-  background-color: #555;
-}
-
-.cat-btn, .pos-btn, .floating-admin-btn {
-  background-color: #222;
-  color: white;
-  border: 1px solid #555;
-  padding: 6px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.cat-btn.active, .pos-btn.active {
-  background-color: #0af;
-  color: black;
-}
-
-/* Green Theme Buttons */
-body.theme-animalcompany .item-button,
-body.theme-animalcompany .cat-btn,
-body.theme-animalcompany .pos-btn {
-  background-color: #1f5820;
-  border-color: #bdf7c2;
-  color: white;
-}
-
-body.theme-animalcompany .item-button:hover,
-body.theme-animalcompany .cat-btn:hover,
-body.theme-animalcompany .pos-btn:hover {
-  background-color: #286c2b;
-}
-
-#output {
-  white-space: pre-wrap;
-  word-break: break-word;
-  background: #111;
-  border: 1px solid #444;
-  padding: 10px;
-  margin-top: 20px;
-  width: 90%;
-  max-width: 600px;
-}
-
-#title {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 2em;
-  color: white;
-}
-
-body.light-mode #title {
-  color: white;
-}
-
-#adminPanel {
-  margin-top: 20px;
-  padding: 10px;
-  border: 2px solid #f0f0f0;
-  background: #222;
+.properties-panel,
+.theme-animalcompany .group-box {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #39ff14;
+  padding: 12px;
   border-radius: 6px;
 }
 
-.floating-admin-btn {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
+/* Buttons */
+.theme-animalcompany .item-button,
+.theme-animalcompany .cat-btn,
+.theme-animalcompany .pos-btn,
+.theme-animalcompany button {
+  background-color: #000;
+  border: 1px solid #39ff14;
+  color: #39ff14;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.positions-bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 5px;
+.theme-animalcompany .item-button:hover,
+.theme-animalcompany .cat-btn:hover,
+.theme-animalcompany .pos-btn:hover,
+.theme-animalcompany button:hover {
+  background-color: #111;
 }
 
-.main-panel {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 10px;
-  gap: 20px;
-  width: 100%;
+/* Inputs */
+.theme-animalcompany input,
+.theme-animalcompany select {
+  background: #000;
+  color: #39ff14;
+  border: 1px solid #39ff14;
 }
 
-.item-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 8px;
-  margin-top: 10px;
+.theme-animalcompany #output {
+  background: #000;
+  color: #39ff14;
+  border: 1px solid #39ff14;
+  padding: 8px;
 }
 
-/* Animations */
-@keyframes scrollGrid {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: -100% 100%;
-  }
+/* Center heading in AC Theme */
+.theme-animalcompany .main-title {
+  text-align: center;
+  color: #39ff14;
+  font-weight: bold;
+  font-size: 24px;
 }
