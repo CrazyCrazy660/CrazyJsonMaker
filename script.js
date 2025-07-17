@@ -1,189 +1,138 @@
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
   const themeDropdown = document.getElementById("themeDropdown");
-  const bgSpeedSlider = document.getElementById("bgSpeedSlider");
-  const gridSpeedDisplay = document.getElementById("gridSpeedDisplay");
 
-  const adminBtn = document.getElementById("adminBtn");
-  const adminPanel = document.getElementById("adminPanel");
-  const newItemName = document.getElementById("newItemName");
-  const newItemID = document.getElementById("newItemID");
-  const newItemCategory = document.getElementById("newItemCategory");
-  const addNewItemBtn = document.getElementById("addNewItemBtn");
-
-  const itemSearch = document.getElementById("itemSearch");
-  const itemGrid = document.getElementById("itemGrid");
-  const categories = document.getElementById("categories");
-  const positionsBar = document.getElementById("positionsBar");
-  const selectedItemName = document.getElementById("selectedItemName");
-
-  const hueSlider = document.getElementById("hueSlider");
-  const satSlider = document.getElementById("satSlider");
-  const scaleSlider = document.getElementById("scaleSlider");
-  const hueVal = document.getElementById("hueVal");
-  const satVal = document.getElementById("satVal");
-  const scaleVal = document.getElementById("scaleVal");
-  const stateInput = document.getElementById("stateInput");
-  const countInput = document.getElementById("countInput");
-  const randomItemsBtn = document.getElementById("randomItemsBtn");
-  const output = document.getElementById("output");
-
-  const ADMIN_PASSWORD = "CrazyJson";
-  let currentSlot = "leftHand";
-  const slotData = {};
-  const items = [];
-
-  function applyTheme(theme) {
-    document.body.classList.remove("light-mode", "theme-animalcompany");
-    if (theme === "light") document.body.classList.add("light-mode");
-    if (theme === "animalcompany") document.body.classList.add("theme-animalcompany");
-    localStorage.setItem("theme", theme);
-  }
-
-  function applyGridSpeed(speed) {
-    document.body.style.setProperty("--gridSpeed", `${speed}s`);
-    localStorage.setItem("acGridSpeed", speed);
-    if (gridSpeedDisplay) gridSpeedDisplay.textContent = speed;
-  }
-
-  themeDropdown.addEventListener("change", () => applyTheme(themeDropdown.value));
-  bgSpeedSlider.addEventListener("input", () => applyGridSpeed(bgSpeedSlider.value));
-
+  // Apply saved theme or default
   const savedTheme = localStorage.getItem("theme") || "default";
   themeDropdown.value = savedTheme;
   applyTheme(savedTheme);
 
-  const savedSpeed = localStorage.getItem("acGridSpeed") || "60";
-  bgSpeedSlider.value = savedSpeed;
-  applyGridSpeed(savedSpeed);
+  // Set fixed background speed for AC theme
+  document.body.style.setProperty("--gridSpeed", "37s");
 
-  adminBtn.addEventListener("click", () => {
-    const pass = prompt("Enter admin password:");
-    if (pass === ADMIN_PASSWORD) {
-      adminPanel.style.display = "block";
-      alert("Admin access granted!");
+  themeDropdown.addEventListener("change", () => {
+    applyTheme(themeDropdown.value);
+  });
+
+  // Admin access
+  document.getElementById("adminBtn").addEventListener("click", () => {
+    const password = prompt("Enter admin password:");
+    if (password === "CrazyJson") {
+      document.getElementById("adminPanel").style.display = "block";
+      alert("Access granted.");
     } else {
-      alert("Incorrect password.");
+      alert("Wrong password.");
     }
   });
 
-  addNewItemBtn.addEventListener("click", () => {
-    const name = newItemName.value.trim();
-    const id = newItemID.value.trim();
-    const cat = newItemCategory.value;
-    if (!name || !id) return alert("Name & ID required.");
-    items.push({ name, id, category: cat });
-    renderItems(itemSearch.value, categories.querySelector(".cat-btn.active").dataset.cat);
-    newItemName.value = "";
-    newItemID.value = "";
+  // Add new item via admin panel
+  document.getElementById("addNewItemBtn").addEventListener("click", () => {
+    const name = document.getElementById("newItemName").value;
+    const id = document.getElementById("newItemID").value;
+    const category = document.getElementById("newItemCategory").value;
+    if (!name || !id) return alert("Please enter name and ID");
+    items.push({ name, id, category });
+    renderItems();
   });
 
-  positionsBar.querySelectorAll(".pos-btn").forEach(btn =>
-    btn.addEventListener("click", () => {
-      positionsBar.querySelectorAll(".pos-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentSlot = btn.dataset.slot;
-      const d = slotData[currentSlot];
-      selectedItemName.textContent = d?.itemName || "No item selected";
-      if (d) {
-        hueSlider.value = d.colorHue;
-        satSlider.value = d.colorSaturation;
-        scaleSlider.value = d.scale;
-        hueVal.textContent = d.colorHue;
-        satVal.textContent = d.colorSaturation;
-        scaleVal.textContent = d.scale;
-        stateInput.value = d.state;
-        countInput.value = d.count;
-      }
-    })
-  );
+  // Render functions, slots, properties
+  initializeUI();
+});
 
-  function selectItem(item) {
-    slotData[currentSlot] = {
-      itemName: item.name,
-      itemID: item.id,
-      category: item.category,
-      colorHue: 0,
-      colorSaturation: 0,
-      scale: 0,
-      state: 0,
-      count: 1
-    };
-    selectedItemName.textContent = item.name;
-    updateOutputJSON();
+// Apply theme to body
+function applyTheme(theme) {
+  document.body.classList.remove("light-mode", "theme-animalcompany");
+  if (theme === "light") {
+    document.body.classList.add("light-mode");
+  } else if (theme === "animalcompany") {
+    document.body.classList.add("theme-animalcompany");
   }
+  localStorage.setItem("theme", theme);
+}
 
-  function renderItems(filter = "", cat = "all") {
-    itemGrid.innerHTML = "";
-    items
-      .filter(it => (cat === "all" || it.category === cat) && it.name.toLowerCase().includes(filter.toLowerCase()))
-      .forEach(item => {
-        const btn = document.createElement("button");
-        btn.textContent = item.name;
-        btn.addEventListener("click", () => selectItem(item));
-        itemGrid.appendChild(btn);
-      });
-  }
+// Example placeholder array for items
+const items = [
+  { name: "Banana", id: "item_banana", category: "food" },
+  { name: "Backpack", id: "item_backpack", category: "backpacks" },
+  { name: "Grenade", id: "item_grenade", category: "explosives" },
+  { name: "RPG Ammo", id: "item_rpg_ammo", category: "ammo" }
+];
 
-  randomItemsBtn.addEventListener("click", () => {
-    const btns = Array.from(itemGrid.children);
-    if (!btns.length) return;
-    btns[Math.floor(Math.random() * btns.length)].click();
-  });
+// Populate item list and categories
+function renderItems() {
+  const itemGrid = document.getElementById("itemGrid");
+  const selectedCategory = document.querySelector(".cat-btn.active")?.dataset.cat || "all";
+  const searchTerm = document.getElementById("itemSearch").value.toLowerCase();
 
-  categories.querySelectorAll(".cat-btn").forEach(btn =>
-    btn.addEventListener("click", () => {
-      categories.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderItems(itemSearch.value, btn.dataset.cat);
-    })
-  );
+  itemGrid.innerHTML = "";
 
-  itemSearch.addEventListener("input", () => {
-    const cat = categories.querySelector(".cat-btn.active").dataset.cat;
-    renderItems(itemSearch.value, cat);
-  });
-
-  [hueSlider, satSlider, scaleSlider].forEach(slider =>
-    slider.addEventListener("input", () => {
-      hueVal.textContent = hueSlider.value;
-      satVal.textContent = satSlider.value;
-      scaleVal.textContent = scaleSlider.value;
-      const d = slotData[currentSlot];
-      if (d) {
-        d.colorHue = +hueSlider.value;
-        d.colorSaturation = +satSlider.value;
-        d.scale = +scaleSlider.value;
-        updateOutputJSON();
-      }
-    })
-  );
-
-  [stateInput, countInput].forEach(input =>
-    input.addEventListener("input", () => {
-      const d = slotData[currentSlot];
-      if (d) {
-        d.state = +stateInput.value;
-        d.count = +countInput.value;
-        updateOutputJSON();
-      }
-    })
-  );
-
-  function updateOutputJSON() {
-    const out = { version: 1 };
-    Object.entries(slotData).forEach(([slot, d]) => {
-      out[slot] = {
-        itemID: d.itemID,
-        colorHue: d.colorHue,
-        colorSaturation: d.colorSaturation,
-        scale: d.scale,
-        state: d.state,
-        count: d.count
-      };
+  items
+    .filter(item => (selectedCategory === "all" || item.category === selectedCategory))
+    .filter(item => item.name.toLowerCase().includes(searchTerm))
+    .forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "item-button";
+      btn.textContent = item.name;
+      btn.onclick = () => selectItem(item);
+      itemGrid.appendChild(btn);
     });
-    output.textContent = JSON.stringify(out, null, 2);
-  }
+}
+
+function selectItem(item) {
+  document.getElementById("selectedItemName").textContent = item.name;
+  updateOutput(item);
+}
+
+function updateOutput(item) {
+  const hue = document.getElementById("hueSlider").value;
+  const sat = document.getElementById("satSlider").value;
+  const scale = document.getElementById("scaleSlider").value;
+  const state = document.getElementById("stateInput").value;
+  const count = document.getElementById("countInput").value;
+
+  const output = {
+    version: 1,
+    back: {
+      itemID: item.id,
+      colorHue: +hue,
+      colorSaturation: +sat,
+      scale: +scale,
+      state: +state,
+      count: +count
+    }
+  };
+
+  document.getElementById("output").textContent = JSON.stringify(output, null, 2);
+}
+
+function initializeUI() {
+  // Search input
+  document.getElementById("itemSearch").addEventListener("input", renderItems);
+
+  // Category buttons
+  document.querySelectorAll(".cat-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderItems();
+    });
+  });
+
+  // Sliders
+  ["hueSlider", "satSlider", "scaleSlider", "stateInput", "countInput"].forEach(id => {
+    document.getElementById(id).addEventListener("input", () => {
+      const currentItemName = document.getElementById("selectedItemName").textContent;
+      const selectedItem = items.find(i => i.name === currentItemName);
+      if (selectedItem) updateOutput(selectedItem);
+    });
+  });
+
+  // Slot button handling (leftHand, rightHand etc.)
+  document.querySelectorAll(".pos-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".pos-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
 
   renderItems();
-  updateOutputJSON();
-});
+}
