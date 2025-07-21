@@ -1,4 +1,147 @@
-/* ===== Universal Button Base ===== */
+/* === ROOT === */
+:root {
+  --gridSpeed: 37s;
+}
+
+/* === GENERAL === */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  transition: background 0.5s ease, color 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #000015, #011);
+  color: white;
+}
+
+/* === THEMES === */
+body.light-mode {
+  background: linear-gradient(135deg, #add8e6, #000000);
+  color: black;
+}
+
+body.theme-animalcompany {
+  background: linear-gradient(135deg, #39ff14 25%, #002b00 75%);
+  background-size: 200% 200%;
+  animation: acScroll var(--gridSpeed) linear infinite;
+  color: #39ff14;
+}
+
+/* === ANIMATION === */
+@keyframes acScroll {
+  0% { background-position: 0% 0%; }
+  100% { background-position: -100% 100%; }
+}
+
+/* === HEADINGS === */
+h1 {
+  text-align: center;
+  font-size: 2.2em;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: white;
+}
+
+body.light-mode h1 {
+  color: white;
+}
+
+/* === SLOTS & BUILDER === */
+#builder {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+[data-slot] {
+  border: 2px solid;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  width: 90%;
+  background: #111;
+}
+
+body.light-mode [data-slot] {
+  border-color: #ccc;
+  background: #f5f5f5;
+}
+
+body.theme-animalcompany [data-slot] {
+  border-color: #39ff14;
+  background: #001100;
+}
+
+[data-slot] h2 {
+  margin-top: 0;
+  text-transform: capitalize;
+  font-size: 1.2em;
+}
+
+/* === ITEM BLOCK === */
+.item-block {
+  background: #222;
+  border: 2px solid #444;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+body.light-mode .item-block {
+  background: #fff;
+  border: 2px solid #ccc;
+}
+
+body.theme-animalcompany .item-block {
+  background: #003300;
+  border: 2px solid #39ff14;
+}
+
+/* === INPUTS & SLIDERS === */
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.input-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #333;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+body.light-mode .input-column {
+  background: #eee;
+}
+
+body.theme-animalcompany .input-column {
+  background: #002200;
+  border: 1px solid #39ff14;
+}
+
+.input-column label {
+  margin-bottom: 4px;
+}
+
+.input-column input[type="range"] {
+  width: 150px;
+}
+
+.input-column button {
+  margin-top: 6px;
+}
+
+/* === BUTTON STYLING === */
 button, .item-button, .cat-btn, .pos-btn {
   border: none;
   padding: 10px 16px;
@@ -8,13 +151,10 @@ button, .item-button, .cat-btn, .pos-btn {
   border-radius: 6px;
   transition: all 0.3s ease;
   font-family: 'Segoe UI', sans-serif;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   user-select: none;
 }
 
-/* === Light Theme Button Style === */
+/* Light Theme */
 body.light-mode button,
 body.light-mode .item-button,
 body.light-mode .cat-btn,
@@ -24,61 +164,118 @@ body.light-mode .pos-btn {
   border: 2px solid #d0d0d0;
 }
 
-body.light-mode button:hover,
-body.light-mode .item-button:hover,
-body.light-mode .cat-btn:hover,
-body.light-mode .pos-btn:hover {
+body.light-mode button:hover {
   background: #fff;
-  border-color: #a0a0a0;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transform: translateY(-2px);
+  border-color: #aaa;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* === Dark (Default) Theme Button Style === */
-body:not(.light-mode):not(.theme-animalcompany) button,
-body:not(.light-mode):not(.theme-animalcompany) .item-button,
-body:not(.light-mode):not(.theme-animalcompany) .cat-btn,
-body:not(.light-mode):not(.theme-animalcompany) .pos-btn {
-  background: #333;
+/* Dark Theme (Default) */
+body:not(.light-mode):not(.theme-animalcompany) button {
+  background: #222;
   color: #fafafa;
-  border: 2px solid #555;
+  border: 2px solid #444;
 }
 
-body:not(.light-mode):not(.theme-animalcompany) button:hover,
-body:not(.light-mode):not(.theme-animalcompany) .item-button:hover,
-body:not(.light-mode):not(.theme-animalcompany) .cat-btn:hover,
-body:not(.light-mode):not(.theme-animalcompany) .pos-btn:hover {
-  background: #444;
-  border-color: #777;
-  box-shadow: 0 4px 10px rgba(0, 255, 255, 0.05);
-  transform: translateY(-2px);
+body:not(.light-mode):not(.theme-animalcompany) button:hover {
+  background: #333;
+  border-color: #666;
+  box-shadow: 0 2px 6px rgba(0, 255, 255, 0.05);
 }
 
-/* === Animal Company Theme Button Style === */
-body.theme-animalcompany button,
-body.theme-animalcompany .item-button,
-body.theme-animalcompany .cat-btn,
-body.theme-animalcompany .pos-btn {
+/* Animal Company Theme */
+body.theme-animalcompany button {
   background: transparent;
   color: #39ff14;
   border: 2px solid #39ff14;
   text-shadow: 0 0 4px #39ff14;
-  box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+  box-shadow: 0 0 6px rgba(57, 255, 20, 0.3);
 }
 
-body.theme-animalcompany button:hover,
-body.theme-animalcompany .item-button:hover,
-body.theme-animalcompany .cat-btn:hover,
-body.theme-animalcompany .pos-btn:hover {
-  background: rgba(57, 255, 20, 0.1);
-  box-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
-  transform: scale(1.05);
+body.theme-animalcompany button:hover {
+  background: rgba(57, 255, 20, 0.05);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
+  transform: scale(1.04);
 }
 
-body.theme-animalcompany button:active,
-body.theme-animalcompany .item-button:active,
-body.theme-animalcompany .cat-btn:active,
-body.theme-animalcompany .pos-btn:active {
-  background: rgba(57, 255, 20, 0.15);
-  transform: scale(0.95);
+/* === SEARCH BAR === */
+#searchBar {
+  margin: 20px auto;
+  padding: 8px 14px;
+  border-radius: 6px;
+  width: 80%;
+  max-width: 500px;
+  font-size: 16px;
+  border: 2px solid #444;
+  background: #111;
+  color: white;
+  display: block;
+}
+
+body.light-mode #searchBar {
+  background: #fff;
+  color: black;
+  border-color: #ccc;
+}
+
+body.theme-animalcompany #searchBar {
+  background: #001800;
+  color: #39ff14;
+  border-color: #39ff14;
+}
+
+/* === OUTPUT & PREVIEW === */
+#output {
+  background: #111;
+  padding: 10px;
+  border: 1px solid #555;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-top: 20px;
+  width: 90%;
+  max-width: 1100px;
+}
+
+#colorPreviewBox {
+  width: 100%;
+  max-width: 800px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  margin-bottom: 10px;
+  border: 1px solid #555;
+  font-weight: bold;
+}
+
+/* === PANEL === */
+#adminPanel {
+  display: none;
+  margin-top: 20px;
+  padding: 10px;
+  background: #222;
+  border: 2px solid #555;
+  border-radius: 10px;
+}
+
+body.light-mode #adminPanel {
+  background: #f0f0f0;
+  border-color: #ccc;
+}
+
+body.theme-animalcompany #adminPanel {
+  background: #003000;
+  border-color: #39ff14;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  #builder, .input-row {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .input-column input[type="range"] {
+    width: 100%;
+  }
 }
