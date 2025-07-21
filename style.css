@@ -1,4 +1,3 @@
-/* === ROOT === */
 :root {
   --gridSpeed: 37s;
 }
@@ -8,34 +7,48 @@ body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   padding: 20px;
-  transition: background 0.5s ease, color 0.5s ease;
+  transition: background 0.6s ease, color 0.6s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
+}
+
+/* === DARK THEME === */
+body:not(.light-mode):not(.theme-animalcompany) {
   background: linear-gradient(135deg, #000015, #011);
   color: white;
 }
 
-/* === THEMES === */
+/* === LIGHT THEME === */
 body.light-mode {
   background: linear-gradient(135deg, #add8e6, #000000);
   color: black;
 }
 
+/* === ANIMAL COMPANY THEME === */
 body.theme-animalcompany {
-  background: linear-gradient(135deg, #39ff14 25%, #002b00 75%);
-  background-size: 200% 200%;
-  animation: acScroll var(--gridSpeed) linear infinite;
+  background: #000;
+  background-image:
+    linear-gradient(rgba(0, 255, 0, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.15) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: acScroll var(--gridSpeed) linear infinite, neonFlicker 3s infinite;
   color: #39ff14;
 }
 
-/* === ANIMATION === */
+/* === BACKGROUND ANIMATIONS === */
 @keyframes acScroll {
-  0% { background-position: 0% 0%; }
-  100% { background-position: -100% 100%; }
+  0%   { background-position: 0 0, 0 0; }
+  100% { background-position: -120px 120px, -120px 120px; }
 }
 
-/* === HEADINGS === */
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.92; }
+}
+
+/* === TYPOGRAPHY === */
 h1 {
   text-align: center;
   font-size: 2.2em;
@@ -48,7 +61,7 @@ body.light-mode h1 {
   color: white;
 }
 
-/* === SLOTS & BUILDER === */
+/* === BUILDER === */
 #builder {
   width: 100%;
   max-width: 1100px;
@@ -57,6 +70,7 @@ body.light-mode h1 {
   align-items: center;
 }
 
+/* === SLOTS === */
 [data-slot] {
   border: 2px solid;
   padding: 10px;
@@ -141,8 +155,11 @@ body.theme-animalcompany .input-column {
   margin-top: 6px;
 }
 
-/* === BUTTON STYLING === */
-button, .item-button, .cat-btn, .pos-btn {
+/* === BUTTONS === */
+button,
+.item-button,
+.cat-btn,
+.pos-btn {
   border: none;
   padding: 10px 16px;
   font-size: 16px;
@@ -154,11 +171,9 @@ button, .item-button, .cat-btn, .pos-btn {
   user-select: none;
 }
 
-/* Light Theme */
+/* Light */
 body.light-mode button,
-body.light-mode .item-button,
-body.light-mode .cat-btn,
-body.light-mode .pos-btn {
+body.light-mode .item-button {
   background: #fafafa;
   color: #222;
   border: 2px solid #d0d0d0;
@@ -170,7 +185,7 @@ body.light-mode button:hover {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Dark Theme (Default) */
+/* Dark */
 body:not(.light-mode):not(.theme-animalcompany) button {
   background: #222;
   color: #fafafa;
@@ -183,7 +198,7 @@ body:not(.light-mode):not(.theme-animalcompany) button:hover {
   box-shadow: 0 2px 6px rgba(0, 255, 255, 0.05);
 }
 
-/* Animal Company Theme */
+/* Animal Company */
 body.theme-animalcompany button {
   background: transparent;
   color: #39ff14;
@@ -224,7 +239,7 @@ body.theme-animalcompany #searchBar {
   border-color: #39ff14;
 }
 
-/* === OUTPUT & PREVIEW === */
+/* === OUTPUT === */
 #output {
   background: #111;
   padding: 10px;
@@ -236,6 +251,7 @@ body.theme-animalcompany #searchBar {
   max-width: 1100px;
 }
 
+/* === PREVIEW === */
 #colorPreviewBox {
   width: 100%;
   max-width: 800px;
@@ -247,7 +263,7 @@ body.theme-animalcompany #searchBar {
   font-weight: bold;
 }
 
-/* === PANEL === */
+/* === ADMIN PANEL === */
 #adminPanel {
   display: none;
   margin-top: 20px;
