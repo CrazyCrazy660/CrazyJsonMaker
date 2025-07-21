@@ -1,81 +1,84 @@
-body.theme-animalcompany {
-  --gridSpeed: 37s;
-  background: #000;
-  background-image:
-    linear-gradient(rgba(0, 255, 0, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 0, 0.2) 1px, transparent 1px);
-  background-size: 60px 60px;
-  animation: scrollGrid var(--gridSpeed) linear infinite, flicker 4s infinite;
-  color: #39ff14;
-  font-family: 'Courier New', Courier, monospace;
-}
-
-/* Background scroll effect */
-@keyframes scrollGrid {
-  0% {
-    background-position: 0 0, 0 0;
-  }
-  100% {
-    background-position: -120px 120px, -120px 120px;
-  }
-}
-
-/* Neon flicker */
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  5%, 10%, 95% { opacity: 0.85; }
-  50% { opacity: 0.92; }
-}
-
-/* Panel Styling */
-.item-panel,
-.properties-panel,
-.theme-animalcompany .group-box {
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid #39ff14;
-  padding: 12px;
-  border-radius: 6px;
-}
-
-/* Buttons */
-.theme-animalcompany .item-button,
-.theme-animalcompany .cat-btn,
-.theme-animalcompany .pos-btn,
-.theme-animalcompany button {
-  background-color: #000;
-  border: 1px solid #39ff14;
-  color: #39ff14;
-  padding: 6px 12px;
-  border-radius: 4px;
+/* ===== Universal Button Base ===== */
+button, .item-button, .cat-btn, .pos-btn {
+  border: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
 }
 
-.theme-animalcompany .item-button:hover,
-.theme-animalcompany .cat-btn:hover,
-.theme-animalcompany .pos-btn:hover,
-.theme-animalcompany button:hover {
-  background-color: #111;
+/* === Light Theme Button Style === */
+body.light-mode button,
+body.light-mode .item-button,
+body.light-mode .cat-btn,
+body.light-mode .pos-btn {
+  background: #fafafa;
+  color: #222;
+  border: 2px solid #d0d0d0;
 }
 
-/* Inputs */
-.theme-animalcompany input,
-.theme-animalcompany select {
-  background: #000;
+body.light-mode button:hover,
+body.light-mode .item-button:hover,
+body.light-mode .cat-btn:hover,
+body.light-mode .pos-btn:hover {
+  background: #fff;
+  border-color: #a0a0a0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+/* === Dark (Default) Theme Button Style === */
+body:not(.light-mode):not(.theme-animalcompany) button,
+body:not(.light-mode):not(.theme-animalcompany) .item-button,
+body:not(.light-mode):not(.theme-animalcompany) .cat-btn,
+body:not(.light-mode):not(.theme-animalcompany) .pos-btn {
+  background: #333;
+  color: #fafafa;
+  border: 2px solid #555;
+}
+
+body:not(.light-mode):not(.theme-animalcompany) button:hover,
+body:not(.light-mode):not(.theme-animalcompany) .item-button:hover,
+body:not(.light-mode):not(.theme-animalcompany) .cat-btn:hover,
+body:not(.light-mode):not(.theme-animalcompany) .pos-btn:hover {
+  background: #444;
+  border-color: #777;
+  box-shadow: 0 4px 10px rgba(0, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+/* === Animal Company Theme Button Style === */
+body.theme-animalcompany button,
+body.theme-animalcompany .item-button,
+body.theme-animalcompany .cat-btn,
+body.theme-animalcompany .pos-btn {
+  background: transparent;
   color: #39ff14;
-  border: 1px solid #39ff14;
+  border: 2px solid #39ff14;
+  text-shadow: 0 0 4px #39ff14;
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
 }
 
-.theme-animalcompany #output {
-  background: #000;
-  color: #39ff14;
-  border: 1px solid #39ff14;
-  padding: 8px;
+body.theme-animalcompany button:hover,
+body.theme-animalcompany .item-button:hover,
+body.theme-animalcompany .cat-btn:hover,
+body.theme-animalcompany .pos-btn:hover {
+  background: rgba(57, 255, 20, 0.1);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
+  transform: scale(1.05);
 }
 
-/* Center heading in AC Theme */
-.theme-animalcompany .main-title {
-  text-align: center;
-  color: #39ff14;
-  font-weight: bold;
-  font-size: 24px;
+body.theme-animalcompany button:active,
+body.theme-animalcompany .item-button:active,
+body.theme-animalcompany .cat-btn:active,
+body.theme-animalcompany .pos-btn:active {
+  background: rgba(57, 255, 20, 0.15);
+  transform: scale(0.95);
 }
