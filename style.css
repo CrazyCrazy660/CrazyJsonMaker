@@ -2,7 +2,7 @@
   --gridSpeed: 37s;
 }
 
-/* === BASE BODY === */
+/* === BASE === */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -28,7 +28,7 @@ body.light-mode {
 
 /* === ANIMAL COMPANY THEME === */
 body.theme-animalcompany {
-  background-color: #000;
+  background: #000;
   background-image:
     linear-gradient(rgba(0, 255, 0, 0.2) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 255, 0, 0.2) 1px, transparent 1px);
@@ -44,20 +44,20 @@ body.theme-animalcompany {
 
 @keyframes neonPulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.92; }
+  50%      { opacity: 0.92; }
 }
 
-/* === TYPOGRAPHY === */
+/* === HEADINGS === */
 h1 {
   text-align: center;
   font-size: 2.2em;
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: white;
+  margin: 0 0 20px;
 }
+
 body.light-mode h1 {
   color: white;
 }
+
 body.theme-animalcompany h1,
 body.theme-animalcompany h2,
 body.theme-animalcompany label {
@@ -65,26 +65,28 @@ body.theme-animalcompany label {
   text-shadow: 0 0 4px #39ff14;
 }
 
-/* === BUILDER === */
+/* === STRUCTURE === */
 #builder {
   border: 2px solid #555;
   border-radius: 12px;
   padding: 20px;
-  margin-bottom: 30px;
   width: 95%;
   max-width: 1200px;
   background-color: rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
+
 body.light-mode #builder {
   border-color: #ccc;
   background-color: #fff;
 }
+
 body.theme-animalcompany #builder {
   border-color: #39ff14;
   background-color: #001800;
 }
 
-/* === SLOTS === */
+/* === SLOTS & PANELS === */
 [data-slot] {
   border: 2px solid #888;
   border-radius: 10px;
@@ -92,22 +94,19 @@ body.theme-animalcompany #builder {
   margin-bottom: 15px;
   background: #111;
   width: 100%;
+  box-sizing: border-box;
 }
+
 body.light-mode [data-slot] {
   border-color: #aaa;
   background: #fafafa;
 }
+
 body.theme-animalcompany [data-slot] {
   border-color: #39ff14;
   background: #001a00;
 }
-[data-slot] h2 {
-  margin-top: 0;
-  text-transform: capitalize;
-  font-size: 1.2em;
-}
 
-/* === ITEM BLOCK === */
 .item-block {
   background: #222;
   border: 2px solid #444;
@@ -115,58 +114,76 @@ body.theme-animalcompany [data-slot] {
   padding: 12px;
   margin-top: 10px;
   width: 100%;
-}
-body.light-mode .item-block {
-  background: #fff;
-  border: 2px solid #ccc;
-}
-body.theme-animalcompany .item-block {
-  background: #002200;
-  border: 2px solid #39ff14;
+  box-sizing: border-box;
 }
 
-/* === INPUTS & SLIDERS === */
+body.light-mode .item-block {
+  background: #fff;
+  border-color: #ccc;
+}
+
+body.theme-animalcompany .item-block {
+  background: #002200;
+  border-color: #39ff14;
+}
+
+/* === INPUT & SLIDERS === */
 .input-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 12px;
   justify-content: center;
+  margin: 10px 0;
 }
+
 .input-column {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   background: #333;
-  padding: 8px;
-  border-radius: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  min-width: 140px;
+  box-sizing: border-box;
 }
+
 body.light-mode .input-column {
-  background: #eee;
+  background: #ececec;
 }
+
 body.theme-animalcompany .input-column {
   background: #002200;
   border: 1px solid #39ff14;
   color: #39ff14;
 }
+
 .input-column label {
-  margin-bottom: 4px;
-}
-.input-column input[type="range"] {
-  width: 150px;
-}
-.input-column button {
-  margin-top: 6px;
+  margin-bottom: 6px;
+  font-weight: bold;
 }
 
-/* === BUTTON STYLES === */
+.input-column label span {
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+.input-column input[type="range"] {
+  width: 100%;
+  max-width: 160px;
+}
+
+.input-column button {
+  margin-top: 8px;
+}
+
+/* === BUTTONS === */
 .button-bar,
-#adminPanel,
-body {
+#adminPanel {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .button-bar {
   flex-direction: row;
   flex-wrap: wrap;
@@ -174,75 +191,81 @@ body {
   gap: 10px;
   margin-bottom: 20px;
 }
-button {
-  border: none;
+
+button,
+.item-button,
+.cat-btn,
+.pos-btn {
   padding: 10px 16px;
   font-size: 16px;
   font-weight: 600;
-  cursor: pointer;
   border-radius: 6px;
+  cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Segoe UI', sans-serif;
   user-select: none;
   display: inline-block;
   margin: 5px;
+  border: 2px solid transparent;
 }
 
-/* LIGHT BUTTON */
+/* Light */
 body.light-mode button {
   background: #fafafa;
   color: #222;
-  border: 2px solid #d0d0d0;
+  border-color: #d0d0d0;
 }
+
 body.light-mode button:hover {
   background: #fff;
   border-color: #aaa;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* DARK BUTTON */
+/* Dark */
 body:not(.light-mode):not(.theme-animalcompany) button {
   background: #222;
   color: #fafafa;
-  border: 2px solid #444;
+  border-color: #444;
 }
+
 body:not(.light-mode):not(.theme-animalcompany) button:hover {
   background: #333;
   border-color: #666;
   box-shadow: 0 2px 6px rgba(0, 255, 255, 0.05);
 }
 
-/* ANIMAL COMPANY BUTTON */
+/* Animal Company */
 body.theme-animalcompany button {
   background: transparent;
   color: #39ff14;
-  border: 2px solid #39ff14;
+  border-color: #39ff14;
   text-shadow: 0 0 3px #39ff14;
   box-shadow: 0 0 6px rgba(57, 255, 20, 0.3);
 }
+
 body.theme-animalcompany button:hover {
   background: rgba(57, 255, 20, 0.05);
   box-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
 }
 
-/* === SEARCH === */
+/* === SEARCH BAR === */
 #searchBar {
-  margin: 20px auto;
-  padding: 8px 14px;
-  border-radius: 6px;
   width: 80%;
   max-width: 500px;
-  font-size: 16px;
+  padding: 8px 14px;
+  margin: 20px 0;
   border: 2px solid #444;
+  border-radius: 6px;
   background: #111;
   color: white;
-  display: block;
 }
+
 body.light-mode #searchBar {
   background: #fff;
   color: black;
   border-color: #ccc;
 }
+
 body.theme-animalcompany #searchBar {
   background: #001800;
   color: #39ff14;
@@ -251,17 +274,17 @@ body.theme-animalcompany #searchBar {
 
 /* === OUTPUT === */
 #output {
+  width: 90%;
+  max-width: 1100px;
   background: #111;
   padding: 10px;
   border: 1px solid #555;
+  margin-top: 20px;
   white-space: pre-wrap;
   word-break: break-word;
-  margin-top: 20px;
-  width: 90%;
-  max-width: 1100px;
 }
 
-/* === PREVIEW === */
+/* === COLOR PREVIEW === */
 #colorPreviewBox {
   width: 100%;
   max-width: 800px;
@@ -275,22 +298,24 @@ body.theme-animalcompany #searchBar {
 
 /* === ADMIN PANEL === */
 #adminPanel {
-  display: none;
-  margin-top: 20px;
-  padding: 15px;
-  border: 2px solid #666;
-  border-radius: 10px;
-  background: #222;
   width: 95%;
   max-width: 1000px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #222;
+  border: 2px solid #666;
+  box-sizing: border-box;
+  display: none;
 }
+
 body.light-mode #adminPanel {
-  border-color: #bbb;
   background: #f0f0f0;
+  border-color: #bbb;
 }
+
 body.theme-animalcompany #adminPanel {
-  border-color: #39ff14;
   background: #003300;
+  border-color: #39ff14;
 }
 
 /* === RESPONSIVE === */
