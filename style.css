@@ -28,24 +28,23 @@ body.light-mode {
 
 /* === ANIMAL COMPANY THEME === */
 body.theme-animalcompany {
-  background: #000;
+  background-color: #000;
   background-image:
-    linear-gradient(rgba(0, 255, 0, 0.15) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 0, 0.15) 1px, transparent 1px);
+    linear-gradient(rgba(0, 255, 0, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.2) 1px, transparent 1px);
   background-size: 60px 60px;
-  animation: acScroll var(--gridSpeed) linear infinite, neonFlicker 3s infinite;
+  animation: acScroll var(--gridSpeed) linear infinite, neonPulse 3s ease-in-out infinite;
   color: #39ff14;
 }
 
-/* === BACKGROUND ANIMATIONS === */
 @keyframes acScroll {
-  0%   { background-position: 0 0, 0 0; }
+  0% { background-position: 0 0, 0 0; }
   100% { background-position: -120px 120px, -120px 120px; }
 }
 
-@keyframes neonFlicker {
+@keyframes neonPulse {
   0%, 100% { opacity: 1; }
-  50%      { opacity: 0.92; }
+  50% { opacity: 0.92; }
 }
 
 /* === TYPOGRAPHY === */
@@ -59,6 +58,13 @@ h1 {
 
 body.light-mode h1 {
   color: white;
+}
+
+body.theme-animalcompany h1,
+body.theme-animalcompany h2,
+body.theme-animalcompany label {
+  color: #39ff14;
+  text-shadow: 0 0 4px #39ff14;
 }
 
 /* === BUILDER === */
@@ -87,7 +93,7 @@ body.light-mode [data-slot] {
 
 body.theme-animalcompany [data-slot] {
   border-color: #39ff14;
-  background: #001100;
+  background: #001a00;
 }
 
 [data-slot] h2 {
@@ -112,7 +118,7 @@ body.light-mode .item-block {
 }
 
 body.theme-animalcompany .item-block {
-  background: #003300;
+  background: #001a00;
   border: 2px solid #39ff14;
 }
 
@@ -141,6 +147,7 @@ body.light-mode .input-column {
 body.theme-animalcompany .input-column {
   background: #002200;
   border: 1px solid #39ff14;
+  color: #39ff14;
 }
 
 .input-column label {
@@ -156,10 +163,7 @@ body.theme-animalcompany .input-column {
 }
 
 /* === BUTTONS === */
-button,
-.item-button,
-.cat-btn,
-.pos-btn {
+button {
   border: none;
   padding: 10px 16px;
   font-size: 16px;
@@ -172,8 +176,7 @@ button,
 }
 
 /* Light */
-body.light-mode button,
-body.light-mode .item-button {
+body.light-mode button {
   background: #fafafa;
   color: #222;
   border: 2px solid #d0d0d0;
@@ -203,14 +206,13 @@ body.theme-animalcompany button {
   background: transparent;
   color: #39ff14;
   border: 2px solid #39ff14;
-  text-shadow: 0 0 4px #39ff14;
+  text-shadow: 0 0 3px #39ff14;
   box-shadow: 0 0 6px rgba(57, 255, 20, 0.3);
 }
 
 body.theme-animalcompany button:hover {
   background: rgba(57, 255, 20, 0.05);
   box-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
-  transform: scale(1.04);
 }
 
 /* === SEARCH BAR === */
