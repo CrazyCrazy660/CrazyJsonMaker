@@ -5,88 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Animal Company JSON Builder</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
 </head>
 <body>
-  <h1 id="title">Animal Company JSON Builder</h1>
+  <h1 id="title">Animal Company JSON Maker</h1>
 
-  <!-- Theme Selector -->
-  <select id="themeDropdown">
-    <option value="default">Dark</option>
-    <option value="light">Light</option>
-    <option value="animalcompany">Animal Company</option>
-  </select>
-
-  <!-- Slot Buttons -->
-  <div class="positions-bar" id="positionsBar">
-    <button class="pos-btn active" data-slot="leftHand">leftHand</button>
-    <button class="pos-btn" data-slot="rightHand">rightHand</button>
-    <button class="pos-btn" data-slot="leftHip">leftHip</button>
-    <button class="pos-btn" data-slot="rightHip">rightHip</button>
-    <button class="pos-btn" data-slot="back">back</button>
+  <div class="toggle-row">
+    <label><input type="radio" name="modeToggle" value="loadout" checked> Loadout</label>
+    <label><input type="radio" name="modeToggle" value="stash"> Stash</label>
   </div>
 
-  <!-- Main Layout -->
-  <div class="main-panel">
-    <!-- Item Panel -->
-    <div class="item-panel">
-      <input id="itemSearch" placeholder="Search items..." />
-      <div class="categories" id="categories">
-        <button class="cat-btn active" data-cat="all">All</button>
-        <button class="cat-btn" data-cat="explosives">Explosives</button>
-        <button class="cat-btn" data-cat="ammo">Ammo</button>
-        <button class="cat-btn" data-cat="backpacks">Backpacks</button>
-        <button class="cat-btn" data-cat="misc">Misc</button>
-        <button class="cat-btn" data-cat="food">Food</button>
-      </div>
-      <div class="item-grid" id="itemGrid"></div>
-      <button id="randomItemsBtn">Random Item</button>
-    </div>
+  <div id="colorPreviewBox">No item selected</div>
 
-    <!-- Properties Panel -->
-    <div class="properties-panel" id="propertiesPanel">
-      <h2>Slot: <span id="selectedItemName">No item selected</span></h2>
-
-      <label>Hue: <span id="hueVal">0</span></label>
-      <input type="range" id="hueSlider" min="0" max="240" value="0" />
-
-      <label>Saturation: <span id="satVal">0</span></label>
-      <input type="range" id="satSlider" min="-120" max="200" value="0" />
-
-      <label>Scale: <span id="scaleVal">0</span></label>
-      <input type="range" id="scaleSlider" min="-128" max="127" value="0" />
-
-      <label>State:</label>
-      <input type="number" id="stateInput" value="0" />
-
-      <label>Count:</label>
-      <input type="number" id="countInput" value="1" />
-    </div>
-
-    <!-- JSON Output -->
-    <pre id="output"></pre>
+  <div id="searchBar">
+    <input id="searchInput" placeholder="Search items..." />
   </div>
 
-  <!-- Admin Button -->
-  <button id="adminBtn" class="floating-admin-btn">Admin</button>
+  <div id="builder"></div>
 
-  <!-- Admin Panel -->
-  <div id="adminPanel" style="display: none;">
-    <h2>Admin Panel</h2>
-    <p>You have access to admin features.</p>
-
-    <div>
-      <input id="newItemName" placeholder="Item Name" />
-      <input id="newItemID" placeholder="Item ID" />
-      <select id="newItemCategory">
-        <option value="misc">Misc</option>
-        <option value="ammo">Ammo</option>
-        <option value="explosives">Explosives</option>
-        <option value="backpacks">Backpacks</option>
-        <option value="food">Food</option>
-      </select>
-      <button id="addNewItemBtn">Add Item</button>
-    </div>
+  <div class="button-bar">
+    <select id="presetDropdown">
+      <option value="">-- Presets --</option>
+      <option value="galaxy">🌌 Galaxy Preset</option>
+      <option value="clear">🧹 Clear All</option>
+    </select>
+    <input id="filenameInput" placeholder="Filename..." />
+    <button id="downloadBtn">⬇️ Download JSON</button>
   </div>
+
+  <pre id="output"></pre>
+
+  <div id="theme-controls">
+    <label for="themeSelect">Theme:</label>
+    <select id="themeSelect">
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+      <option value="animal">Animal Company</option>
+    </select>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
