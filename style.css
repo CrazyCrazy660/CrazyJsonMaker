@@ -2,6 +2,7 @@
   --accent-color: #0cf;
   --border-color: #555;
   --inner-bg: #222;
+  --grid-gap: 16px;
 }
 
 body {
@@ -10,62 +11,52 @@ body {
   padding: 20px;
   background: linear-gradient(135deg, #001030, #003060);
   color: white;
-  transition: background 0.5s ease;
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
 h1 {
   text-align: center;
-  margin-top: 0;
+  margin: 0 0 20px;
+  font-size: 2.2em;
 }
 
+/* Mode Toggle */
 .toggle-row {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0 20px;
-  gap: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .toggle-row label {
+  margin: 0 12px;
   cursor: pointer;
   font-weight: bold;
 }
 
+/* Color Preview */
 #colorPreviewBox {
   width: 100%;
-  height: 40px;
-  line-height: 40px;
+  margin-bottom: 20px;
+  padding: 8px;
   text-align: center;
-  margin: 10px 0;
-  border: 2px solid var(--border-color);
   font-weight: bold;
+  border: 2px solid var(--border-color);
 }
 
-#searchBar {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-#searchInput {
-  padding: 6px;
-  width: 60%;
-  max-width: 400px;
-}
-
+/* Builder Slots */
 #builder {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--grid-gap);
   align-items: center;
 }
 
 [data-slot] {
   border: 2px solid var(--border-color);
-  padding: 15px;
   background: var(--inner-bg);
+  padding: 16px;
   width: 100%;
-  max-width: 600px;
-  border-radius: 10px;
+  max-width: 680px;
+  border-radius: 8px;
 }
 
 [data-slot] h2 {
@@ -73,133 +64,125 @@ h1 {
   text-transform: capitalize;
   text-align: center;
   color: var(--accent-color);
+  font-size: 1.2em;
 }
 
+/* Item Block */
 .item-block {
   background: var(--inner-bg);
   border: 2px solid var(--border-color);
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 6px;
+  display: grid;
+  grid-template-columns: 1fr repeat(5, max-content);
+  gap: 12px;
+  align-items: center;
 }
 
-.input-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
+/* Input Columns (sliders & numbers) */
 .input-column {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #333;
-  padding: 6px;
-  border-radius: 5px;
-  color: white;
 }
 
 .input-column label {
   font-size: 0.9em;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 
 .input-column input[type="range"] {
   width: 120px;
 }
 
-.input-column span {
-  display: block;
-  font-size: 0.8em;
-  margin-top: 2px;
+.input-column input[type="number"] {
+  width: 60px;
+  text-align: center;
 }
 
-.input-column button {
-  margin-top: 4px;
-  background: #444;
-  border: none;
-  padding: 4px 6px;
-  color: white;
-  cursor: pointer;
-  border-radius: 3px;
-}
-
+/* Button Bar & Controls */
 .button-bar {
   display: flex;
   flex-wrap: wrap;
+  gap: 12px;
   justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
-button, select {
+button, select, input[type="text"], input[type="number"] {
   background: #444;
   color: white;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-input, select {
-  background: #111;
-  color: white;
   border: 1px solid #555;
-  padding: 4px;
-  border-radius: 3px;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 0.95em;
 }
 
+/* Output Pre */
 #output {
   background: #111;
-  padding: 10px;
   border: 1px solid var(--border-color);
-  white-space: pre-wrap;
-  word-break: break-word;
+  padding: 12px;
   margin-top: 20px;
+  max-width: 90%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
 }
 
+/* Theme Selector */
 #theme-controls {
-  margin-top: 30px;
+  margin-top: 20px;
   text-align: center;
+}
+
+#theme-controls label {
+  margin-right: 8px;
+  font-weight: 600;
 }
 
 /* THEMES */
 body.light {
-  background: linear-gradient(135deg, #ffffff, #aad1ff);
-  color: black;
-  --border-color: #000;
-  --inner-bg: #fff;
+  --border-color: #444;
+  --inner-bg: #f0f0f0;
   --accent-color: #0077cc;
+  background: linear-gradient(135deg, #f5f5f5, #aec4e8);
+  color: #111;
 }
 
 body.dark {
-  background: linear-gradient(135deg, #000000, #222222);
-  color: white;
   --border-color: #555;
   --inner-bg: #222;
   --accent-color: #0cf;
+  background: linear-gradient(135deg, #000, #222);
+  color: #fff;
 }
 
 body.animal {
-  background: linear-gradient(135deg, #3b4d2d, #728b3f);
-  color: white;
   --border-color: #b6db5c;
   --inner-bg: #1f2b10;
   --accent-color: #d3ff5e;
+  background: linear-gradient(135deg, #3b4d2d, #728b3f);
+  color: #fff;
 }
 
+/* Mobile Responsiveness */
 @media (max-width: 600px) {
-  .input-row {
-    flex-direction: column;
-    align-items: center;
+  .item-block {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
   }
 
   .button-bar {
     flex-direction: column;
     align-items: center;
   }
+}
 
-  #searchInput {
-    width: 90%;
-  }
+/* Optional: Glow for Animal Theme */
+body.animal [data-slot] {
+  box-shadow: 0 0 6px var(--accent-color);
+}
+body.animal h1 {
+  text-shadow: 0 0 8px var(--accent-color);
 }
