@@ -1,139 +1,92 @@
 :root {
-  --gridSpeed: 37s;
+  --accent-color: #0cf;
+  --border-color: #555;
+  --inner-bg: #222;
 }
 
-/* === BASE === */
 body {
+  font-family: sans-serif;
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
   padding: 20px;
-  transition: background 0.6s ease, color 0.6s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* === DARK THEME === */
-body:not(.light-mode):not(.theme-animalcompany) {
-  background: linear-gradient(135deg, #000015, #011);
+  background: linear-gradient(135deg, #001030, #003060);
   color: white;
+  transition: background 0.5s ease;
 }
 
-/* === LIGHT THEME === */
-body.light-mode {
-  background: linear-gradient(135deg, #add8e6, #000000);
-  color: black;
-}
-
-/* === ANIMAL COMPANY THEME === */
-body.theme-animalcompany {
-  background: #000;
-  background-image:
-    linear-gradient(rgba(0, 255, 0, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 0, 0.2) 1px, transparent 1px);
-  background-size: 60px 60px;
-  animation: acScroll var(--gridSpeed) linear infinite, neonPulse 3s ease-in-out infinite;
-  color: #39ff14;
-}
-
-@keyframes acScroll {
-  0% { background-position: 0 0, 0 0; }
-  100% { background-position: -120px 120px, -120px 120px; }
-}
-
-@keyframes neonPulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.92; }
-}
-
-/* === HEADINGS === */
 h1 {
   text-align: center;
-  font-size: 2.2em;
-  margin: 0 0 20px;
+  margin-top: 0;
 }
 
-body.light-mode h1 {
-  color: white;
+.toggle-row {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 20px;
+  gap: 20px;
 }
 
-body.theme-animalcompany h1,
-body.theme-animalcompany h2,
-body.theme-animalcompany label {
-  color: #39ff14;
-  text-shadow: 0 0 4px #39ff14;
+.toggle-row label {
+  cursor: pointer;
+  font-weight: bold;
 }
 
-/* === STRUCTURE === */
-#builder {
-  border: 2px solid #555;
-  border-radius: 12px;
-  padding: 20px;
-  width: 95%;
-  max-width: 1200px;
-  background-color: rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
-}
-
-body.light-mode #builder {
-  border-color: #ccc;
-  background-color: #fff;
-}
-
-body.theme-animalcompany #builder {
-  border-color: #39ff14;
-  background-color: #001800;
-}
-
-/* === SLOTS & PANELS === */
-[data-slot] {
-  border: 2px solid #888;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 15px;
-  background: #111;
+#colorPreviewBox {
   width: 100%;
-  box-sizing: border-box;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  margin: 10px 0;
+  border: 2px solid var(--border-color);
+  font-weight: bold;
 }
 
-body.light-mode [data-slot] {
-  border-color: #aaa;
-  background: #fafafa;
+#searchBar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
-body.theme-animalcompany [data-slot] {
-  border-color: #39ff14;
-  background: #001a00;
+#searchInput {
+  padding: 6px;
+  width: 60%;
+  max-width: 400px;
+}
+
+#builder {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+[data-slot] {
+  border: 2px solid var(--border-color);
+  padding: 15px;
+  background: var(--inner-bg);
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+}
+
+[data-slot] h2 {
+  margin-top: 0;
+  text-transform: capitalize;
+  text-align: center;
+  color: var(--accent-color);
 }
 
 .item-block {
-  background: #222;
-  border: 2px solid #444;
-  border-radius: 10px;
-  padding: 12px;
-  margin-top: 10px;
-  width: 100%;
-  box-sizing: border-box;
+  background: var(--inner-bg);
+  border: 2px solid var(--border-color);
+  padding: 10px;
+  border-radius: 8px;
 }
 
-body.light-mode .item-block {
-  background: #fff;
-  border-color: #ccc;
-}
-
-body.theme-animalcompany .item-block {
-  background: #002200;
-  border-color: #39ff14;
-}
-
-/* === INPUT & SLIDERS === */
 .input-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   justify-content: center;
-  margin: 10px 0;
 }
 
 .input-column {
@@ -141,191 +94,112 @@ body.theme-animalcompany .item-block {
   flex-direction: column;
   align-items: center;
   background: #333;
-  padding: 10px;
-  border-radius: 8px;
-  min-width: 140px;
-  box-sizing: border-box;
-}
-
-body.light-mode .input-column {
-  background: #ececec;
-}
-
-body.theme-animalcompany .input-column {
-  background: #002200;
-  border: 1px solid #39ff14;
-  color: #39ff14;
-}
-
-.input-column label {
-  margin-bottom: 6px;
-  font-weight: bold;
-}
-
-.input-column label span {
-  margin-left: 5px;
-  font-weight: bold;
-}
-
-.input-column input[type="range"] {
-  width: 100%;
-  max-width: 160px;
-}
-
-.input-column button {
-  margin-top: 8px;
-}
-
-/* === BUTTONS === */
-.button-bar,
-#adminPanel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.button-bar {
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-button,
-.item-button,
-.cat-btn,
-.pos-btn {
-  padding: 10px 16px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  user-select: none;
-  display: inline-block;
-  margin: 5px;
-  border: 2px solid transparent;
-}
-
-/* Light */
-body.light-mode button {
-  background: #fafafa;
-  color: #222;
-  border-color: #d0d0d0;
-}
-
-body.light-mode button:hover {
-  background: #fff;
-  border-color: #aaa;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* Dark */
-body:not(.light-mode):not(.theme-animalcompany) button {
-  background: #222;
-  color: #fafafa;
-  border-color: #444;
-}
-
-body:not(.light-mode):not(.theme-animalcompany) button:hover {
-  background: #333;
-  border-color: #666;
-  box-shadow: 0 2px 6px rgba(0, 255, 255, 0.05);
-}
-
-/* Animal Company */
-body.theme-animalcompany button {
-  background: transparent;
-  color: #39ff14;
-  border-color: #39ff14;
-  text-shadow: 0 0 3px #39ff14;
-  box-shadow: 0 0 6px rgba(57, 255, 20, 0.3);
-}
-
-body.theme-animalcompany button:hover {
-  background: rgba(57, 255, 20, 0.05);
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
-}
-
-/* === SEARCH BAR === */
-#searchBar {
-  width: 80%;
-  max-width: 500px;
-  padding: 8px 14px;
-  margin: 20px 0;
-  border: 2px solid #444;
-  border-radius: 6px;
-  background: #111;
+  padding: 6px;
+  border-radius: 5px;
   color: white;
 }
 
-body.light-mode #searchBar {
-  background: #fff;
-  color: black;
-  border-color: #ccc;
+.input-column label {
+  font-size: 0.9em;
+  margin-bottom: 3px;
 }
 
-body.theme-animalcompany #searchBar {
-  background: #001800;
-  color: #39ff14;
-  border-color: #39ff14;
+.input-column input[type="range"] {
+  width: 120px;
 }
 
-/* === OUTPUT === */
+.input-column span {
+  display: block;
+  font-size: 0.8em;
+  margin-top: 2px;
+}
+
+.input-column button {
+  margin-top: 4px;
+  background: #444;
+  border: none;
+  padding: 4px 6px;
+  color: white;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.button-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button, select {
+  background: #444;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input, select {
+  background: #111;
+  color: white;
+  border: 1px solid #555;
+  padding: 4px;
+  border-radius: 3px;
+}
+
 #output {
-  width: 90%;
-  max-width: 1100px;
   background: #111;
   padding: 10px;
-  border: 1px solid #555;
-  margin-top: 20px;
+  border: 1px solid var(--border-color);
   white-space: pre-wrap;
   word-break: break-word;
+  margin-top: 20px;
 }
 
-/* === COLOR PREVIEW === */
-#colorPreviewBox {
-  width: 100%;
-  max-width: 800px;
-  height: 40px;
-  line-height: 40px;
+#theme-controls {
+  margin-top: 30px;
   text-align: center;
-  margin-bottom: 10px;
-  border: 1px solid #555;
-  font-weight: bold;
 }
 
-/* === ADMIN PANEL === */
-#adminPanel {
-  width: 95%;
-  max-width: 1000px;
-  padding: 15px;
-  border-radius: 10px;
-  background: #222;
-  border: 2px solid #666;
-  box-sizing: border-box;
-  display: none;
+/* THEMES */
+body.light {
+  background: linear-gradient(135deg, #ffffff, #aad1ff);
+  color: black;
+  --border-color: #000;
+  --inner-bg: #fff;
+  --accent-color: #0077cc;
 }
 
-body.light-mode #adminPanel {
-  background: #f0f0f0;
-  border-color: #bbb;
+body.dark {
+  background: linear-gradient(135deg, #000000, #222222);
+  color: white;
+  --border-color: #555;
+  --inner-bg: #222;
+  --accent-color: #0cf;
 }
 
-body.theme-animalcompany #adminPanel {
-  background: #003300;
-  border-color: #39ff14;
+body.animal {
+  background: linear-gradient(135deg, #3b4d2d, #728b3f);
+  color: white;
+  --border-color: #b6db5c;
+  --inner-bg: #1f2b10;
+  --accent-color: #d3ff5e;
 }
 
-/* === RESPONSIVE === */
-@media (max-width: 768px) {
-  #builder, .input-row {
-    width: 100%;
+@media (max-width: 600px) {
+  .input-row {
     flex-direction: column;
     align-items: center;
   }
-  .input-column input[type="range"] {
-    width: 100%;
+
+  .button-bar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #searchInput {
+    width: 90%;
   }
 }
