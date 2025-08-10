@@ -1,48 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Animal Company JSON Builder</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AC Jsons Item Generator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1 id="title">Animal Company JSON Maker</h1>
+    <header>
+        <h1 id="appTitle">ACJsons Item Generator</h1>
+        <div class="top-buttons">
+            <button id="loadJSON">📂 Load JSON</button>
+            <button id="undoBtn">↩ Undo</button>
+            <button id="redoBtn">↪ Redo</button>
+            <select id="themeSelector">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="ac">Animal Company</option>
+            </select>
+        </div>
+    </header>
 
-  <div class="toggle-row">
-    <label><input type="radio" name="modeToggle" value="loadout" checked> Loadout</label>
-    <label><input type="radio" name="modeToggle" value="stash"> Stash</label>
-  </div>
+    <main>
+        <!-- Slot Selector -->
+        <section id="slotSection">
+            <h2>Positions</h2>
+            <div class="slots">
+                <button class="slot-btn" data-slot="Left Hand">Left Hand</button>
+                <button class="slot-btn" data-slot="Right Hand">Right Hand</button>
+                <button class="slot-btn" data-slot="Left Hip">Left Hip</button>
+                <button class="slot-btn" data-slot="Right Hip">Right Hip</button>
+                <button class="slot-btn" data-slot="Back">Back</button>
+            </div>
+        </section>
 
-  <div id="colorPreviewBox">No item selected</div>
+        <!-- Item Selector -->
+        <section id="itemSection">
+            <label for="itemSearch">Select an item:</label>
+            <input type="text" id="itemSearch" placeholder="Search for an item...">
+            <select id="itemSelect">
+                <option value="">Select an item...</option>
+            </select>
+        </section>
 
-  <div id="searchBar">
-    <input id="searchInput" placeholder="Search items..." />
-  </div>
+        <!-- Scale Slider -->
+        <section class="slider-group">
+            <label for="scaleSlider">Scale Modifier: <span id="scaleValue">0</span></label>
+            <input type="range" id="scaleSlider" min="-10" max="10" value="0" step="1">
+        </section>
 
-  <div id="builder"></div>
+        <!-- Hue Slider -->
+        <section class="slider-group">
+            <label for="hueSlider">Hue: <span id="hueValue">0°</span></label>
+            <input type="range" id="hueSlider" min="0" max="360" value="0" step="1" class="hue-slider">
+        </section>
 
-  <div class="button-bar">
-    <select id="presetDropdown">
-      <option value="">-- Presets --</option>
-      <option value="galaxy">🌌 Galaxy Preset</option>
-      <option value="clear">🧹 Clear All</option>
-    </select>
-    <input id="filenameInput" placeholder="Filename..." />
-    <button id="downloadBtn">⬇️ Download JSON</button>
-  </div>
+        <!-- Saturation Slider -->
+        <section class="slider-group">
+            <label for="saturationSlider">Saturation: <span id="saturationValue">0</span></label>
+            <input type="range" id="saturationSlider" min="-127" max="127" value="0" step="1" class="saturation-slider">
+        </section>
 
-  <pre id="output"></pre>
+        <!-- Color Preview -->
+        <section class="color-preview-container">
+            <div class="color-preview" id="colorPreview"></div>
+            <span id="hexCode">#808080</span>
+        </section>
 
-  <div id="theme-controls">
-    <label for="themeSelect">Theme:</label>
-    <select id="themeSelect">
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-      <option value="animal">Animal Company</option>
-    </select>
-  </div>
+        <!-- Child Items -->
+        <section>
+            <h3>Child Items <span id="childCount">(0)</span></h3>
+            <button id="addChildBtn">+ Add Child</button>
+            <ul id="childList"></ul>
+        </section>
 
-  <script src="script.js"></script>
+        <!-- JSON Preview -->
+        <section>
+            <h3>JSON Preview</h3>
+            <pre id="jsonPreview"></pre>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
