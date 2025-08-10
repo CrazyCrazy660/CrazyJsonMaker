@@ -1,182 +1,207 @@
-/* === Base Styles === */
+/* ==== General Layout ==== */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
     transition: background 0.5s, color 0.5s;
 }
 
 header {
     text-align: center;
-    padding: 1rem;
+    margin-top: 15px;
 }
 
-h1 {
-    margin-bottom: 0.5rem;
+#appTitle {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
 }
 
 .top-buttons {
     display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
     justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-button, select, input[type="text"] {
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* === Slot Buttons === */
+/* ==== Slots ==== */
 .slots {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
     justify-content: center;
-    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
 }
 
 .slot-btn {
-    padding: 0.8rem 1.2rem;
-    border-radius: 12px;
-    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #555;
+    color: white;
+    border: 2px solid #333;
     font-weight: bold;
-    background: #00cfff;
-    color: black;
-    transition: background 0.3s ease, transform 0.1s ease;
+    transition: background 0.3s, transform 0.2s;
+}
+.slot-btn:hover {
+    background: #777;
+    transform: scale(1.05);
+}
+.slot-btn.active {
+    background: #0cf;
+    border-color: #09a;
 }
 
-.slot-btn.active {
-    background: #00aaff;
+/* ==== Sections ==== */
+section {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid;
+    width: 90%;
+    max-width: 500px;
+    box-sizing: border-box;
+}
+
+/* ==== Sliders ==== */
+.slider-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.slider-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+input[type="range"] {
+    width: 100%;
+    max-width: 300px;
+}
+
+/* ==== Color Preview ==== */
+.color-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8px;
+}
+.color-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    margin-bottom: 5px;
+}
+#hexCode {
+    font-weight: bold;
+}
+
+/* ==== Buttons ==== */
+button, select {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 2px solid #333;
+    background: #555;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+button:hover, select:hover {
+    background: #777;
     transform: scale(1.05);
 }
 
-/* === Sliders === */
-.slider-group {
-    margin: 1rem 0;
-    text-align: center;
-}
-
-input[type="range"] {
-    width: 100%;
-    height: 8px;
-    border-radius: 4px;
-    appearance: none;
-    outline: none;
-}
-
-/* Hue gradient slider */
-.hue-slider {
-    background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
-}
-
-/* Saturation gradient slider */
-.saturation-slider {
-    background: linear-gradient(to right, gray, red);
-}
-
-/* Slider thumb */
-input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    background: white;
-    border-radius: 50%;
-    border: 2px solid #333;
-    cursor: pointer;
-}
-input[type="range"]::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
-    background: white;
-    border-radius: 50%;
-    border: 2px solid #333;
-    cursor: pointer;
-}
-
-/* === Color Preview === */
-.color-preview-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    justify-content: center;
-    margin: 1rem 0;
-}
-
-.color-preview {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #333;
-}
-
-/* === Child Items === */
+/* ==== Child Items ==== */
 #childList {
     list-style: none;
     padding: 0;
 }
-
-/* === JSON Preview === */
-pre {
-    background: rgba(0,0,0,0.1);
-    padding: 1rem;
-    border-radius: 8px;
-    max-width: 90%;
-    overflow-x: auto;
-    border: 2px solid;
+#childList li {
+    padding: 4px;
+    margin: 3px 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
 }
 
-/* === Light Theme === */
+/* ==== JSON Preview ==== */
+#jsonPreview {
+    background: rgba(0,0,0,0.1);
+    padding: 10px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+}
+
+/* ==== Themes ==== */
 body.light {
     background: linear-gradient(135deg, lightblue, white);
     color: black;
 }
-body.light button, body.light select, body.light input {
-    background: white;
-    border: 2px solid black;
-    color: black;
-}
-body.light pre {
+body.light section {
     border-color: black;
 }
+body.light button, body.light select {
+    background: white;
+    color: black;
+    border-color: black;
+}
+body.light .slot-btn.active {
+    background: #0cf;
+    color: black;
+}
 
-/* === Dark Theme === */
 body.dark {
-    background: linear-gradient(135deg, #1a1a1a, #000000);
+    background: linear-gradient(135deg, darkblue, black);
     color: white;
 }
-body.dark button, body.dark select, body.dark input {
-    background: #222;
-    border: 2px solid white;
-    color: white;
-}
-body.dark pre {
+body.dark section {
     border-color: white;
 }
+body.dark button, body.dark select {
+    background: #333;
+    color: white;
+    border-color: white;
+}
+body.dark .slot-btn.active {
+    background: #0cf;
+    color: black;
+}
 
-/* === Animal Company Theme === */
+/* Animal Company Theme */
 body.ac {
-    background: repeating-linear-gradient(45deg, #001100, #001100 50px, #002200 50px, #002200 100px);
-    color: #00ff00;
-    animation: moveBG 37s linear infinite;
+    background: linear-gradient(135deg, #00b300, #003300);
+    animation: acMove 37s linear infinite;
+    color: white;
 }
-body.ac button, body.ac select, body.ac input {
-    background: black;
-    border: 2px solid #00ff00;
-    color: #00ff00;
+body.ac section {
+    border-color: lime;
 }
-body.ac pre {
-    border-color: #00ff00;
+body.ac button, body.ac select {
+    background: #005500;
+    color: white;
+    border-color: lime;
 }
-@keyframes moveBG {
-    from { background-position: 0 0; }
-    to { background-position: -200px 200px; }
+body.ac .slot-btn.active {
+    background: lime;
+    color: black;
+}
+
+@keyframes acMove {
+    0% { background-position: 0 0; }
+    100% { background-position: -400px 400px; }
+}
+
+/* ==== Mobile Centering ==== */
+@media (max-width: 600px) {
+    .slots {
+        flex-direction: column;
+        align-items: center;
+    }
+    section {
+        width: 95%;
+    }
 }
