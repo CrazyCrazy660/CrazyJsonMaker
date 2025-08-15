@@ -1,207 +1,324 @@
-/* ==== General Layout ==== */
+/* =========================
+   Global Reset & Layout
+   ========================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root{
+  --radius: 12px;
+  --gap: 12px;
+  --maxw: 920px;
+
+  /* shared hues */
+  --ac-green: #18d65f;
+  --ac-green-dark: #0e7c3b;
+  --ac-green-deep: #0a5b2c;
+
+  /* light */
+  --light-fg: #111;
+  --light-bg-1: #cfeaff;
+  --light-bg-2: #ffffff;
+
+  /* dark */
+  --dark-fg: #f5f7fb;
+  --dark-bg-1: #0b0f1a;
+  --dark-bg-2: #010409;
+
+  /* neutral */
+  --panel-bg: rgba(255,255,255,0.06);
+}
+
+html, body {
+  height: 100%;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: background 0.5s, color 0.5s;
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
-header {
-    text-align: center;
-    margin-top: 15px;
+/* Keep everything nicely centered */
+#mainTitle,
+#themeButtons,
+#searchContainer,
+#builder,
+.button-bar,
+#output {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#appTitle {
-    font-size: 1.8rem;
-    margin-bottom: 10px;
+/* Title */
+#mainTitle{
+  text-align: center;
+  margin: 6px 0 14px;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  letter-spacing: 0.3px;
 }
 
-.top-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
+/* =========================
+   Control Rows
+   ========================= */
+#themeButtons,
+#searchContainer,
+.button-bar{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+  margin-bottom: 14px;
 }
 
-/* ==== Slots ==== */
-.slots {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
+/* Search */
+#searchContainer input#itemSearch{
+  min-width: 260px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
 }
 
-.slot-btn {
-    padding: 10px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    background: #555;
-    color: white;
-    border: 2px solid #333;
-    font-weight: bold;
-    transition: background 0.3s, transform 0.2s;
-}
-.slot-btn:hover {
-    background: #777;
-    transform: scale(1.05);
-}
-.slot-btn.active {
-    background: #0cf;
-    border-color: #09a;
+/* Buttons (shared) */
+button,
+select {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform .14s ease, background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
 }
 
-/* ==== Sections ==== */
-section {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 8px;
-    border: 2px solid;
-    width: 90%;
-    max-width: 500px;
-    box-sizing: border-box;
+button:active { transform: translateY(1px); }
+
+/* =========================
+   Builder / Slots
+   ========================= */
+#builder{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
 }
 
-/* ==== Sliders ==== */
-.slider-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.slider-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-input[type="range"] {
-    width: 100%;
-    max-width: 300px;
+/* Each slot box you render in JS should have class="slot" */
+.slot{
+  border: 2px solid currentColor;
+  border-radius: var(--radius);
+  padding: 14px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(2px);
 }
 
-/* ==== Color Preview ==== */
-.color-preview-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 8px;
-}
-.color-preview {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 2px solid #333;
-    margin-bottom: 5px;
-}
-#hexCode {
-    font-weight: bold;
+/* Slot header */
+.slot > h2{
+  margin: 0 0 8px;
+  font-size: 1rem;
 }
 
-/* ==== Buttons ==== */
-button, select {
-    padding: 8px 12px;
-    border-radius: 5px;
-    border: 2px solid #333;
-    background: #555;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-button:hover, select:hover {
-    background: #777;
-    transform: scale(1.05);
+/* Selected slot highlight */
+.slot.selected{
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.08) inset, 0 0 0 3px currentColor;
 }
 
-/* ==== Child Items ==== */
-#childList {
-    list-style: none;
-    padding: 0;
-}
-#childList li {
-    padding: 4px;
-    margin: 3px 0;
-    background: rgba(255,255,255,0.1);
-    border-radius: 4px;
+/* Items list inside slot */
+.slot ul{
+  margin: 8px 0 0;
+  padding-left: 18px;
 }
 
-/* ==== JSON Preview ==== */
-#jsonPreview {
-    background: rgba(0,0,0,0.1);
-    padding: 10px;
-    border-radius: 6px;
-    overflow-x: auto;
-    font-size: 0.85rem;
+/* JSON output */
+#output{
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 2px solid currentColor;
+  background: var(--panel-bg);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  font-size: 0.9rem;
 }
 
-/* ==== Themes ==== */
-body.light {
-    background: linear-gradient(135deg, lightblue, white);
-    color: black;
-}
-body.light section {
-    border-color: black;
-}
-body.light button, body.light select {
-    background: white;
-    color: black;
-    border-color: black;
-}
-body.light .slot-btn.active {
-    background: #0cf;
-    color: black;
+/* =========================
+   THEMES
+   Body.className is set via JS to:
+   light-theme / dark-theme / ac-theme
+   ========================= */
+
+/* ----- LIGHT THEME ----- */
+body.light-theme{
+  color: var(--light-fg);
+  background: linear-gradient(135deg, var(--light-bg-1), var(--light-bg-2));
 }
 
-body.dark {
-    background: linear-gradient(135deg, darkblue, black);
-    color: white;
-}
-body.dark section {
-    border-color: white;
-}
-body.dark button, body.dark select {
-    background: #333;
-    color: white;
-    border-color: white;
-}
-body.dark .slot-btn.active {
-    background: #0cf;
-    color: black;
+body.light-theme #mainTitle{
+  /* you earlier asked title to be white on light mode */
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
 }
 
-/* Animal Company Theme */
-body.ac {
-    background: linear-gradient(135deg, #00b300, #003300);
-    animation: acMove 37s linear infinite;
-    color: white;
+/* light inputs/buttons */
+body.light-theme #itemSearch{
+  background: #fff;
+  color: #111;
+  border: 2px solid #000;
 }
-body.ac section {
-    border-color: lime;
-}
-body.ac button, body.ac select {
-    background: #005500;
-    color: white;
-    border-color: lime;
-}
-body.ac .slot-btn.active {
-    background: lime;
-    color: black;
+body.light-theme #itemSearch:focus{
+  box-shadow: 0 0 0 4px rgba(0,0,0,0.12);
 }
 
-@keyframes acMove {
-    0% { background-position: 0 0; }
-    100% { background-position: -400px 400px; }
+body.light-theme button,
+body.light-theme select{
+  background: #fff;
+  color: #111;
+  border-color: #000;
+}
+body.light-theme button:hover,
+body.light-theme select:hover{
+  background: #f2f2f2;
+}
+body.light-theme .slot{
+  border-color: #000;
+  background: rgba(0,0,0,0.05);
+}
+body.light-theme #output{
+  border-color: #000;
+  background: rgba(0,0,0,0.04);
 }
 
-/* ==== Mobile Centering ==== */
-@media (max-width: 600px) {
-    .slots {
-        flex-direction: column;
-        align-items: center;
-    }
-    section {
-        width: 95%;
-    }
+/* ----- DARK THEME ----- */
+body.dark-theme{
+  color: var(--dark-fg);
+  background: linear-gradient(135deg, #0a1630, #000810);
+}
+
+body.dark-theme #itemSearch{
+  background: #0f1624;
+  color: var(--dark-fg);
+  border: 2px solid #fff;
+}
+body.dark-theme #itemSearch:focus{
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.12);
+}
+
+body.dark-theme button,
+body.dark-theme select{
+  background: #0f1624;
+  color: var(--dark-fg);
+  border-color: #fff;
+}
+body.dark-theme button:hover,
+body.dark-theme select:hover{
+  background: #151e2f;
+}
+body.dark-theme .slot{
+  border-color: #fff;
+  background: rgba(255,255,255,0.06);
+}
+body.dark-theme #output{
+  border-color: #fff;
+  background: rgba(255,255,255,0.06);
+}
+
+/* ----- ANIMAL COMPANY THEME ----- */
+/* Smooth diagonal animated green gradient per your reference */
+body.ac-theme{
+  color: #eafff0;
+  background:
+    radial-gradient(1200px 800px at 20% -20%, rgba(24,214,95,0.25), transparent 60%),
+    radial-gradient(900px 600px at 120% 120%, rgba(24,214,95,0.18), transparent 60%),
+    linear-gradient(135deg, #0b2b19, #0e3a22, #0d522c, #0a3c24);
+  background-size: 140% 140%;
+  animation: acGradient 37s linear infinite;
+}
+
+@keyframes acGradient{
+  0%   { background-position: 0% 0%, 100% 100%, 0% 0%; }
+  50%  { background-position: 100% 0%, 0% 100%, 100% 100%; }
+  100% { background-position: 0% 0%, 100% 100%, 0% 0%; }
+}
+
+/* AC inputs */
+body.ac-theme #itemSearch{
+  background: rgba(10, 60, 36, 0.6);
+  color: #eafff0;
+  border: 2px solid var(--ac-green);
+}
+body.ac-theme #itemSearch::placeholder{ color: #cfeeda; }
+body.ac-theme #itemSearch:focus{
+  box-shadow: 0 0 0 4px rgba(24,214,95,0.22);
+}
+
+/* AC buttons */
+body.ac-theme button,
+body.ac-theme select{
+  background: var(--ac-green-deep);
+  color: #eafff0;
+  border-color: var(--ac-green);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.35);
+}
+body.ac-theme button:hover,
+body.ac-theme select:hover{
+  background: var(--ac-green-dark);
+}
+
+/* AC slots + output with lime borders */
+body.ac-theme .slot{
+  border-color: var(--ac-green);
+  background: rgba(10, 60, 36, 0.45);
+}
+body.ac-theme #output{
+  border-color: var(--ac-green);
+  background: rgba(10, 60, 36, 0.45);
+}
+
+/* Selected ring in AC uses neon green */
+body.ac-theme .slot.selected{
+  box-shadow: 0 0 0 3px rgba(24,214,95,0.2) inset, 0 0 0 3px var(--ac-green);
+}
+
+/* =========================
+   Accessibility & Small Screens
+   ========================= */
+@media (max-width: 680px){
+  body{ padding: 12px; }
+  #builder{ gap: 10px; }
+  #searchContainer input#itemSearch{ min-width: 0; width: min(100%, 420px); }
+}
+
+/* Focus styles (keyboard users) */
+button:focus-visible,
+select:focus-visible,
+#itemSearch:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(0, 160, 255, 0.35);
+}
+
+/* Make selects consistent with buttons */
+select{
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 18px) calc(50% - 4px),
+    calc(100% - 12px) calc(50% - 4px),
+    calc(100% - 2.2em) 0.5em;
+  background-size: 6px 6px, 6px 6px, 1px 1.8em;
+  background-repeat: no-repeat;
+  padding-right: 2.2em;
 }
