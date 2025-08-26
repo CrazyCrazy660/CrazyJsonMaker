@@ -167,7 +167,7 @@ const items = [
   { name: "Whoopie Cushion", id: "item_whoopie" },
   { name: "Zombie Meat", id: "item_zombie_meat" },
   { name: "Zombie Mob Loot Box", id: "item_randombox_mobloot_zombie" }
-[;
+];
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 // === State ===
